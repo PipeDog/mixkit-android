@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+//    implementation 'com.google.code.gson:gson:2.8.6'
+//    implementation 'com.squareup:javapoet:1.12.1'
+
+//    implementation 'com.google.auto.service:auto-service:1.0-rc6'
+//    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
+}
