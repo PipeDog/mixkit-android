@@ -42,7 +42,7 @@ public class MixModuleProcessor {
     private final Logger mLogger;
     private final Filer mFiler;
     private final Gson mGson;
-    private List<MixModuleBean> mModuleDataList;
+    private Map<String, MixModuleBean> mModuleDataMap;
 
     public MixModuleProcessor(ProcessingEnvironment processingEnv) {
         mLogger = new Logger(processingEnv.getMessager());
@@ -95,7 +95,6 @@ public class MixModuleProcessor {
 
             if (moduleData == null) {
                 moduleData = new MixModuleBean();
-                moduleData.moduleName = moduleName;
                 moduleData.className = className;
                 moduleDataMap.put(moduleName, moduleData);
             }
@@ -112,8 +111,7 @@ public class MixModuleProcessor {
             MixMethodBean methodBean = new MixMethodBean();
             methods.put(exportMethodName, methodBean);
 
-            methodBean.exportName = exportMethodName;
-            methodBean.nativeName = methodElement.getSimpleName().toString();
+            methodBean.methodName = methodElement.getSimpleName().toString();
             List<MixParameterBean> parameters = new ArrayList<MixParameterBean>();
             methodBean.parameters = parameters;
 
@@ -136,7 +134,7 @@ public class MixModuleProcessor {
 
         mLogger.info("modules = " + mGson.toJson(moduleDataMap));
 
-        mModuleDataList = new ArrayList<MixModuleBean>(moduleDataMap.values());
+        mModuleDataMap = new HashMap<String, MixModuleBean>(moduleDataMap);
         createMixModuleLoaderClass();
     }
 
@@ -147,7 +145,7 @@ public class MixModuleProcessor {
                 .build();
 
         method = method.toBuilder()
-                .addStatement("return $S", mGson.toJson(mModuleDataList))
+                .addStatement("return $S", mGson.toJson(mModuleDataMap))
                 .build();
 
         try {
