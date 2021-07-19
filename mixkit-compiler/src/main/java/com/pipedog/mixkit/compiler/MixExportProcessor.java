@@ -31,14 +31,9 @@ public class MixExportProcessor extends AbstractProcessor {
     private MixModuleProcessor mModuleProcessor;
     private MixMessageParserProcessor mMessageParserProcessor;
 
-    private Logger mLogger;
-
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-
-        mLogger = new Logger(processingEnv.getMessager());
-        mLogger.info("MixExportProcessor init");
 
         mModuleProcessor = new MixModuleProcessor(processingEnv);
         mMessageParserProcessor = new MixMessageParserProcessor(processingEnv);
@@ -46,13 +41,6 @@ public class MixExportProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-        mLogger.info("MixExportProcessor process");
-
-        for (TypeElement typeElement : annotations) {
-            String name = typeElement.getQualifiedName().toString();
-            mLogger.info(">>>>> annotation name = " + name);
-        }
-
         mModuleProcessor.process(annotations, roundEnvironment);
         mMessageParserProcessor.process(annotations, roundEnvironment);
         return true;

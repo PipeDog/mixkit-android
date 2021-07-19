@@ -38,7 +38,6 @@ public class MixMessageParserProcessor {
         mFiler = processingEnv.getFiler();
         mGson = new Gson();
         mParserClasses = new ArrayList<>();
-        mLogger.info("MixMessageParserProcessor init");
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {

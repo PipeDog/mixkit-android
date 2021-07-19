@@ -20,11 +20,18 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.util.Elements;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 
 import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.annotation.MixMethod;
@@ -41,8 +48,6 @@ public class MixModuleProcessor {
         mLogger = new Logger(processingEnv.getMessager());
         mFiler = processingEnv.getFiler();
         mGson = new Gson();
-
-        mLogger.info("MixModuleProcessor init");
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
@@ -75,6 +80,12 @@ public class MixModuleProcessor {
         // 遍历 @MixMethod 注解，生成注解导出信息 map
         HashMap<String, MixModuleBean> moduleDataMap = new HashMap<String, MixModuleBean>();
         for (Element methodElement : methodElements) {
+            if (methodElement instanceof ExecutableElement) { } else {
+                mLogger.info("[Error] annotation failed in class named " +
+                        methodElement.getEnclosingElement().toString());
+                continue;
+            }
+
             String className = methodElement.getEnclosingElement().toString();
             if (className == null || className.length() == 0) { continue; }
             if (!moduleNameMap.containsKey(className)) { continue; }
@@ -89,19 +100,41 @@ public class MixModuleProcessor {
                 moduleDataMap.put(moduleName, moduleData);
             }
 
-            Map<String, String> methods = moduleData.methods;
+            Map<String, MixMethodBean> methods = moduleData.methods;
             if (methods == null) {
-                methods = new HashMap<String, String>();
+                methods = new HashMap<String, MixMethodBean>();
                 moduleData.methods = methods;
             }
 
             MixMethod methodAnnotation = methodElement.getAnnotation(MixMethod.class);
             String exportMethodName = methodAnnotation.name();
-            String nativeMethodName = methodElement.getSimpleName().toString();
-            methods.put(exportMethodName, nativeMethodName);
+
+            MixMethodBean methodBean = new MixMethodBean();
+            methods.put(exportMethodName, methodBean);
+
+            methodBean.exportName = exportMethodName;
+            methodBean.nativeName = methodElement.getSimpleName().toString();
+            List<MixParameterBean> parameters = new ArrayList<MixParameterBean>();
+            methodBean.parameters = parameters;
+
+            // Generate parameters
+            ExecutableElement executableElement = (ExecutableElement)methodElement;
+            List<? extends VariableElement> variableElements = executableElement.getParameters();
+            for (VariableElement variableElement : variableElements) {
+                TypeMirror methodParameterType = variableElement.asType();
+                if (methodParameterType instanceof TypeVariable) {
+                    TypeVariable typeVariable = (TypeVariable) methodParameterType;
+                    methodParameterType = typeVariable.getUpperBound();
+                }
+
+                MixParameterBean parameterBean = new MixParameterBean();
+                parameterBean.name = variableElement.getSimpleName().toString();
+                parameterBean.type = methodParameterType.toString();
+                parameters.add(parameterBean);
+            }
         }
 
-        mLogger.info("moduleDataMap = " + mGson.toJson(moduleDataMap));
+        mLogger.info("modules = " + mGson.toJson(moduleDataMap));
 
         mModuleDataList = new ArrayList<MixModuleBean>(moduleDataMap.values());
         createMixModuleLoaderClass();

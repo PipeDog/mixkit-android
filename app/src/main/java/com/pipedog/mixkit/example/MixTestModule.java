@@ -7,7 +7,7 @@ import com.pipedog.mixkit.annotation.MixMethod;
 public class MixTestModule {
 
     @MixMethod(name = "testExportMethod")
-    public void testMethod() {
+    public void testMethod(String arg1, int arg2) {
 
     }
 }

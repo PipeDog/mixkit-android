@@ -5,5 +5,5 @@ import java.util.List;
 public class MixMethodBean {
     public String exportName;
     public String nativeName;
-    public List<String> argumentTypes;
+    public List<MixParameterBean> parameters;
 }
