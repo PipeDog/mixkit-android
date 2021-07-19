@@ -25,6 +25,7 @@ public class MixModuleManager {
 
     private Gson mGson;
     private Map<String, MixModuleData> mModuleDataMap;
+    private Map<String, MixMethodInvoker> mInvokerMap;
     private volatile static MixModuleManager defaultManager;
 
     public static MixModuleManager defaultManager() {
@@ -41,6 +42,7 @@ public class MixModuleManager {
     private MixModuleManager() {
         mGson = new Gson();
         mModuleDataMap = new HashMap<String, MixModuleData>();
+        mInvokerMap = new HashMap<String, MixMethodInvoker>();
 
         String packageName = Path.MIX_MODULE_PROVIDER_PACKAGE;
         List<Class<?>> providerClasses =
@@ -60,8 +62,6 @@ public class MixModuleManager {
                 MixLogger.error("Load parse failed, e : " + e.toString());
             }
         }
-
-        MixLogger.info("load module infos : %s, size : %d", mGson.toJson(mModuleDataMap), mModuleDataMap.size());
     }
 
     public MixModuleMethod getMethod(String moduleName, String methodName) {
@@ -70,6 +70,23 @@ public class MixModuleManager {
 
         MixModuleMethod method = moduleData.methods.get(methodName);
         return method;
+    }
+
+    public MixMethodInvoker getInvoker(String moduleName, String methodName) {
+        String invokerId = formatInvokerId(moduleName, methodName);
+        MixMethodInvoker invoker = mInvokerMap.get(invokerId);
+        if (invoker != null) { return invoker; }
+
+        MixModuleMethod method = getMethod(moduleName, methodName);
+        if (method == null) { return null; }
+
+        invoker = new MixMethodInvoker(method);
+        mInvokerMap.put(invokerId, invoker);
+        return invoker;
+    }
+
+    private String formatInvokerId(String moduleName, String methodName) {
+        return moduleName + "_$_" + methodName;
     }
 
 }
