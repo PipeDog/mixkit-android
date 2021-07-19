@@ -19,6 +19,7 @@ import com.pipedog.mixkit.launch.Mix;
 import com.pipedog.mixkit.launch.MixOptions;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.tool.ClassUtils;
+import com.pipedog.mixkit.tool.MixProviderClassLoader;
 
 public class MixModuleManager {
 
@@ -41,46 +42,12 @@ public class MixModuleManager {
         mGson = new Gson();
         mModuleDataMap = new HashMap<String, MixModuleData>();
 
-        Context context = null;
-        try {
-            MixOptions options = Mix.options();
-            context = options.context;
-        } catch (Exception e) {
-            MixLogger.error("Catch exception : ", e.toString());
-            return;
-        }
-
-        List<String> loaderClassNames = null;
-        try {
-            String packageName = Path.MIX_MODULE_PROVIDER_PACKAGE;
-            loaderClassNames = ClassUtils.getFileNameByPackageName(context, packageName);
-        } catch (Exception e) {
-            MixLogger.error("fetch provider failed, exception : %s", e.toString());
-            return;
-        }
-
-        if (loaderClassNames == null || loaderClassNames.isEmpty()) {
-            MixLogger.info("Dynamic loader class is null!");
-            return;
-        }
-
-        List<Class<?>> loaderClasses = new ArrayList<>();
-        for (String className : loaderClassNames) {
-            try {
-                Class aClass = Class.forName(className);
-                if (aClass == null) {
-                    MixLogger.error("Fetch class failed with class name " + className);
-                    continue;
-                }
-
-                loaderClasses.add(aClass);
-            } catch (Exception e) {
-                MixLogger.error("Load parse failed, e : " + e.toString());
-            }
-        }
+        String packageName = Path.MIX_MODULE_PROVIDER_PACKAGE;
+        List<Class<?>> providerClasses =
+                MixProviderClassLoader.getClassesWithPackageName(packageName);
 
         // Load all class names
-        for (Class<?> aClass : loaderClasses) {
+        for (Class<?> aClass : providerClasses) {
             try {
                 Object provider = aClass.getConstructor().newInstance();
                 Method method = aClass.getMethod(Path.MIX_MODULE_PROVIDER_METHOD);
@@ -97,6 +64,12 @@ public class MixModuleManager {
         MixLogger.info("load module infos : %s, size : %d", mGson.toJson(mModuleDataMap), mModuleDataMap.size());
     }
 
-    
+    public MixModuleMethod getMethod(String moduleName, String methodName) {
+        MixModuleData moduleData = mModuleDataMap.get(moduleName);
+        if (moduleData == null) { return null; }
+
+        MixModuleMethod method = moduleData.methods.get(methodName);
+        return method;
+    }
 
 }

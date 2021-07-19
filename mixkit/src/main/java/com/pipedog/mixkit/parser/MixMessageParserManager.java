@@ -34,63 +34,45 @@ public class MixMessageParserManager implements IMixMessageParserManager {
 
     private MixMessageParserManager() {
         mGson = new Gson();
-        mParserClasses = new ArrayList<>();
+        mParserClasses = new ArrayList<Class<?>>();
 
-        // Load all classes from package "com.pipedog.mixkit.compiler.dynamic.parser"
-        MixLogger.info("init parser manager");
+        String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
+        List<Class<?>> providerClasses =
+                MixProviderClassLoader.getClassesWithPackageName(packageName);
+        generateParserClasses(providerClasses);
 
-        Context context = null;
-        try {
-            MixOptions options = Mix.options();
-            context = options.context;
-        } catch (Exception e) {
-            MixLogger.error("Catch exception : ", e.toString());
-            return;
+        MixLogger.info("parser classes : %d", mParserClasses.size());
+    }
+
+    @Override
+    public IMixMessageParser detectParser(Object metaData) {
+        if (metaData == null || mParserClasses == null || mParserClasses.isEmpty()) {
+            return null;
         }
 
-        MixLogger.info("get context success!");
-
-        List<String> loaderClassNames = null;
-        try {
-            String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
-            loaderClassNames = ClassUtils.getFileNameByPackageName(context, packageName);
-        } catch (Exception e) {
-            MixLogger.error("fetch provider failed, exception : %s", e.toString());
-            return;
-        }
-
-        MixLogger.info("get class names from package finished, class names = %s", mGson.toJson(loaderClassNames));
-
-        if (loaderClassNames == null || loaderClassNames.isEmpty()) {
-            MixLogger.info("Dynamic loader class is null!");
-            return;
-        }
-
-        List<Class<?>> loaderClasses = new ArrayList<>();
-        for (String className : loaderClassNames) {
-            MixLogger.info("class name = %s", className);
-
+        for (Class aClass : mParserClasses) {
             try {
-                Class aClass = Class.forName(className);
-                if (aClass == null) {
-                    MixLogger.error("Fetch class failed with class name " + className);
-                    continue;
-                }
+                Method canParseMethod = aClass.getMethod("canParse", Object.class);
+                Boolean ret = (Boolean)canParseMethod.invoke(aClass, metaData);
+                if (Boolean.FALSE.equals(ret)) { continue; }
 
-                loaderClasses.add(aClass);
-
-                MixLogger.info("add class to classes set");
+                Method newParserMethod = aClass.getMethod("newParser", Object.class);
+                IMixMessageParser parser = (IMixMessageParser)newParserMethod.invoke(aClass, metaData);
+                return parser;
             } catch (Exception e) {
-                MixLogger.error("Load parse failed, e : " + e.toString());
+                e.printStackTrace();
+                MixLogger.info("catch exception : " + e.toString());
             }
         }
 
-        MixLogger.info("loaderClasses : %d", loaderClasses.size());
+        return null;
+    }
 
+    private void generateParserClasses(List<Class<?>> providerClasses) {
         List<String> classNames = new ArrayList<String>();
 
         // Load all class names
-        for (Class<?> aClass : loaderClasses) {
+        for (Class<?> aClass : providerClasses) {
             try {
                 Object provider = aClass.getConstructor().newInstance();
                 Method method = aClass.getMethod(Path.MIX_PARSER_PROVIDER_METHOD);
@@ -123,32 +105,6 @@ public class MixMessageParserManager implements IMixMessageParserManager {
                 MixLogger.error(String.format("catch exception : " + e.toString()));
             }
         }
-
-        MixLogger.info("parser classes : %d", mParserClasses.size());
-    }
-
-    @Override
-    public IMixMessageParser detectParser(Object metaData) {
-        if (metaData == null || mParserClasses == null || mParserClasses.isEmpty()) {
-            return null;
-        }
-
-        for (Class aClass : mParserClasses) {
-            try {
-                Method canParseMethod = aClass.getMethod("canParse", Object.class);
-                Boolean ret = (Boolean)canParseMethod.invoke(aClass, metaData);
-                if (Boolean.FALSE.equals(ret)) { continue; }
-
-                Method newParserMethod = aClass.getMethod("newParser", Object.class);
-                IMixMessageParser parser = (IMixMessageParser)newParserMethod.invoke(aClass, metaData);
-                return parser;
-            } catch (Exception e) {
-                e.printStackTrace();
-                MixLogger.info("catch exception : " + e.toString());
-            }
-        }
-
-        return null;
     }
 
 }
