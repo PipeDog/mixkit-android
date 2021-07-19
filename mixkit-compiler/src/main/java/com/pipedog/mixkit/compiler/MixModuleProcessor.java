@@ -111,6 +111,7 @@ public class MixModuleProcessor {
             MixMethodBean methodBean = new MixMethodBean();
             methods.put(exportMethodName, methodBean);
 
+            methodBean.className = className;
             methodBean.methodName = methodElement.getSimpleName().toString();
             List<MixParameterBean> parameters = new ArrayList<MixParameterBean>();
             methodBean.parameters = parameters;
