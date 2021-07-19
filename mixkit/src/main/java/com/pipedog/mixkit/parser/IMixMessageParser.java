@@ -10,12 +10,12 @@ public interface IMixMessageParser {
         public List<Object> arguments();
     }
 
-    static boolean canParse(Object metaData) {
+    public static boolean canParse(Object metaData) {
         return false;
     }
-    static IMixMessageParser newParser(Object metaData) {
+    public static IMixMessageParser newParser(Object metaData) {
         return null;
     }
-    IMixMessageBody messageBody();
+    public IMixMessageBody messageBody();
 
 }

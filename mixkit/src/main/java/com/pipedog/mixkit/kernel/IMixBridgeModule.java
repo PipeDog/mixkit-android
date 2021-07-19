@@ -1,6 +1,7 @@
 package com.pipedog.mixkit.kernel;
 
-public interface IMixExecutor {
+public interface IMixBridgeModule {
     void bindBridge(IMixBridge bridge);
-    boolean invokeMethod(Object metaData);
+    void load();
+    void unload();
 }

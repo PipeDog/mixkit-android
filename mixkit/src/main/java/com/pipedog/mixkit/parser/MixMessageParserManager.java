@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import java.lang.Boolean;
 
-public class MixMessageParserManager implements IMixMessageParserManager {
+public class MixMessageParserManager {
 
     private Gson mGson;
     private List<Class<?>> mParserClasses;
-    private volatile static IMixMessageParserManager defaultManager;
+    private volatile static MixMessageParserManager defaultManager;
 
-    public static IMixMessageParserManager defaultManager() {
+    public static MixMessageParserManager defaultManager() {
         if (defaultManager == null) {
             synchronized (MixMessageParserManager.class) {
                 if (defaultManager == null) {
@@ -44,7 +44,6 @@ public class MixMessageParserManager implements IMixMessageParserManager {
         MixLogger.info("parser classes : %d", mParserClasses.size());
     }
 
-    @Override
     public IMixMessageParser detectParser(Object metaData) {
         if (metaData == null || mParserClasses == null || mParserClasses.isEmpty()) {
             return null;
