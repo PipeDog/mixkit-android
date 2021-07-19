@@ -68,7 +68,7 @@ public class ClassUtils {
             Enumeration<String> dexEntries = dexfile.entries();
             while (dexEntries.hasMoreElements()) {
                 String className = dexEntries.nextElement();
-                Log.i("[Mix|info]", " className = " + className);
+                // Log.i("[Mix|info]", " className = " + className);
 
                 if (className.contains(packageName)) {
                     classNames.add(className);

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import com.pipedog.mixkit.parser.*;
+import com.pipedog.mixkit.module.MixModuleManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             Logger.getGlobal().info("Mix-Android" + e.toString());
         }
+
+        MixModuleManager.defaultManager();
 
     }
 }
