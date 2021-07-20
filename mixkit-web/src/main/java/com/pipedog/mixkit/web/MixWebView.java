@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.InputEvent;
 
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.ClientCertRequest;
@@ -33,7 +34,7 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
 
-public class MixWebView extends WebView implements IMixScriptEngine {
+public class MixWebView extends WebView implements IMixScriptEngine, IMixWebViewBridgeDelegate {
 
     // 包装外部传递进行来 WebViewClient，并且提供各种回调
     public class MixWebViewClient extends WebViewClient {
@@ -68,7 +69,8 @@ public class MixWebView extends WebView implements IMixScriptEngine {
                 mWebViewClient.onPageStarted(view, url, favicon);
             }
 
-            // TODO: inject js script into webview
+            // inject export infos into webview when callback `onPageStarted`
+            injectNativeModules();
         }
 
         @Override
@@ -253,12 +255,16 @@ public class MixWebView extends WebView implements IMixScriptEngine {
 
     }
 
+    private static final String MIX_KIT_NAME = "MixKit";
+
     private Gson mGson;
+    private MixWebViewBridge mWebViewBridge;
 
     public MixWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mGson = new Gson();
+        mWebViewBridge = new MixWebViewBridge(this);
 
         // enable js bridge
         WebSettings webSettings = getSettings();
@@ -268,9 +274,11 @@ public class MixWebView extends WebView implements IMixScriptEngine {
         WebViewClient webViewClient = getWebViewClient();
         MixWebViewClient realClient = new MixWebViewClient(webViewClient);
         setWebViewClient(realClient);
+
+        addJavascriptInterface(this, MIX_KIT_NAME);
     }
 
-    private void injectJsScript() {
+    private void injectNativeModules() {
         String format =
                 "if (window.__mk_systemType != 2) { " +
                 "   window.__mk_systemType = 2; " +
@@ -278,6 +286,7 @@ public class MixWebView extends WebView implements IMixScriptEngine {
                 "}";
         String json = MixModuleManager.defaultManager().getModuleDataJson();
         String script = String.format(format, json);
+
         executeScript(script, new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {
@@ -289,6 +298,16 @@ public class MixWebView extends WebView implements IMixScriptEngine {
                 MixLogger.error("inject js script failed, error : %s!", error);
             }
         });
+    }
+
+    @JavascriptInterface
+    public void postMessage(String message) {
+        try {
+            Map map = mGson.fromJson(message, Map.class);
+            mWebViewBridge.executor().invokeMethod(map);
+        } catch (Exception e) {
+            MixLogger.error("invoke native method failed, message : %s.", message);
+        }
     }
 
     @Override
@@ -369,4 +388,8 @@ public class MixWebView extends WebView implements IMixScriptEngine {
         });
     }
 
+    @Override
+    public IMixScriptEngine scriptEngine() {
+        return (IMixScriptEngine)this;
+    }
 }
