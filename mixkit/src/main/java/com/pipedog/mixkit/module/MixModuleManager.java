@@ -24,6 +24,7 @@ import com.pipedog.mixkit.tool.MixProviderClassLoader;
 public class MixModuleManager {
 
     private Gson mGson;
+    private String mModuleDataJson;
     private Map<String, MixModuleData> mModuleDataMap;
     private Map<String, MixMethodInvoker> mInvokerMap;
     private volatile static MixModuleManager defaultManager;
@@ -62,6 +63,16 @@ public class MixModuleManager {
                 MixLogger.error("Load parse failed, e : " + e.toString());
             }
         }
+
+        mModuleDataJson = mGson.toJson(mModuleDataMap);
+    }
+
+    public String getModuleDataJson() {
+        return mModuleDataJson;
+    }
+
+    public Map<String, MixModuleData> getModuleDataMap() {
+        return mModuleDataMap;
     }
 
     public MixModuleMethod getMethod(String moduleName, String methodName) {

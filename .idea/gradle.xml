@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/mixkit-annotation" />
             <option value="$PROJECT_DIR$/mixkit-compiler" />
             <option value="$PROJECT_DIR$/mixkit-path" />
+            <option value="$PROJECT_DIR$/mixkit-web" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -16,14 +16,25 @@ public class MixMethodInvoker {
         mModuleMethod = method;
     }
 
-    public void invoke(Object module, List<Object> parameters) {
+    public boolean invoke(Object module, List<Object> parameters) {
         try {
             prepareMethodIfNeeded();
             mMethod.invoke(module, parameters);
         } catch (Exception e) {
             MixLogger.error("Invoke method failed, class : `%s`, method : `%s`!",
                     mModuleMethod.className, mModuleMethod.methodName);
+            return false;
         }
+
+        return true;
+    }
+
+    public String getClassName() {
+        return mModuleMethod.className;
+    }
+
+    public String getMethodName() {
+        return mModuleMethod.methodName;
     }
 
     private void prepareMethodIfNeeded() {

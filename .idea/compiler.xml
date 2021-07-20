@@ -27,6 +27,7 @@
       <module name="mixkit-android.mixkit" target="11" />
       <module name="mixkit-android.mixkit-annotation" target="1.8" />
       <module name="mixkit-android.mixkit-compiler" target="1.8" />
+      <module name="mixkit-android.mixkit-web" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
