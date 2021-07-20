@@ -103,8 +103,6 @@ public class WebViewExecutor implements IMixExecutor {
             return;
         }
 
-        IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
-
         List jsArgs = new ArrayList<>();
         jsArgs.add(callbackID);
 
@@ -113,6 +111,7 @@ public class WebViewExecutor implements IMixExecutor {
         }
         jsArgs.add(arguments);
 
+        IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
         scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs, new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {

@@ -260,9 +260,22 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     private Gson mGson;
     private MixWebViewBridge mWebViewBridge;
 
+    public MixWebView(Context context) {
+        super(context);
+        setupInitializeConfiguration();
+    }
+
+    public MixWebView(Context context, AttributeSet att) {
+        super(context, att);
+        setupInitializeConfiguration();
+    }
+
     public MixWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setupInitializeConfiguration();
+    }
 
+    private void setupInitializeConfiguration() {
         mGson = new Gson();
         mWebViewBridge = new MixWebViewBridge(this);
 
@@ -346,7 +359,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
             } else if (obj instanceof String) {
                 String argument = String.format("'%s'", obj);
                 sb.append(argument);
-            } else if (obj instanceof Short||
+            } else if (obj instanceof Short ||
                     obj instanceof Integer ||
                     obj instanceof Long ||
                     obj instanceof Float ||
