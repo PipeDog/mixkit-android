@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import android.util.Log;
+import android.webkit.WebSettings;
 
 import com.pipedog.mixkit.launch.Mix;
 import com.pipedog.mixkit.launch.MixOptions;
@@ -26,34 +27,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("testModuleName", "MKTestModule");
-        map.put("testMethodName", "testExportMethod");
-
-        try {
-            IMixMessageParser parser = MixMessageParserManager.defaultManager().detectParser(map);
-            if (parser == null) { return; }
-
-            Logger.getGlobal().info("parser class name : " + parser.getClass().getName());
-            Logger.getGlobal().info("parser modulename = " + parser.messageBody().moduleName() + ", " +
-                    "methodName = " + parser.messageBody().methodName());
-        } catch (Exception e) {
-            Logger.getGlobal().info("Mix-Android" + e.toString());
-        }
-
-        MixModuleManager.defaultManager();
-
-        Context context = null;
-        try {
-            MixOptions options = Mix.options();
-            context = options.context;
-        } catch (Exception e) {
-            Logger.getGlobal().info("get context failed, e : " + e.toString());
-            return;
-        }
-
         MixWebView webView = findViewById(R.id.testWebView);
         webView.setWebContentsDebuggingEnabled(true);
+
+        WebSettings settings = webView.getSettings();
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
 
         webView.loadUrl("file:///android_asset/demo.html");
 
