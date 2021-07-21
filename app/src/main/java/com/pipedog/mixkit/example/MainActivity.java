@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //webView.loadUrl("file:///android_asset/index.html"); 加载assets目录中含有的index.html
-
         MixWebView webView = findViewById(R.id.testWebView);
         webView.setWebContentsDebuggingEnabled(true);
 
@@ -61,6 +59,5 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("Mix-app", ">>>>> application launch finished!!!");
         MixLogger.info(">>>>> application launch finished!!!");
-//        webView.loadUrl("https://www.baidu.com");
     }
 }

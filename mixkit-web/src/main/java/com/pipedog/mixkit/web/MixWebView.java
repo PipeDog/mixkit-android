@@ -37,6 +37,9 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
 
+// Chrome debug address:
+// chrome://inspect/#devices
+
 public class MixWebView extends WebView implements IMixScriptEngine, IMixWebViewBridgeDelegate {
 
     // 包装外部传递进行来 WebViewClient，并且提供各种回调
