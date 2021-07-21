@@ -19,17 +19,17 @@ public class MixMessageParserManager {
 
     private Gson mGson;
     private List<Class<?>> mParserClasses;
-    private volatile static MixMessageParserManager defaultManager;
+    private volatile static MixMessageParserManager sDefaultManager;
 
     public static MixMessageParserManager defaultManager() {
-        if (defaultManager == null) {
+        if (sDefaultManager == null) {
             synchronized (MixMessageParserManager.class) {
-                if (defaultManager == null) {
-                    defaultManager = new MixMessageParserManager();
+                if (sDefaultManager == null) {
+                    sDefaultManager = new MixMessageParserManager();
                 }
             }
         }
-        return defaultManager;
+        return sDefaultManager;
     }
 
     private MixMessageParserManager() {

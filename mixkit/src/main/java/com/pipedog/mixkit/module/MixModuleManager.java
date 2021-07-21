@@ -27,17 +27,17 @@ public class MixModuleManager {
     private String mModuleDataJson;
     private Map<String, MixModuleData> mModuleDataMap;
     private Map<String, MixMethodInvoker> mInvokerMap;
-    private volatile static MixModuleManager defaultManager;
+    private volatile static MixModuleManager sDefaultManager;
 
     public static MixModuleManager defaultManager() {
-        if (defaultManager == null) {
+        if (sDefaultManager == null) {
             synchronized (MixModuleManager.class) {
-                if (defaultManager == null) {
-                    defaultManager = new MixModuleManager();
+                if (sDefaultManager == null) {
+                    sDefaultManager = new MixModuleManager();
                 }
             }
         }
-        return defaultManager;
+        return sDefaultManager;
     }
 
     private MixModuleManager() {

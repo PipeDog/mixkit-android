@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 public class MixLogger {
 
-    private static final Logger mLogger = Logger.getLogger("MixLogger");
+    private static final Logger sLogger = Logger.getLogger("MixLogger");
 
     public static void info(String format, Object... args) {
         String msg = new Formatter().format(format, args).toString();
@@ -23,15 +23,15 @@ public class MixLogger {
     }
 
     public static void info(String msg) {
-        mLogger.info("[Mix|info] " + msg);
+        sLogger.info("[Mix|info] " + msg);
     }
 
     public static void warning(String msg) {
-        mLogger.warning("[Mix|warning] " + msg);
+        sLogger.warning("[Mix|warning] " + msg);
     }
 
     public static void error(String msg) {
-        mLogger.severe("[Mix|error] " + msg);
+        sLogger.severe("[Mix|error] " + msg);
     }
 
 }
