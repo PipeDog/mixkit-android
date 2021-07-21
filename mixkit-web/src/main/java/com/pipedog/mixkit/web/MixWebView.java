@@ -325,6 +325,18 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         super.loadUrl(url);
     }
 
+    @Override
+    public void loadData(@NonNull String data, @Nullable String mimeType, @Nullable String encoding) {
+        injectNativeModules();
+        super.loadData(data, mimeType, encoding);
+    }
+
+    @Override
+    public void loadDataWithBaseURL(@Nullable String baseUrl, @NonNull String data, @Nullable String mimeType, @Nullable String encoding, @Nullable String historyUrl) {
+        injectNativeModules();
+        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+    }
+
     @JavascriptInterface
     public void postMessage(String message) {
         try {
