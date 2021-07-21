@@ -40,8 +40,6 @@ public class MixMessageParserManager {
         List<Class<?>> providerClasses =
                 MixProviderClassLoader.getClassesWithPackageName(packageName);
         generateParserClasses(providerClasses);
-
-        MixLogger.info("parser classes : %d", mParserClasses.size());
     }
 
     public IMixMessageParser detectParser(Object metaData) {

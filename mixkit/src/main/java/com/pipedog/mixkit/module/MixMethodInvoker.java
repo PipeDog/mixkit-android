@@ -110,8 +110,6 @@ public class MixMethodInvoker {
                 parameterArray[i] = to;
             } else {
                 parameterArray[i] = from;
-                MixLogger.error(">>>>>>> parameterType : %s, value : %s", parameterType, from.toString());
-
             }
         }
 

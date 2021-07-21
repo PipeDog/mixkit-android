@@ -54,9 +54,6 @@ public class MixModuleProcessor {
         Set<? extends Element> moduleElements = roundEnvironment.getElementsAnnotatedWith(MixModule.class);
         Set<? extends Element> methodElements = roundEnvironment.getElementsAnnotatedWith(MixMethod.class);
 
-        mLogger.info("[Module] moduleElements.size = " + moduleElements.size());
-        mLogger.info("[Module] methodElements.size = " + methodElements.size());
-
         if (moduleElements == null || moduleElements.isEmpty()) { return false; }
         if (methodElements == null || methodElements.isEmpty()) { return false; }
 
@@ -74,8 +71,6 @@ public class MixModuleProcessor {
             String className = moduleElement.toString();
             moduleNameMap.put(className, moduleName);
         }
-
-        mLogger.info("moduleNames = " + mGson.toJson(moduleNameMap));
 
         // 遍历 @MixMethod 注解，生成注解导出信息 map
         HashMap<String, MixModuleBean> moduleDataMap = new HashMap<String, MixModuleBean>();
@@ -132,8 +127,6 @@ public class MixModuleProcessor {
                 parameters.add(parameterBean);
             }
         }
-
-        mLogger.info("modules = " + mGson.toJson(moduleDataMap));
 
         mModuleDataMap = new HashMap<String, MixModuleBean>(moduleDataMap);
         createMixModuleLoaderClass();

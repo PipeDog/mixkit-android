@@ -41,9 +41,8 @@ public class MixMessageParserProcessor {
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-        Set<? extends Element> parserElements = roundEnvironment.getElementsAnnotatedWith(MixMessageParser.class);
-        mLogger.info("[Parser] parserElements.size = " + parserElements.size());
-
+        Set<? extends Element> parserElements =
+                roundEnvironment.getElementsAnnotatedWith(MixMessageParser.class);
         if (parserElements == null || parserElements.isEmpty()) { return false; }
 
         processParsers(parserElements);
@@ -56,7 +55,6 @@ public class MixMessageParserProcessor {
             mParserClasses.add(className);
         }
 
-        mLogger.info("message parsers = " + mGson.toJson(mParserClasses));
         createMixMessageParserLoaderClass();
     }
 

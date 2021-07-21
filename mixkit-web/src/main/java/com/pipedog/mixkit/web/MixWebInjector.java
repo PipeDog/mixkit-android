@@ -42,8 +42,6 @@ public class MixWebInjector {
 
         Gson gson = new Gson();
         sModuleDataJson = gson.toJson(injectionMap);
-
-        MixLogger.info(">>>>> sModuleDataJson : %s", sModuleDataJson);
         return sModuleDataJson;
     }
 

@@ -27,10 +27,6 @@ public class WebViewExecutor implements IMixExecutor {
         @Override
         public void invoke(List<Object> arguments) {
             invokeCallback(arguments, mCallbackId);
-
-            MixLogger.info(">>>>> invoke callback from native, callbackID : %s, arguments : %s",
-                    mCallbackId, arguments.toString());
-
         }
 
     }
@@ -58,15 +54,10 @@ public class WebViewExecutor implements IMixExecutor {
 
     @Override
     public boolean invokeMethod(Object metaData) {
-        MixLogger.info(">>>>>>>======== 11111111");
-
         MixMessageParserManager parserManager = mBridge.messageParserManager();
-        MixLogger.info(">>>>>>>======== 1++++++++");
 
         IMixMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) { return false; }
-
-        MixLogger.info(">>>>>>>======== 222222222");
 
         IMixMessageParser.IMixMessageBody body = parser.messageBody();
         String moduleName = body.moduleName();
@@ -75,28 +66,20 @@ public class WebViewExecutor implements IMixExecutor {
         MixModuleManager moduleManager = MixModuleManager.defaultManager();
         MixMethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
 
-        MixLogger.info(">>>>>>>======== 33333333");
-
         if (invoker == null) {
             MixLogger.error("Get invoker failed, module : %s, method : %s.",
                     moduleName, methodName);
             return false;
         }
 
-        MixLogger.info(">>>>>>>======== 44444444");
-
         String className = invoker.getClassName();
         Object bridgeModule = mBridge.moduleCreator().getModule(className);
-
-        MixLogger.info(">>>>>>>======== 555555555");
 
         if (bridgeModule == null) {
             MixLogger.error("Get bridge module object failed, module : %s, method : %s.",
                     moduleName, methodName);
             return false;
         }
-
-        MixLogger.info(">>>>> lalallalalalal ");
 
         List<Object> arguments = body.arguments();
         List<Object> nativeArgs = new ArrayList<>();

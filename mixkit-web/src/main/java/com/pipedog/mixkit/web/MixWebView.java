@@ -292,8 +292,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         setWebViewClient(realClient);
 
         addJavascriptInterface(this, MIX_KIT_NAME);
-
-        MixLogger.info(">>>>> callback setupInitializeConfiguration");
     }
 
     private void injectNativeModules() {
@@ -304,8 +302,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                 "}";
         String json = MixWebInjector.getInjectionJson();
         String script = String.format(format, json);
-
-        MixLogger.info(">>>>> format script: %s", script);
 
         executeScript(script, new ScriptCallback() {
             @Override
@@ -330,8 +326,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     public void postMessage(String message) {
         try {
             Map map = mGson.fromJson(message, Map.class);
-
-            MixLogger.info(">>>>> size = %d, message = %s", map.size(), message);
 
             if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
                 mWebViewBridge.executor().invokeMethod(map);

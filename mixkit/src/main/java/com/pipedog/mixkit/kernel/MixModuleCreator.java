@@ -35,16 +35,9 @@ public class MixModuleCreator {
             return null;
         }
 
-        MixLogger.info(">>>>>>>======== cls named : %s", cls.getName());
-
         try {
             Constructor constructor = cls.getConstructor();
-            MixLogger.info(">>>>>>>======== get constructor : %s", (constructor == null ? "failed" : "success"));
-
             module = constructor.newInstance();
-            MixLogger.info(">>>>>>>======== create constructor : %s", (module == null ?
-                    "failed" : "success"));
-
         } catch (Exception e) {
             MixLogger.error("Create module failed, class named : `%s`, exception : %s!",
                     className, e.toString());
