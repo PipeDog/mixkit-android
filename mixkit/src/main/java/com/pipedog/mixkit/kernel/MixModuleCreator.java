@@ -10,19 +10,19 @@ import com.pipedog.mixkit.tool.MixLogger;
 public class MixModuleCreator {
 
     private IMixBridge mBridge;
-    private Map<String, IMixBridgeModule> mModuleMap;
+    private Map<String, Object> mModuleMap;
 
     public MixModuleCreator(IMixBridge bridge) {
         mBridge = bridge;
-        mModuleMap = new HashMap<String, IMixBridgeModule>();
+        mModuleMap = new HashMap<String, Object>();
     }
 
-    public IMixBridgeModule getModule(String className) {
+    public Object getModule(String className) {
         if (className == null || className.isEmpty()) {
             return null;
         }
 
-        IMixBridgeModule module = mModuleMap.get(className);
+        Object module = mModuleMap.get(className);
         if (module != null) {
             return module;
         }
@@ -35,15 +35,25 @@ public class MixModuleCreator {
             return null;
         }
 
+        MixLogger.info(">>>>>>>======== cls named : %s", cls.getName());
+
         try {
-            module = (IMixBridgeModule)cls.getConstructor().newInstance();
+            Constructor constructor = cls.getConstructor();
+            MixLogger.info(">>>>>>>======== get constructor : %s", (constructor == null ? "failed" : "success"));
+
+            module = constructor.newInstance();
+            MixLogger.info(">>>>>>>======== create constructor : %s", (module == null ?
+                    "failed" : "success"));
+
         } catch (Exception e) {
-            MixLogger.error("Create module failed, class named : `%s`.", className);
+            MixLogger.error("Create module failed, class named : `%s`, exception : %s!",
+                    className, e.toString());
             return null;
         }
 
         if (module instanceof IMixBridgeModule) {
             IMixBridgeModule iModule = (IMixBridgeModule)module;
+            iModule.bindBridge(mBridge);
             iModule.load();
         }
 

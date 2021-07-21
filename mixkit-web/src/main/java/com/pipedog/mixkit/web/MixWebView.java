@@ -1,6 +1,8 @@
 package com.pipedog.mixkit.web;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.content.Context;
 import android.net.http.SslError;
@@ -22,6 +24,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -63,14 +66,14 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-
             if (mWebViewClient != null) {
                 mWebViewClient.onPageStarted(view, url, favicon);
             }
 
             // inject export infos into webview when callback `onPageStarted`
             injectNativeModules();
+
+            super.onPageStarted(view, url, favicon);
         }
 
         @Override
@@ -289,6 +292,8 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         setWebViewClient(realClient);
 
         addJavascriptInterface(this, MIX_KIT_NAME);
+
+        MixLogger.info(">>>>> callback setupInitializeConfiguration");
     }
 
     private void injectNativeModules() {
@@ -297,8 +302,10 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                 "   window.__mk_systemType = 2; " +
                 "   window.__mk_nativeConfig = %s; " +
                 "}";
-        String json = MixModuleManager.defaultManager().getModuleDataJson();
+        String json = MixWebInjector.getInjectionJson();
         String script = String.format(format, json);
+
+        MixLogger.info(">>>>> format script: %s", script);
 
         executeScript(script, new ScriptCallback() {
             @Override
@@ -313,11 +320,30 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         });
     }
 
+    @Override
+    public void loadUrl(@NonNull String url) {
+        injectNativeModules();
+        super.loadUrl(url);
+    }
+
     @JavascriptInterface
     public void postMessage(String message) {
         try {
             Map map = mGson.fromJson(message, Map.class);
-            mWebViewBridge.executor().invokeMethod(map);
+
+            MixLogger.info(">>>>> size = %d, message = %s", map.size(), message);
+
+            if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+                mWebViewBridge.executor().invokeMethod(map);
+            } else {
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebViewBridge.executor().invokeMethod(map);
+                    }
+                });
+            }
         } catch (Exception e) {
             MixLogger.error("invoke native method failed, message : %s.", message);
         }
@@ -344,6 +370,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         StringBuilder sb = new StringBuilder();
         if (module != null && !module.isEmpty()) {
             sb.append(module);
+            sb.append(".");
         }
 
         sb.append(method);
@@ -392,13 +419,33 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
             return;
         }
 
+        executeScriptOnMainThread(script, resultCallback);
+    }
+
+    private void executeScriptOnMainThread(String script, ScriptCallback resultCallback) {
         String formatScript = String.format("javascript:%s", script);
-        evaluateJavascript(formatScript, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                resultCallback.onReceiveValue(value);
-            }
-        });
+
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            evaluateJavascript(formatScript, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                    resultCallback.onReceiveValue(value);
+                    }
+            });
+        } else {
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    evaluateJavascript(formatScript, new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String value) {
+                            resultCallback.onReceiveValue(value);
+                                    }
+                    });
+                }
+            });
+        }
     }
 
     @Override

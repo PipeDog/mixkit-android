@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="mix.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
+
+    <title>title</title>
+    <style>
+        * {
+            font-size: 50px;
+        }
+
+        .button {
+            height: 80px;
+            width: 90%;
+            padding: 50px;
+            background-color: #716600;
+            border: solid 1px #bde700;
+            border-radius: 5px;
+            font-size: 1em;
+            color: white
+        }
+    </style>
+
+    <script>
+
+        var vConsole = new VConsole();
+        let MKTestModule = NativeModules.MKTestModule;
+        let MKLogManager = NativeModules.LogManager;
+
+
+        function testAndroidMethod() {
+            MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
+                MKLogManager.log(msg);
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+</br>
+
+<button class="button" type="button" onclick="testAndroidMethod()">testAndroidMethod</button>
+</br>
+
+
+</body>
+
+</html>

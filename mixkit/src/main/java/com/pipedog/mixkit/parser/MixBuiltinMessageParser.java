@@ -1,6 +1,7 @@
 package com.pipedog.mixkit.parser;
 
 import com.pipedog.mixkit.annotation.MixMessageParser;
+import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,9 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
     private IMixMessageBody mMessageBody;
 
     public static boolean canParse(Object metaData) {
+        MixLogger.info(">>>>>>>======== call builtin parser , metaData kind : %s",
+                metaData.getClass().getName());
+
         if (metaData instanceof Map) { } else {
             return false;
         }
