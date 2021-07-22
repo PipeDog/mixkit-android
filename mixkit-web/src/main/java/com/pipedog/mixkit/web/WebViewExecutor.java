@@ -118,12 +118,12 @@ public class WebViewExecutor implements IMixExecutor {
         scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs, new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {
-                MixLogger.info("[mix|web] js return value : %s", value);
+                MixLogger.info("js return value : %s", value);
             }
 
             @Override
             public void onReceiveError(String error) {
-                MixLogger.error("[mix|web] invoke js failed : %s", error);
+                MixLogger.error("invoke js failed : %s", error);
             }
         });
     }

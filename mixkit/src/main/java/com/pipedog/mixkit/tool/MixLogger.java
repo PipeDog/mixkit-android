@@ -27,7 +27,7 @@ public class MixLogger {
     }
 
     public static void warning(String msg) {
-        sLogger.warning("[Mix|warning] " + msg);
+        sLogger.warning("[Mix|warn] " + msg);
     }
 
     public static void error(String msg) {
