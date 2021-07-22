@@ -1,12 +1,10 @@
 package com.pipedog.mixkit.web;
 
 import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixBridgeModule;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.module.MixModuleMethod;
 import com.pipedog.mixkit.parser.MixMessageParserManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
 import com.pipedog.mixkit.tool.MixLogger;
@@ -108,7 +106,7 @@ public class WebViewExecutor implements IMixExecutor {
             return;
         }
 
-        List jsArgs = new ArrayList<>();
+        List<Object> jsArgs = new ArrayList<Object>();
         jsArgs.add(callbackID);
 
         if (arguments == null || arguments.isEmpty()) {
