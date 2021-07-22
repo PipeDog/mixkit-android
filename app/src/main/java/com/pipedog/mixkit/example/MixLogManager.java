@@ -14,7 +14,7 @@ public class MixLogManager implements IMixBridgeModule {
     }
 
     @Override
-    public void bindBridge(IMixBridge bridge) {
+    public void setBridge(IMixBridge bridge) {
 
     }
 

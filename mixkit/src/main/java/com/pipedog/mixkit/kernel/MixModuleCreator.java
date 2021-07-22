@@ -46,7 +46,7 @@ public class MixModuleCreator {
 
         if (module instanceof IMixBridgeModule) {
             IMixBridgeModule iModule = (IMixBridgeModule)module;
-            iModule.bindBridge(mBridge);
+            iModule.setBridge(mBridge);
             iModule.load();
         }
 

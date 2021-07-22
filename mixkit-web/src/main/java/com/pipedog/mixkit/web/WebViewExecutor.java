@@ -48,7 +48,7 @@ public class WebViewExecutor implements IMixExecutor {
     }
 
     @Override
-    public void bindBridge(IMixBridge bridge) {
+    public void setBridge(IMixBridge bridge) {
         mBridge = (MixWebViewBridge)bridge;
     }
 

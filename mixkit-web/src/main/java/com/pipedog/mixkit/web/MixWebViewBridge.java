@@ -16,7 +16,7 @@ public class MixWebViewBridge implements IMixBridge {
         mDelegate = delegate;
 
         mExecutor = new WebViewExecutor();
-        mExecutor.bindBridge(this);
+        mExecutor.setBridge(this);
 
         mModuleCreator = new MixModuleCreator(this);
         mMessageParserManager = MixMessageParserManager.defaultManager();
