@@ -453,7 +453,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                         @Override
                         public void onReceiveValue(String value) {
                             resultCallback.onReceiveValue(value);
-                                    }
+                        }
                     });
                 }
             });
