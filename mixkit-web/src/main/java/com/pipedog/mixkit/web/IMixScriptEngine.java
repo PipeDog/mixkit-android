@@ -14,6 +14,6 @@ public interface IMixScriptEngine {
                       Object[] arguments,
                       ScriptCallback resultCallback);
 
-    void executeScript(String script, ScriptCallback resultCallback);
+    void evaluate(String script, ScriptCallback resultCallback);
 
 }

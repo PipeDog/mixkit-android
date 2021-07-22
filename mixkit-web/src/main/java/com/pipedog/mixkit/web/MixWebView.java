@@ -309,7 +309,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         String json = MixWebInjector.getInjectionJson();
         String script = String.format(format, json);
 
-        executeScript(script, new ScriptCallback() {
+        evaluate(script, new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {
                 MixLogger.info("inject js script finished, return value : %s.", value);
@@ -420,48 +420,44 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         }
 
         sb.append(");");
-        executeScript(sb.toString(), resultCallback);
+        evaluate(sb.toString(), resultCallback);
     }
 
     @Override
-    public void executeScript(String script, ScriptCallback resultCallback) {
+    public void evaluate(String script, ScriptCallback resultCallback) {
         if (script == null || script.isEmpty()) {
             resultCallback.onReceiveError("execute script failed, " +
                     "argument script can not be null, check it!");
             return;
         }
 
-        executeScriptOnMainThread(script, resultCallback);
-    }
-
-    private void executeScriptOnMainThread(String script, ScriptCallback resultCallback) {
-        String formatScript = String.format("javascript:%s", script);
-
         if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
-            evaluateJavascript(formatScript, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
-                    resultCallback.onReceiveValue(value);
-                    }
-            });
+            eval(script, resultCallback);
         } else {
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    evaluateJavascript(formatScript, new ValueCallback<String>() {
-                        @Override
-                        public void onReceiveValue(String value) {
-                            resultCallback.onReceiveValue(value);
-                        }
-                    });
+                    eval(script, resultCallback);
                 }
             });
         }
+    }
+
+    private void eval(String script, ScriptCallback resultCallback) {
+        String formatScript = String.format("javascript:%s", script);
+
+        evaluateJavascript(formatScript, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                resultCallback.onReceiveValue(value);
+            }
+        });
     }
 
     @Override
     public IMixScriptEngine scriptEngine() {
         return (IMixScriptEngine)this;
     }
+
 }
