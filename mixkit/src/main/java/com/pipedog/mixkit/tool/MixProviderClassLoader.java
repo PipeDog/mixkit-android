@@ -2,8 +2,7 @@ package com.pipedog.mixkit.tool;
 
 import android.content.Context;
 
-import com.pipedog.mixkit.launch.Mix;
-import com.pipedog.mixkit.launch.MixOptions;
+import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.tool.*;
 import com.pipedog.mixkit.path.Path;
 
@@ -16,12 +15,9 @@ public class MixProviderClassLoader {
         List<Class<?>> providerClasses = new ArrayList<Class<?>>();
 
         // Get android application context
-        Context context = null;
-        try {
-            MixOptions options = Mix.options();
-            context = options.context;
-        } catch (Exception e) {
-            MixLogger.error("Catch exception : ", e.toString());
+        Context context = MixLaunchManager.defaultManager().getContext();
+        if (context == null) {
+            MixLogger.error("Get context failed!");
             return providerClasses;
         }
 

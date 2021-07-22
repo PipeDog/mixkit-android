@@ -2,8 +2,9 @@ package com.pipedog.mixkit.example;
 
 import android.content.Context;
 import android.app.Application;
-import com.pipedog.mixkit.launch.Mix;
-import com.pipedog.mixkit.launch.MixOptions;
+
+import com.pipedog.mixkit.launch.MixEnvironment;
+import com.pipedog.mixkit.launch.MixLaunchManager;
 
 public class MixApplication extends Application {
 
@@ -15,10 +16,9 @@ public class MixApplication extends Application {
 
         mContext = this.getApplicationContext();
 
-        MixOptions options = new MixOptions();
-        options.context = mContext;
-        options.env = MixOptions.MixEnvironment.Debug;
-        Mix.launch(options);
+        MixLaunchManager launchManager = MixLaunchManager.defaultManager();
+        launchManager.registerContext(mContext);
+        launchManager.setEnvironment(MixEnvironment.Debug);
     }
 
 }

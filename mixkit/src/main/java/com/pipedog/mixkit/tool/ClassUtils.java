@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
-import com.pipedog.mixkit.launch.Mix;
-import com.pipedog.mixkit.launch.MixOptions;
+import com.pipedog.mixkit.launch.MixEnvironment;
+import com.pipedog.mixkit.launch.MixLaunchManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,13 +119,9 @@ public class ClassUtils {
             }
         }
 
-        try {
-            MixOptions options = Mix.options();
-            if (options.env == MixOptions.MixEnvironment.Debug) {
-                sourcePaths.addAll(tryLoadInstantRunDexFile(applicationInfo));
-            }
-        } catch (Exception e) {
-            Log.e("Mix", e.toString());
+        MixEnvironment env = MixLaunchManager.defaultManager().getEnvironment();
+        if (env == MixEnvironment.Debug) {
+            sourcePaths.addAll(tryLoadInstantRunDexFile(applicationInfo));
         }
 
         return sourcePaths;

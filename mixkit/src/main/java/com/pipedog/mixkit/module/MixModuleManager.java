@@ -15,8 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.path.Path;
-import com.pipedog.mixkit.launch.Mix;
-import com.pipedog.mixkit.launch.MixOptions;
+import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.tool.ClassUtils;
 import com.pipedog.mixkit.tool.MixProviderClassLoader;
