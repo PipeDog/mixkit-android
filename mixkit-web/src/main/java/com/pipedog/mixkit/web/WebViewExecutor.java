@@ -116,7 +116,7 @@ public class WebViewExecutor implements IMixExecutor {
         jsArgs.add(arguments);
 
         IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
-        scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs, new ScriptCallback() {
+        scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {
                 MixLogger.info("js return value : %s", value);

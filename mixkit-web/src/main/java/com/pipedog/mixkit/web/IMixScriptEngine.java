@@ -6,12 +6,12 @@ import java.util.List;
 public interface IMixScriptEngine {
 
     void invokeMethod(String method,
-                      List<Object> arguments,
+                      Object[] arguments,
                       ScriptCallback resultCallback);
 
     void invokeMethod(String module,
                       String method,
-                      List<Object> arguments,
+                      Object[] arguments,
                       ScriptCallback resultCallback);
 
     void executeScript(String script, ScriptCallback resultCallback);

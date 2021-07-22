@@ -363,7 +363,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
     @Override
     public void invokeMethod(String method,
-                             List<Object> arguments,
+                             Object[] arguments,
                              ScriptCallback resultCallback) {
         invokeMethod(null, method, arguments, resultCallback);
     }
@@ -371,7 +371,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     @Override
     public void invokeMethod(String module,
                              String method,
-                             List<Object> arguments,
+                             Object[] arguments,
                              ScriptCallback resultCallback) {
         if (method == null || method.isEmpty()) {
             resultCallback.onReceiveError("invoke method failed, " +
@@ -388,9 +388,9 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         sb.append(method);
         sb.append("(");
 
-        int numberOfArguments = arguments.size();
+        int numberOfArguments = arguments.length;
         for (int i = 0; i < numberOfArguments; i++) {
-            Object obj = arguments.get(i);
+            Object obj = arguments[i];
 
             if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
                 String argument = mGson.toJson(obj);
