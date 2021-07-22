@@ -284,42 +284,10 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         setupInitializeConfiguration();
     }
 
-    private void setupInitializeConfiguration() {
-        mGson = new Gson();
-        mWebViewBridge = new MixWebViewBridge(this);
-
-        // enable js bridge
-        WebSettings webSettings = getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-        // register event listener
-        WebViewClient webViewClient = getWebViewClient();
-        MixWebViewClient realClient = new MixWebViewClient(webViewClient);
-        setWebViewClient(realClient);
-
-        addJavascriptInterface(this, MIX_KIT_NAME);
-    }
-
-    private void injectNativeModules() {
-        String format =
-                "if (window.__mk_systemType != 2) { " +
-                "   window.__mk_systemType = 2; " +
-                "   window.__mk_nativeConfig = %s; " +
-                "}";
-        String json = MixWebInjector.getInjectionJson();
-        String script = String.format(format, json);
-
-        evaluate(script, new ScriptCallback() {
-            @Override
-            public void onReceiveValue(String value) {
-                MixLogger.info("inject js script finished, return value : %s.", value);
-            }
-
-            @Override
-            public void onReceiveError(String error) {
-                MixLogger.error("inject js script failed, error : %s!", error);
-            }
-        });
+    @Override
+    public void setWebViewClient(@NonNull WebViewClient client) {
+        MixWebViewClient wrapper = new MixWebViewClient(client);
+        super.setWebViewClient(wrapper);
     }
 
     @Override
@@ -444,6 +412,48 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         }
     }
 
+    @Override
+    public IMixScriptEngine scriptEngine() {
+        return (IMixScriptEngine)this;
+    }
+
+    private void setupInitializeConfiguration() {
+        mGson = new Gson();
+        mWebViewBridge = new MixWebViewBridge(this);
+
+        // Enable js bridge
+        WebSettings webSettings = getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        // Set client into container, then reset container into webView
+        WebViewClient webViewClient = getWebViewClient();
+        setWebViewClient(webViewClient);
+
+        addJavascriptInterface(this, MIX_KIT_NAME);
+    }
+
+    private void injectNativeModules() {
+        String format =
+                "if (window.__mk_systemType != 2) { " +
+                        "   window.__mk_systemType = 2; " +
+                        "   window.__mk_nativeConfig = %s; " +
+                        "}";
+        String json = MixWebInjector.getInjectionJson();
+        String script = String.format(format, json);
+
+        evaluate(script, new ScriptCallback() {
+            @Override
+            public void onReceiveValue(String value) {
+                MixLogger.info("inject js script finished, return value : %s.", value);
+            }
+
+            @Override
+            public void onReceiveError(String error) {
+                MixLogger.error("inject js script failed, error : %s!", error);
+            }
+        });
+    }
+
     private void eval(String script, ScriptCallback resultCallback) {
         String formatScript = String.format("javascript:%s", script);
 
@@ -453,11 +463,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                 resultCallback.onReceiveValue(value);
             }
         });
-    }
-
-    @Override
-    public IMixScriptEngine scriptEngine() {
-        return (IMixScriptEngine)this;
     }
 
 }
