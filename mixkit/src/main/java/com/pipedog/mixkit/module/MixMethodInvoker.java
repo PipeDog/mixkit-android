@@ -133,7 +133,9 @@ public class MixMethodInvoker {
             sClassMap.put("char", char.class);
         }
 
-        // Remove the generic suffix
+        // Remove the generic suffix, like the follow case:
+        //      before : java.util.List<java.lang.Object>
+        //      after  : java.util.List
         int index = className.indexOf("<");
         if (index != NOT_FOUND) {
             String tmp = className;
