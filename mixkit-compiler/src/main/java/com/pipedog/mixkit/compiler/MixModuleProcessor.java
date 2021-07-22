@@ -131,10 +131,10 @@ public class MixModuleProcessor {
         }
 
         mModuleDataMap = new HashMap<String, MixModuleBean>(moduleDataMap);
-        createMixModuleLoaderClass();
+        createMixModuleProviderClass();
     }
 
-    private void createMixModuleLoaderClass() {
+    private void createMixModuleProviderClass() {
         MethodSpec method = MethodSpec.methodBuilder(Path.MIX_MODULE_PROVIDER_METHOD)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(String.class)

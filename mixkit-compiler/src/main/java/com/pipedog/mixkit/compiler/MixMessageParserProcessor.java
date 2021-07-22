@@ -55,10 +55,10 @@ public class MixMessageParserProcessor {
             mParserClasses.add(className);
         }
 
-        createMixMessageParserLoaderClass();
+        createMixMessageParserProviderClass();
     }
 
-    private void createMixMessageParserLoaderClass() {
+    private void createMixMessageParserProviderClass() {
         MethodSpec method = MethodSpec.methodBuilder(Path.MIX_PARSER_PROVIDER_METHOD)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(String.class)

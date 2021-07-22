@@ -12,13 +12,12 @@
     <title>title</title>
     <style>
         * {
-            font-size: 50px;
+            font-size: 20px;
         }
 
         .button {
-            height: 80px;
+            height: 50px;
             width: 90%;
-            padding: 50px;
             background-color: #716600;
             border: solid 1px #bde700;
             border-radius: 5px;
@@ -43,6 +42,7 @@
             let arr = ['aaa', 'bbb', 'ccc', 100];
 
             MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
+                console.log('receive native callback, response is ' + msg);
                 MKLogManager.log(msg);
             }, m, arr);
         }
