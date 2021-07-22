@@ -30,6 +30,7 @@ public class WebViewExecutor implements IMixExecutor {
             List<Object> args = new ArrayList<Object>(Arrays.asList(arguments));
             invokeCallback(args, mCallbackId);
         }
+
     }
 
     private static String sBridgeName;
