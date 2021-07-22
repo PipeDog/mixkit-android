@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 public class MixMethodInvoker {
 
+    private static final int NOT_FOUND = -1;
+
     private static Map<String, Class<?>> sClassMap;
     private MixModuleMethod mModuleMethod;
     private Method mMethod;
@@ -78,38 +80,40 @@ public class MixMethodInvoker {
         Object[] parameterArray = new Object[parameters.size()];
         for (int i = 0; i < parameters.size(); i++) {
             MixMethodParameter parameter = mModuleMethod.parameters.get(i);
-            String parameterType = parameter.type;
+            String declaredType = parameter.type;
             Object from = parameters.get(i);
 
-            if (parameterType.equals("byte")) {
+            if (declaredType.equals("byte")) {
                 byte to = MixTypeConverter.toByte(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("short")) {
+            } else if (declaredType.equals("short")) {
                 short to = MixTypeConverter.toShort(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("int")) {
+            } else if (declaredType.equals("int")) {
                 int to = MixTypeConverter.toInt(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("long")) {
+            } else if (declaredType.equals("long")) {
                 long to = MixTypeConverter.toLong(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("float")) {
+            } else if (declaredType.equals("float")) {
                 float to = MixTypeConverter.toFloat(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("double")) {
+            } else if (declaredType.equals("double")) {
                 double to = MixTypeConverter.toDouble(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("boolean")) {
+            } else if (declaredType.equals("boolean")) {
                 boolean to = MixTypeConverter.toBoolean(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("char")) {
+            } else if (declaredType.equals("char")) {
                 char to = MixTypeConverter.toChar(from);
                 parameterArray[i] = to;
-            } else if (parameterType.equals("java.lang.String")) {
+            } else if (declaredType.equals("java.lang.String")) {
                 String to = MixTypeConverter.toString(from);
                 parameterArray[i] = to;
             } else {
                 parameterArray[i] = from;
+                MixLogger.info("Invoker: get declaredType is `%s`, parameter class is `%s`",
+                        declaredType, from.getClass().toString());
             }
         }
 
@@ -127,6 +131,15 @@ public class MixMethodInvoker {
             sClassMap.put("double", double.class);
             sClassMap.put("boolean", boolean.class);
             sClassMap.put("char", char.class);
+        }
+
+        // Remove the generic suffix
+        int index = className.indexOf("<");
+        if (index != NOT_FOUND) {
+            String tmp = className;
+            className = tmp.substring(0, index);
+            MixLogger.info("Invoker: transform class name from `%s` to `%s`.",
+                    tmp, className);
         }
 
         Class cls = sClassMap.get(className);

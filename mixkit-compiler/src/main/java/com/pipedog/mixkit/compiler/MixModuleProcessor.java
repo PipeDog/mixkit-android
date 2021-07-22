@@ -51,8 +51,10 @@ public class MixModuleProcessor {
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
-        Set<? extends Element> moduleElements = roundEnvironment.getElementsAnnotatedWith(MixModule.class);
-        Set<? extends Element> methodElements = roundEnvironment.getElementsAnnotatedWith(MixMethod.class);
+        Set<? extends Element> moduleElements =
+                roundEnvironment.getElementsAnnotatedWith(MixModule.class);
+        Set<? extends Element> methodElements =
+                roundEnvironment.getElementsAnnotatedWith(MixMethod.class);
 
         if (moduleElements == null || moduleElements.isEmpty()) { return false; }
         if (methodElements == null || methodElements.isEmpty()) { return false; }

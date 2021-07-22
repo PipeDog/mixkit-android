@@ -35,9 +35,16 @@
         let MKTestLibModule = NativeModules.TestLibModule;
 
         function testAndroidMethod() {
+            let m = {
+                key1: 'lalalal',
+                key2: 'uuuu',
+            };
+
+            let arr = ['aaa', 'bbb', 'ccc', 100];
+
             MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
                 MKLogManager.log(msg);
-            });
+            }, m, arr);
         }
 
     </script>
