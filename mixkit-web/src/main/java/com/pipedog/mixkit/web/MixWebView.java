@@ -302,9 +302,9 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     private void injectNativeModules() {
         String format =
                 "if (window.__mk_systemType != 2) { " +
-                        "   window.__mk_systemType = 2; " +
-                        "   window.__mk_nativeConfig = %s; " +
-                        "}";
+                "   window.__mk_systemType = 2; " +
+                "   window.__mk_nativeConfig = %s; " +
+                "}";
         String json = MixWebInjector.getInjectionJson();
         String script = String.format(format, json);
 
