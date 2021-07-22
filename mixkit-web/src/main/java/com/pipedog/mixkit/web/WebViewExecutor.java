@@ -12,6 +12,7 @@ import com.pipedog.mixkit.parser.IMixMessageParser;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class WebViewExecutor implements IMixExecutor {
@@ -25,10 +26,10 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         @Override
-        public void invoke(List<Object> arguments) {
-            invokeCallback(arguments, mCallbackId);
+        public void invoke(Object[] arguments) {
+            List<Object> args = new ArrayList<Object>(Arrays.asList(arguments));
+            invokeCallback(args, mCallbackId);
         }
-
     }
 
     private static String sBridgeName;

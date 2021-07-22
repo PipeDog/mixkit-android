@@ -28,9 +28,7 @@ public class MixTestModule {
         if (callback != null) {
             Log.i("MixTest", "callback is not null!!!!!!");
 
-            List<Object> args = new ArrayList<Object>();
-            args.add(">>>>>> log finished!");
-            callback.invoke(args);
+            callback.invoke(new Object[]{">>>>>> log finished!!!"});
         }
 
     }
