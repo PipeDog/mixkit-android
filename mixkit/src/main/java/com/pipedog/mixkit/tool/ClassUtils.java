@@ -60,7 +60,8 @@ public class ClassUtils {
         for (String path : getSourcePaths(context)) {
             DexFile dexfile;
             if (path.endsWith(EXTRACTED_SUFFIX)) {
-                //NOT use new DexFile(path), because it will throw "permission error in /data/dalvik-cache"
+                // NOT use new DexFile(path), because it will throw "permission error in
+                // /data/dalvik-cache"
                 dexfile = DexFile.loadDex(path, path + ".tmp", 0);
             } else {
                 dexfile = new DexFile(path);
@@ -96,23 +97,23 @@ public class ClassUtils {
         List<String> sourcePaths = new ArrayList<>();
         sourcePaths.add(applicationInfo.sourceDir); //add the default apk path
 
-        //the prefix of extracted file, ie: test.classes
+        // the prefix of extracted file, ie: test.classes
         String extractedFilePrefix = sourceApk.getName() + EXTRACTED_NAME_EXT;
 
-//        如果VM已经支持了MultiDex，就不要去Secondary Folder加载 Classesx.zip了，那里已经么有了
-//        通过是否存在sp中的multidex.version是不准确的，因为从低版本升级上来的用户，是包含这个sp配置的
+        // 如果VM已经支持了MultiDex，就不要去Secondary Folder加载 Classesx.zip了，那里已经么有了
+        // 通过是否存在sp中的multidex.version是不准确的，因为从低版本升级上来的用户，是包含这个sp配置的
         if (!isVMMultidexCapable()) {
-            //the total dex numbers
+            // the total dex numbers
             int totalDexNumber = getMultiDexPreferences(context).getInt(KEY_DEX_NUMBER, 1);
             File dexDir = new File(applicationInfo.dataDir, SECONDARY_FOLDER_NAME);
 
             for (int secondaryNumber = 2; secondaryNumber <= totalDexNumber; secondaryNumber++) {
-                //for each dex file, ie: test.classes2.zip, test.classes3.zip...
+                // for each dex file, ie: test.classes2.zip, test.classes3.zip...
                 String fileName = extractedFilePrefix + secondaryNumber + EXTRACTED_SUFFIX;
                 File extractedFile = new File(dexDir, fileName);
                 if (extractedFile.isFile()) {
                     sourcePaths.add(extractedFile.getAbsolutePath());
-                    //we ignore the verify zip part
+                    // we ignore the verify zip part
                 } else {
                     throw new IOException("Missing extracted secondary dex file '" + extractedFile.getPath() + "'");
                 }
@@ -174,10 +175,10 @@ public class ClassUtils {
         String vmName = null;
 
         try {
-            if (isYunOS()) {    // YunOS需要特殊判断
+            if (isYunOS()) { // YunO S需要特殊判断
                 vmName = "'YunOS'";
                 isMultidexCapable = Integer.valueOf(System.getProperty("ro.build.version.sdk")) >= 21;
-            } else {    // 非YunOS原生Android
+            } else { // 非 YunOS 原生 Android
                 vmName = "'Android'";
                 String versionString = System.getProperty("java.vm.version");
                 if (versionString != null) {
