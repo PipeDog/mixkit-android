@@ -77,6 +77,10 @@ public class MixMethodInvoker {
     }
 
     private Object[] convertParameters(List<Object> parameters) {
+        if (parameters == null || parameters.isEmpty()) {
+            return new Object[0];
+        }
+
         Object[] parameterArray = new Object[parameters.size()];
         for (int i = 0; i < parameters.size(); i++) {
             MixMethodParameter parameter = mModuleMethod.parameters.get(i);

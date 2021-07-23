@@ -12,32 +12,38 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
 
     public class MixMessageBuiltinBody implements IMixMessageParser.IMixMessageBody {
 
-        private String moduleName;
-        private String methodName;
-        private List<Object> arguments;
+        private String mModuleName;
+        private String mMethodName;
+        private List<Object> mArguments;
 
         public MixMessageBuiltinBody(String moduleName, String methodName, List arguments) {
-            this.moduleName = moduleName;
-            this.methodName = methodName;
-            this.arguments = arguments;
+            mModuleName = moduleName;
+            mMethodName = methodName;
+            mArguments = arguments;
         }
 
         @Override
         public String moduleName() {
-            return moduleName;
+            if (mModuleName == null) {
+                return "";
+            }
+            return mModuleName;
         }
 
         @Override
         public String methodName() {
-            return methodName;
+            if (mMethodName == null) {
+                return "";
+            }
+            return mMethodName;
         }
 
         @Override
         public List<Object> arguments() {
-            if (arguments == null || arguments.isEmpty()) {
+            if (mArguments == null || mArguments.isEmpty()) {
                 return new ArrayList<Object>();
             }
-            return arguments;
+            return mArguments;
         }
 
     }

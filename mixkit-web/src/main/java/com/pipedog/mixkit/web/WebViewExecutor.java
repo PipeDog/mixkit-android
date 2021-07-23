@@ -82,7 +82,11 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         List<Object> arguments = body.arguments();
-        List<Object> nativeArgs = new ArrayList<>();
+        if (arguments == null) {
+            arguments = new ArrayList<Object>();
+        }
+
+        List<Object> nativeArgs = new ArrayList<Object>();
 
         for (Object arg : arguments) {
             Object nativeArg = arg;
