@@ -1,8 +1,34 @@
 class NativeModules {
 
-    constructor(props) {
+    constructor() {
         this._callbacksMap = {};
-        this._registerModules(props);
+        this._registerModules(this._getNativeConfig());
+    }
+
+    // methods `_getSystemType` and `_getNativeConfig`
+    // Android webView bug, call js maybe failed.
+    _getSystemType() {
+        let systemType;
+        if (this._getValueType(window.__mk_systemType) === 'number' || this._getValueType(window.__mk_systemType) === 'string') {
+            systemType = window.__mk_systemType;
+        } else if (this._getValueType(window.MixKit) === 'object' && this._getValueType(window.MixKit.getSystemType) === 'function') {
+            systemType = window.MixKit.getSystemType();
+        } else {
+            systemType = 0;
+        }
+        return String(systemType);
+    }
+
+    _getNativeConfig() {
+        let nativeConfig;
+        if (this._getValueType(window.__mk_nativeConfig) === 'object') {
+            nativeConfig = window.__mk_nativeConfig;
+        } else if (this._getValueType(window.MixKit) === 'object' && this._getValueType(window.MixKit.getNativeConfig) === 'function') {
+            nativeConfig = JSON.parse(window.MixKit.getNativeConfig());
+        } else {
+            nativeConfig = {};
+        }
+        return nativeConfig;
     }
 
     _registerModules(modulesMap) {
@@ -48,7 +74,7 @@ class NativeModules {
             arguments: nativeArguments
         };
 
-        switch (String(window.__mk_systemType)) {
+        switch (this._getSystemType()) {
             case '1': { // iOS
                 window.webkit.messageHandlers.MixKit.postMessage(message);
             } break;
@@ -95,4 +121,4 @@ class NativeModules {
 
 }
 
-NativeModules = new NativeModules(window.__mk_nativeConfig);
+NativeModules = new NativeModules();

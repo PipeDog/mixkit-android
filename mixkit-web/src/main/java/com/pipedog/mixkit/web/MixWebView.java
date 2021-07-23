@@ -265,6 +265,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     }
 
     private static final String MIX_KIT_NAME = "MixKit";
+    private static final int MIX_ANDROID_TYPE = 2;
 
     private Gson mGson;
     private MixWebViewBridge mWebViewBridge;
@@ -301,12 +302,13 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
     private void injectNativeModules() {
         String format =
-                "if (window.__mk_systemType != 2) { " +
-                "   window.__mk_systemType = 2; " +
+                "let androidType = %d;" +
+                "if (window.__mk_systemType != androidType) { " +
+                "   window.__mk_systemType = androidType; " +
                 "   window.__mk_nativeConfig = %s; " +
                 "}";
         String json = MixWebInjector.getInjectionJson();
-        String script = String.format(format, json);
+        String script = String.format(format, MIX_ANDROID_TYPE, MIX_ANDROID_TYPE, json);
 
         evaluate(script, new ScriptCallback() {
             @Override
@@ -340,6 +342,16 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
         } catch (Exception e) {
             MixLogger.error("invoke native method failed, message : %s.", message);
         }
+    }
+
+    @JavascriptInterface
+    public int getSystemType() {
+        return MIX_ANDROID_TYPE;
+    }
+
+    @JavascriptInterface
+    public String getNativeConfig() {
+        return MixWebInjector.getInjectionJson();
     }
 
     @Override
