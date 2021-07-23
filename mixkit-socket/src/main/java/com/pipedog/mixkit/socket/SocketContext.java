@@ -39,12 +39,12 @@ public class SocketContext implements ISocketEngine, IWebSocketDelegate, ISocket
     }
 
     @Override
-    public void sendData(Object data,
-                         @Nullable SocketCallback callback) {
+    public boolean sendData(Object data,
+                            @Nullable SocketCallback callback) {
         if (data == null) {
-            return;
+            return false;
         }
-        mWebSocket.sendData(data, callback);
+        return mWebSocket.sendData(data, callback);
     }
 
     @Override

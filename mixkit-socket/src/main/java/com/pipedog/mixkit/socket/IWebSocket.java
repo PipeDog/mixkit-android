@@ -4,5 +4,5 @@ import androidx.annotation.Nullable;
 
 public interface IWebSocket {
     public void bindDelegate(@Nullable IWebSocketDelegate delegate);
-    public void sendData(Object data, @Nullable SocketCallback callback);
+    public boolean sendData(Object data, @Nullable SocketCallback callback);
 }

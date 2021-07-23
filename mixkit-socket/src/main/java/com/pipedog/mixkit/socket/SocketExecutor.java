@@ -110,12 +110,6 @@ public class SocketExecutor implements IMixExecutor {
         ISocketEngine socketEngine = mBridge.bridgeDelegate().socketEngine();
         socketEngine.sendData(callbackArgs.toArray(), new SocketCallback() {
             @Override
-            public void onReceiveSuccess(Object value) {
-                if (value == null) { value = ""; }
-                MixLogger.error("invoke socket success : %s", value.toString());
-            }
-
-            @Override
             public void onReceiveFailure(Object error) {
                 if (error == null) { error = ""; }
                 MixLogger.error("invoke socket failed : %s", error.toString());
