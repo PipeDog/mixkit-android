@@ -69,6 +69,8 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            injectNativeModules();
+
             if (mWebViewClient != null) {
                 mWebViewClient.onPageStarted(view, url, favicon);
             }
@@ -352,24 +354,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     public void setWebViewClient(@NonNull WebViewClient client) {
         MixWebViewClient wrapper = new MixWebViewClient(client);
         super.setWebViewClient(wrapper);
-    }
-
-    @Override
-    public void loadUrl(@NonNull String url) {
-        injectNativeModules();
-        super.loadUrl(url);
-    }
-
-    @Override
-    public void loadData(@NonNull String data, @Nullable String mimeType, @Nullable String encoding) {
-        injectNativeModules();
-        super.loadData(data, mimeType, encoding);
-    }
-
-    @Override
-    public void loadDataWithBaseURL(@Nullable String baseUrl, @NonNull String data, @Nullable String mimeType, @Nullable String encoding, @Nullable String historyUrl) {
-        injectNativeModules();
-        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
     }
 
     @Override
