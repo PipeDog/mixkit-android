@@ -1,25 +1,25 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.socket;
 
 import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.parser.MixMessageParserManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
+import com.pipedog.mixkit.parser.MixMessageParserManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WebViewExecutor implements IMixExecutor {
+public class SocketExecutor implements IMixExecutor {
 
-    private class WebResultCallback implements MixResultCallback {
+    private class SocketResultCallback implements MixResultCallback {
 
         public String mCallbackId;
 
-        public WebResultCallback(String callbackId) {
+        public SocketResultCallback(String callbackId) {
             mCallbackId = callbackId;
         }
 
@@ -31,31 +31,20 @@ public class WebViewExecutor implements IMixExecutor {
 
     }
 
-    private static String sBridgeName;
-    private static String sFunctionName;
+    private SocketBridge mBridge;
 
-    private MixWebViewBridge mBridge;
-
-    public WebViewExecutor() {
-        if (sBridgeName == null) {
-            registerCallbackScript("NativeModules", "invokeCallback");
-        }
-    }
-
-    public static void registerCallbackScript(String bridgeName, String funcName) {
-        sBridgeName = bridgeName;
-        sFunctionName = funcName;
+    public SocketExecutor() {
+        // Do nothing...
     }
 
     @Override
     public void setBridge(IMixBridge bridge) {
-        mBridge = (MixWebViewBridge)bridge;
+        mBridge = (SocketBridge)bridge;
     }
 
     @Override
     public boolean invokeMethod(Object metaData) {
         MixMessageParserManager parserManager = mBridge.messageParserManager();
-
         IMixMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) { return false; }
 
@@ -94,7 +83,7 @@ public class WebViewExecutor implements IMixExecutor {
             if (nativeArg instanceof String) {
                 boolean isCallbackID = ((String)arg).startsWith("_$_mk_callback_$_");
                 if (isCallbackID) {
-                    WebResultCallback callback = new WebResultCallback((String)arg);
+                    SocketResultCallback callback = new SocketResultCallback((String)arg);
                     nativeArg = callback;
                 }
             }
@@ -110,26 +99,29 @@ public class WebViewExecutor implements IMixExecutor {
             return;
         }
 
-        List<Object> jsArgs = new ArrayList<Object>();
-        jsArgs.add(callbackID);
+        List<Object> callbackArgs = new ArrayList<Object>();
+        callbackArgs.add(callbackID);
 
         if (arguments == null || arguments.isEmpty()) {
             arguments = new ArrayList<>();
         }
-        jsArgs.add(arguments);
+        callbackArgs.add(arguments);
 
-        IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
-        scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
+        ISocketEngine socketEngine = mBridge.bridgeDelegate().socketEngine();
+        socketEngine.sendData(callbackArgs.toArray(), new SocketCallback() {
             @Override
-            public void onReceiveValue(String value) {
-                MixLogger.info("js return value : %s", value);
+            public void onReceiveSuccess(Object value) {
+                if (value == null) { value = ""; }
+                MixLogger.error("invoke socket success : %s", value.toString());
             }
 
             @Override
-            public void onReceiveError(String error) {
-                MixLogger.error("invoke js failed : %s", error);
+            public void onReceiveFailure(Object error) {
+                if (error == null) { error = ""; }
+                MixLogger.error("invoke socket failed : %s", error.toString());
             }
         });
     }
 
 }
+
