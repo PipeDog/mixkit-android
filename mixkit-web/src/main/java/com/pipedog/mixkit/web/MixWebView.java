@@ -69,9 +69,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            // inject export infos into webview when callback `onPageStarted`
-            injectNativeModules();
-
             if (mWebViewClient != null) {
                 mWebViewClient.onPageStarted(view, url, favicon);
             }
@@ -81,9 +78,6 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            // inject export infos into webview when callback `onPageFinished`
-            injectNativeModules();
-
             super.onPageFinished(view, url);
 
             if (mWebViewClient != null) {
@@ -308,7 +302,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                 "   window.__mk_nativeConfig = %s; " +
                 "}";
         String json = MixWebInjector.getInjectionJson();
-        String script = String.format(format, MIX_ANDROID_TYPE, MIX_ANDROID_TYPE, json);
+        String script = String.format(format, MIX_ANDROID_TYPE, json);
 
         evaluate(script, new ScriptCallback() {
             @Override
