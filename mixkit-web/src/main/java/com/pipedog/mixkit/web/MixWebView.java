@@ -8,7 +8,6 @@ import android.content.Context;
 import android.net.http.SslError;
 import android.os.Message;
 import android.view.KeyEvent;
-import android.view.InputEvent;
 
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
@@ -27,12 +26,10 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
@@ -40,7 +37,7 @@ import com.google.gson.Gson;
 // Chrome debug address:
 // chrome://inspect/#devices
 
-public class MixWebView extends WebView implements IMixScriptEngine, IMixWebViewBridgeDelegate {
+public class MixWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
 
     // 包装外部传递进行来 WebViewClient，并且提供各种回调
     public class MixWebViewClient extends WebViewClient {
@@ -264,7 +261,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     private static final int MIX_ANDROID_TYPE = 2;
 
     private Gson mGson;
-    private MixWebViewBridge mWebViewBridge;
+    private WebViewBridge mWebViewBridge;
 
     public MixWebView(Context context) {
         super(context);
@@ -283,7 +280,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
     private void setupInitializeConfiguration() {
         mGson = new Gson();
-        mWebViewBridge = new MixWebViewBridge(this);
+        mWebViewBridge = new WebViewBridge(this);
 
         // Enable js bridge
         WebSettings webSettings = getSettings();
@@ -303,7 +300,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
                 "   window.__mk_systemType = androidType; " +
                 "   window.__mk_nativeConfig = %s; " +
                 "}";
-        String json = MixWebInjector.getInjectionJson();
+        String json = WebInjector.getInjectionJson();
         String script = String.format(format, MIX_ANDROID_TYPE, json);
 
         evaluate(script, new ScriptCallback() {
@@ -347,7 +344,7 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
 
     @JavascriptInterface
     public String getNativeConfig() {
-        return MixWebInjector.getInjectionJson();
+        return WebInjector.getInjectionJson();
     }
 
     @Override
@@ -451,8 +448,8 @@ public class MixWebView extends WebView implements IMixScriptEngine, IMixWebView
     }
 
     @Override
-    public IMixScriptEngine scriptEngine() {
-        return (IMixScriptEngine)this;
+    public IScriptEngine scriptEngine() {
+        return (IScriptEngine)this;
     }
 
 }

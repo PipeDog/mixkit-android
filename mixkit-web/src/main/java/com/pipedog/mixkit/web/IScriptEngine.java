@@ -3,7 +3,7 @@ package com.pipedog.mixkit.web;
 import android.webkit.WebView;
 import java.util.List;
 
-public interface IMixScriptEngine {
+public interface IScriptEngine {
 
     void invokeMethod(String method,
                       Object[] arguments,

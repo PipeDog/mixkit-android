@@ -34,7 +34,7 @@ public class WebViewExecutor implements IMixExecutor {
     private static String sBridgeName;
     private static String sFunctionName;
 
-    private MixWebViewBridge mBridge;
+    private WebViewBridge mBridge;
 
     public WebViewExecutor() {
         if (sBridgeName == null) {
@@ -49,7 +49,7 @@ public class WebViewExecutor implements IMixExecutor {
 
     @Override
     public void setBridge(IMixBridge bridge) {
-        mBridge = (MixWebViewBridge)bridge;
+        mBridge = (WebViewBridge)bridge;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class WebViewExecutor implements IMixExecutor {
         }
         jsArgs.add(arguments);
 
-        IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
+        IScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
         scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {

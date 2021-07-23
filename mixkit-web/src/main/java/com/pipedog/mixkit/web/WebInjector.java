@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-public class MixWebInjector {
+public class WebInjector {
 
     private static String sModuleDataJson;
 

@@ -5,14 +5,14 @@ import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixModuleCreator;
 import com.pipedog.mixkit.parser.MixMessageParserManager;
 
-public class MixWebViewBridge implements IMixBridge {
+public class WebViewBridge implements IMixBridge {
 
-    private IMixWebViewBridgeDelegate mDelegate;
+    private IWebViewBridgeDelegate mDelegate;
     private WebViewExecutor mExecutor;
     private MixModuleCreator mModuleCreator;
     private MixMessageParserManager mMessageParserManager;
 
-    public MixWebViewBridge(IMixWebViewBridgeDelegate delegate) {
+    public WebViewBridge(IWebViewBridgeDelegate delegate) {
         mDelegate = delegate;
 
         mExecutor = new WebViewExecutor();
@@ -22,7 +22,7 @@ public class MixWebViewBridge implements IMixBridge {
         mMessageParserManager = MixMessageParserManager.defaultManager();
     }
 
-    public IMixWebViewBridgeDelegate bridgeDelegate() {
+    public IWebViewBridgeDelegate bridgeDelegate() {
         return mDelegate;
     }
 
