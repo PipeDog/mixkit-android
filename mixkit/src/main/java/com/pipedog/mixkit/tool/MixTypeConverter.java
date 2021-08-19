@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.module;
+package com.pipedog.mixkit.tool;
 
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.tool.NumberUtils;

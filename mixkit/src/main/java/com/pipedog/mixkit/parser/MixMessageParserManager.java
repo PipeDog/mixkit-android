@@ -18,6 +18,7 @@ public class MixMessageParserManager {
 
     private Gson mGson;
     private List<Class<?>> mParserClasses;
+
     private volatile static MixMessageParserManager sDefaultManager;
 
     public static MixMessageParserManager defaultManager() {

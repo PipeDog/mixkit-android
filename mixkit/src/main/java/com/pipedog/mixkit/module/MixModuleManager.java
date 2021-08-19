@@ -26,6 +26,7 @@ public class MixModuleManager {
     private String mModuleDataJson;
     private Map<String, MixModuleData> mModuleDataMap;
     private Map<String, MixMethodInvoker> mInvokerMap;
+
     private volatile static MixModuleManager sDefaultManager;
 
     public static MixModuleManager defaultManager() {
