@@ -1,23 +1,16 @@
 package com.pipedog.mixkit.module;
 
-import android.content.Context;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.lang.Class;
 import java.lang.reflect.*;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.path.Path;
-import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.tool.MixLogger;
-import com.pipedog.mixkit.tool.ClassUtils;
 import com.pipedog.mixkit.tool.MixProviderClassLoader;
 
 public class MixModuleManager {

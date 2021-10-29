@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.compiler;
+package com.pipedog.mixkit.compiler.utils;
 
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;

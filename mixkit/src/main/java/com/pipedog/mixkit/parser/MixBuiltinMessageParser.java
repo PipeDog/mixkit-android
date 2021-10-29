@@ -1,7 +1,6 @@
 package com.pipedog.mixkit.parser;
 
 import com.pipedog.mixkit.annotation.MixMessageParser;
-import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.List;
 import java.util.Map;

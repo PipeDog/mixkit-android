@@ -5,7 +5,6 @@
 ```
 dependencies {
     // ...
-    implementation project(path: ':mixkit-annotation')
     implementation project(path: ':mixkit-compiler')
     annotationProcessor project(path: ':mixkit-compiler')
     //...

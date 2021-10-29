@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.compiler;
+package com.pipedog.mixkit.compiler.bean;
 
 import java.util.List;
 

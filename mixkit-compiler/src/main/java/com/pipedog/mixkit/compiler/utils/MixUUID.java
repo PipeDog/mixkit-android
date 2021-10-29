@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.compiler;
+package com.pipedog.mixkit.compiler.utils;
 
 import java.lang.StringBuilder;
 import java.util.Random;

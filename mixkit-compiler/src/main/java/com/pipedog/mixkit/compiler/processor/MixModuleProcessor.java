@@ -1,7 +1,11 @@
-package com.pipedog.mixkit.compiler;
+package com.pipedog.mixkit.compiler.processor;
 
 import com.google.gson.Gson;
-import com.google.auto.service.AutoService;
+import com.pipedog.mixkit.compiler.utils.Logger;
+import com.pipedog.mixkit.compiler.utils.MixUUID;
+import com.pipedog.mixkit.compiler.bean.MixMethodBean;
+import com.pipedog.mixkit.compiler.bean.MixModuleBean;
+import com.pipedog.mixkit.compiler.bean.MixParameterBean;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -11,24 +15,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.util.Elements;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
@@ -43,11 +39,15 @@ public class MixModuleProcessor {
     private final Filer mFiler;
     private final Gson mGson;
     private Map<String, MixModuleBean> mModuleDataMap;
+    private final TypeElement mProviderTypeElement;
 
     public MixModuleProcessor(ProcessingEnvironment processingEnv) {
         mLogger = new Logger(processingEnv.getMessager());
         mFiler = processingEnv.getFiler();
         mGson = new Gson();
+
+        Elements elements = processingEnv.getElementUtils();
+        mProviderTypeElement = elements.getTypeElement(Path.MIX_MODULE_PROVIDER_INTERFACE);
     }
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnvironment) {
@@ -147,6 +147,7 @@ public class MixModuleProcessor {
         try {
             TypeSpec typeSpec =
                     TypeSpec.classBuilder(Path.MIX_MODULE_PROVIDER_NAME + "_$_" + MixUUID.UUID())
+                            .addSuperinterface(ClassName.get(mProviderTypeElement))
                             .addModifiers(Modifier.PUBLIC)
                             .addMethod(method)
                             .build();

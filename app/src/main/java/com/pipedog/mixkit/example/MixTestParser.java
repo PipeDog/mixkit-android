@@ -2,7 +2,6 @@ package com.pipedog.mixkit.example;
 
 import com.pipedog.mixkit.annotation.MixMessageParser;
 import com.pipedog.mixkit.parser.IMixMessageParser;
-import com.pipedog.mixkit.parser.MixBuiltinMessageParser;
 
 import java.util.List;
 import java.util.ArrayList;

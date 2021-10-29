@@ -9,6 +9,7 @@ public class Path {
     public static final String MIX_MODULE_METHOD_CLASS_NAME = "com.pipedog.mixkit.compiler.MixMethod";
     public static final String MIX_MODULE_PROVIDER_METHOD = "getRegisteredModulesJson";
     public static final String MIX_MODULE_PROVIDER_NAME = "MixModuleProvider";
+    public static final String MIX_MODULE_PROVIDER_INTERFACE = "com.pipedog.mixkit.compiler.provider.IMixModuleProvider";
 
     // For annotation @MixMessageParser()
     public static final String MIX_PARSER_PROVIDER_PACKAGE = "com.pipedog.mixkit.compiler.dynamic.parser";
@@ -16,6 +17,7 @@ public class Path {
             MIX_PARSER_PROVIDER_PACKAGE + "." + "MixMessageParser";
     public static final String MIX_PARSER_PROVIDER_METHOD = "getRegisteredMessageParsersJson";
     public static final String MIX_PARSER_PROVIDER_NAME = "MixMessageParserProvider";
+    public static final String MIX_PARSER_PROVIDER_INTERFACE = "com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider";
 
     // For annotations path
     // Set the follow constants to annotation `SupportedAnnotationTypes` at Class `MixExportProcessor`

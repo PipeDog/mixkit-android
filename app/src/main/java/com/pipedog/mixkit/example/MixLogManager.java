@@ -5,6 +5,9 @@ import com.pipedog.mixkit.kernel.IMixBridgeModule;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.annotation.*;
 
+import com.pipedog.mixkit.annotation.MixMethod;
+import com.pipedog.mixkit.annotation.MixModule;
+
 @MixModule(name = "LogManager")
 public class MixLogManager implements IMixBridgeModule {
 
