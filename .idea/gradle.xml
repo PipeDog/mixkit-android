@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/mixkit" />
             <option value="$PROJECT_DIR$/mixkit-compiler" />
+            <option value="$PROJECT_DIR$/mixkit-register" />
             <option value="$PROJECT_DIR$/mixkit-socket" />
             <option value="$PROJECT_DIR$/mixkit-web" />
           </set>

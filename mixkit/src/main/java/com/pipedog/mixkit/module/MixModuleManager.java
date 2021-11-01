@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pipedog.mixkit.path.Path;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.tool.MixProviderClassLoader;
+import com.pipedog.mixkit.compiler.provider.IMixModuleProvider;
 
 public class MixModuleManager {
 
@@ -57,7 +58,29 @@ public class MixModuleManager {
             }
         }
 
+        autoCallRegisterModuleProvider();
         mModuleDataJson = mGson.toJson(mModuleDataMap);
+    }
+
+    private void autoCallRegisterModuleProvider() {
+        // Call this function in constructor
+        // The code will be inserted automatically during compilation
+        // The insert code will call function `registerModuleProvider` here
+    }
+
+    private void registerModuleProvider(String providerClassName) {
+        try {
+            Class aClass = Class.forName(providerClassName);
+            Object provider = aClass.getConstructor().newInstance();
+            Method method = aClass.getMethod(Path.MIX_MODULE_PROVIDER_METHOD);
+            String json = (String)method.invoke(provider);
+
+            Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
+            Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
+            mModuleDataMap.putAll(map);
+        } catch (Exception e) {
+            MixLogger.error("Load parse failed, e : " + e.toString());
+        }
     }
 
     public String getModuleDataJson() {
