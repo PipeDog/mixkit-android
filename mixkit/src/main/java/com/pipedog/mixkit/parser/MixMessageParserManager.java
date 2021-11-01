@@ -8,6 +8,7 @@ import com.pipedog.mixkit.path.Path;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class MixMessageParserManager {
 
     private Gson mGson;
     private List<String> mParserClassNames;
-    private List<Class<?>> mParserClasses;
+    private Set<Class<?>> mParserClasses;
 
     private volatile static MixMessageParserManager sDefaultManager;
 
@@ -36,7 +37,7 @@ public class MixMessageParserManager {
     private MixMessageParserManager() {
         mGson = new Gson();
         mParserClassNames = new ArrayList<String>();
-        mParserClasses = new ArrayList<Class<?>>();
+        mParserClasses = new HashSet<Class<?>>();
 
         String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
         List<Class<?>> providerClasses =
@@ -88,24 +89,7 @@ public class MixMessageParserManager {
 
         // Transform class name to Class instance
         for (String className : classNames) {
-            try {
-                Class aClass = Class.forName(className);
-                if (aClass == null) {
-                    MixLogger.error("Fetch class failed with class name " + className);
-                    continue;
-                }
-
-                if (IMixMessageParser.class.isAssignableFrom(aClass) == false) {
-                    MixLogger.error(String.format("Class %s does not comply with the interface %s",
-                            className, IMixMessageParser.class));
-                    continue;
-                }
-
-                mParserClasses.add(aClass);
-            } catch (Exception e) {
-                e.printStackTrace();
-                MixLogger.error(String.format("catch exception : " + e.toString()));
-            }
+            loadParserClass(className);
         }
     }
 
@@ -130,26 +114,30 @@ public class MixMessageParserManager {
     }
 
     private void loadAllParserClasses() {
-        // Transform class name to Class instance
         for (String className : mParserClassNames) {
-            try {
-                Class aClass = Class.forName(className);
-                if (aClass == null) {
-                    MixLogger.error("Fetch class failed with class name " + className);
-                    continue;
-                }
+            loadParserClass(className);
+        }
+    }
 
-                if (IMixMessageParser.class.isAssignableFrom(aClass) == false) {
-                    MixLogger.error(String.format("Class %s does not comply with the interface %s",
-                            className, IMixMessageParser.class));
-                    continue;
-                }
-
-                mParserClasses.add(aClass);
-            } catch (Exception e) {
-                e.printStackTrace();
-                MixLogger.error(String.format("catch exception : " + e.toString()));
+    private void loadParserClass(String parserClassName) {
+        // Transform class name to Class instance
+        try {
+            Class aClass = Class.forName(parserClassName);
+            if (aClass == null) {
+                MixLogger.error("Fetch class failed with class name " + parserClassName);
+                return;
             }
+
+            if (IMixMessageParser.class.isAssignableFrom(aClass) == false) {
+                MixLogger.error(String.format("Class %s does not comply with the interface %s",
+                        parserClassName, IMixMessageParser.class));
+                return;
+            }
+
+            mParserClasses.add(aClass);
+        } catch (Exception e) {
+            e.printStackTrace();
+            MixLogger.error(String.format("catch exception : " + e.toString()));
         }
     }
 
