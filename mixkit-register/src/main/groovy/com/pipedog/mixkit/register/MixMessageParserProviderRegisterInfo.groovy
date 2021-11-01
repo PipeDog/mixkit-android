@@ -1,15 +1,15 @@
 package com.pipedog.mixkit.register
 
 /**
- * `MixModuleProvider` register info, configure the provider information here.
+ * `MixMessageParserProvider` register info, configure the provider information here.
  * @auth liang
  * @since 2021/11/01 18:56
  */
-class MixModuleProviderRegisterInfo implements IRegisterInfo {
+class MixMessageParserProviderRegisterInfo implements IRegisterInfo {
 
     @Override
     String scanInterfaceName() {
-        return "com.pipedog.mixkit.compiler.provider.IMixModuleProvider"
+        return "com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider"
     }
 
     @Override
@@ -20,17 +20,17 @@ class MixModuleProviderRegisterInfo implements IRegisterInfo {
 
     @Override
     String codeInsertToClassName() {
-        return "com.pipedog.mixkit.module.MixModuleManager"
+        return "com.pipedog.mixkit.parser.MixMessageParserManager"
     }
 
     @Override
     String codeInsertToMethodName() {
-        return "autoCallRegisterModuleProvider"
+        return "autoCallRegisterParserProvider"
     }
 
     @Override
     String registerMethodName() {
-        return "registerModuleProvider"
+        return "registerParserProvider"
     }
 
 }
