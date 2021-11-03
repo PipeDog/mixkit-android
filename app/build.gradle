@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
-apply plugin: 'RegisterPlugin'
+apply plugin: 'mixkit-register'
 
 android {
     compileSdkVersion 30
