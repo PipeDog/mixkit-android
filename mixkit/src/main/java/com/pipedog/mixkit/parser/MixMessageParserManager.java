@@ -40,11 +40,6 @@ public class MixMessageParserManager {
         mParserClassNames = new ArrayList<String>();
         mParserClasses = new HashSet<Class<?>>();
 
-//        String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
-//        List<Class<?>> providerClasses =
-//                MixProviderClassLoader.getClassesWithPackageName(packageName);
-//        generateParserClasses(providerClasses);
-
         autoCallRegisterParserProvider();
         loadAllParserClasses();
     }
@@ -70,28 +65,6 @@ public class MixMessageParserManager {
         }
 
         return null;
-    }
-
-    private void generateParserClasses(List<Class<?>> providerClasses) {
-        List<String> classNames = new ArrayList<String>();
-
-        // Load all class names
-        for (Class<?> aClass : providerClasses) {
-            try {
-                Object provider = aClass.getConstructor().newInstance();
-                Method method = aClass.getMethod(Path.MIX_PARSER_PROVIDER_METHOD);
-                String parserNames = (String)method.invoke(provider);
-                List<String> names = mGson.fromJson(parserNames, List.class);
-                classNames.addAll(names);
-            } catch (Exception e) {
-                MixLogger.error("Load parse failed, e : " + e.toString());
-            }
-        }
-
-        // Transform class name to Class instance
-        for (String className : classNames) {
-            loadParserClass(className);
-        }
     }
 
     private void autoCallRegisterParserProvider() {

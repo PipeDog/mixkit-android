@@ -1,9 +1,6 @@
 package com.pipedog.mixkit.autoregister
-/**
- * 已扫描到接口或者codeInsertToClassName jar的信息
- * @author zhangkb
- * @since 2018/04/17
- */
+
+// 已扫描到接口或者 codeInsertToClassName jar的信息
 class ScanJarHarvest {
     List<Harvest> harvestList = new ArrayList<>()
     class Harvest {

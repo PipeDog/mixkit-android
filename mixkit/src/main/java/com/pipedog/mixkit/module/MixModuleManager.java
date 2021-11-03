@@ -39,25 +39,6 @@ public class MixModuleManager {
         mModuleDataMap = new HashMap<String, MixModuleData>();
         mInvokerMap = new HashMap<String, MixMethodInvoker>();
 
-//        String packageName = Path.MIX_MODULE_PROVIDER_PACKAGE;
-//        List<Class<?>> providerClasses =
-//                MixProviderClassLoader.getClassesWithPackageName(packageName);
-//
-//        // Load all class names
-//        for (Class<?> aClass : providerClasses) {
-//            try {
-//                Object provider = aClass.getConstructor().newInstance();
-//                Method method = aClass.getMethod(Path.MIX_MODULE_PROVIDER_METHOD);
-//                String json = (String)method.invoke(provider);
-//
-//                Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
-//                Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
-//                mModuleDataMap.putAll(map);
-//            } catch (Exception e) {
-//                MixLogger.error("Load parse failed, e : " + e.toString());
-//            }
-//        }
-
         autoCallRegisterModuleProvider();
         mModuleDataJson = mGson.toJson(mModuleDataMap);
     }

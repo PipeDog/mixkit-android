@@ -7,11 +7,7 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 import java.util.zip.ZipEntry
-/**
- *
- * @author billy.qi
- * @since 17/3/20 11:48
- */
+
 class CodeInsertProcessor {
     RegisterInfo extension
 
@@ -30,7 +26,7 @@ class CodeInsertProcessor {
         }
     }
 
-    //处理jar包中的class代码注入
+    // 处理 jar 包中的 class 代码注入
     private File generateCodeIntoJarFile(File jarFile) {
         if (jarFile) {
             def optJar = new File(jarFile.getParent(), jarFile.name + ".opt")
@@ -76,6 +72,7 @@ class CodeInsertProcessor {
         }
         return false
     }
+
     /**
      * 处理class的注入
      * @param file class文件
@@ -116,11 +113,13 @@ class CodeInsertProcessor {
                    String superName, String[] interfaces) {
             super.visit(version, access, name, signature, superName, interfaces)
         }
+
         @Override
         MethodVisitor visitMethod(int access, String name, String desc,
                                   String signature, String[] exceptions) {
             MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions)
-            if (name == extension.initMethodName) { //注入代码到指定的方法之中
+            if (name == extension.initMethodName) {
+                // 注入代码到指定的方法之中
                 boolean _static = (access & Opcodes.ACC_STATIC) > 0
                 mv = new MyMethodVisitor(Opcodes.ASM6, mv, _static)
             }
@@ -141,14 +140,14 @@ class CodeInsertProcessor {
             if ((opcode >= Opcodes.IRETURN && opcode <= Opcodes.RETURN)) {
                 extension.classList.each { name ->
                     if (!_static) {
-                        //加载this
+                        // 加载this
                         mv.visitVarInsn(Opcodes.ALOAD, 0)
                     }
-                    //用无参构造方法创建一个组件实例
+                    // 用无参构造方法创建一个组件实例
                     mv.visitTypeInsn(Opcodes.NEW, name)
                     mv.visitInsn(Opcodes.DUP)
                     mv.visitMethodInsn(Opcodes.INVOKESPECIAL, name, "<init>", "()V", false)
-                    //调用注册方法将组件实例注册到组件库中
+                    // 调用注册方法将组件实例注册到组件库中
                     if (_static) {
                         mv.visitMethodInsn(Opcodes.INVOKESTATIC
                                 , extension.registerClassName
@@ -166,9 +165,11 @@ class CodeInsertProcessor {
             }
             super.visitInsn(opcode)
         }
+
         @Override
         void visitMaxs(int maxStack, int maxLocals) {
             super.visitMaxs(maxStack + 4, maxLocals)
         }
     }
+
 }

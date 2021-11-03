@@ -8,11 +8,6 @@ import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
-/**
- *
- * @author billy.qi
- * @since 17/3/21 11:48
- */
 class RegisterTransform extends Transform {
 
     Project project
@@ -21,7 +16,6 @@ class RegisterTransform extends Transform {
     RegisterTransform(Project project) {
         this.project = project
     }
-
 
     @Override
     String getName() {
@@ -38,10 +32,6 @@ class RegisterTransform extends Transform {
         return TransformManager.SCOPE_FULL_PROJECT
     }
 
-    /**
-     * 是否支持增量编译
-     * @return
-     */
     @Override
     boolean isIncremental() {
         return false
@@ -63,7 +53,6 @@ class RegisterTransform extends Transform {
 
         long time = System.currentTimeMillis()
         boolean leftSlash = File.separator == '/'
-
 
         println("auto-register-----------isIncremental:${isIncremental}------------------------\n")
 
@@ -91,7 +80,7 @@ class RegisterTransform extends Transform {
                 String root = directoryInput.file.absolutePath
                 if (!root.endsWith(File.separator))
                     root += File.separator
-                //遍历目录下的每个文件
+                // 遍历目录下的每个文件
                 directoryInput.file.eachFileRecurse { File file ->
                     def path = file.absolutePath.replace(root, '')
                     if (file.isFile()) {
@@ -145,18 +134,18 @@ class RegisterTransform extends Transform {
 
         // 获得输入文件
         File src = jarInput.file
-        //遍历jar的字节码类文件，找到需要自动注册的类
+        // 遍历jar的字节码类文件，找到需要自动注册的类
         File dest = getDestFile(jarInput, outputProvider)
         long time = System.currentTimeMillis();
         if (!scanProcessor.scanJar(src, dest) //直接读取了缓存，没有执行实际的扫描
-                //此jar文件中不需要被注入代码
-                //为了避免增量编译时代码注入重复，被注入代码的jar包每次都重新复制
+                // 此jar文件中不需要被注入代码
+                // 为了避免增量编译时代码注入重复，被注入代码的jar包每次都重新复制
                 && !scanProcessor.isCachedJarContainsInitClass(src.absolutePath)) {
-            //不需要执行文件复制，直接返回
+            // 不需要执行文件复制，直接返回
             return
         }
         println "auto-register cost time: " + (System.currentTimeMillis() - time) + " ms to scan jar file:" + dest.absolutePath
-        //复制jar文件到transform目录：build/transforms/auto-register/
+        // 复制 jar 文件到 transform 目录：build/transforms/auto-register/
         FileUtils.copyFile(src, dest)
     }
 

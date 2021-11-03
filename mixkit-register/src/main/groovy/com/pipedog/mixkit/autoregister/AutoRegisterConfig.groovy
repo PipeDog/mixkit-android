@@ -3,11 +3,7 @@ package com.pipedog.mixkit.autoregister
 import com.pipedog.mixkit.autoregister.builtin.MixRegisterInfo
 import org.gradle.api.Project
 
-/**
- * aop的配置信息
- * @author billy.qi
- * @since 17/3/28 11:48
- */
+// AOP 的配置信息
 class AutoRegisterConfig {
 
     public ArrayList<Map<String, Object>> registerInfo = []
@@ -19,17 +15,10 @@ class AutoRegisterConfig {
     AutoRegisterConfig() {}
 
     void convertConfig() {
-        List<Map<String, Object>> mixRegisterInfos = MixRegisterInfo.getBuiltinRegisterInfos()
-        if (mixRegisterInfos.size() > 0) {
-            registerInfo.addAll(mixRegisterInfos)
+        List<Map<String, Object>> builtinRegisterInfos = MixRegisterInfo.getBuiltinRegisterInfos()
+        if (builtinRegisterInfos.size() > 0) {
+            registerInfo.addAll(builtinRegisterInfos)
         }
-
-        println '>>>>>>>>>> mixRegisterInfos = ' + mixRegisterInfos.toString()
-        println '>>>>>>>>>> allRegisterInfo = ' + registerInfo.toString()
-
-
-        project.logger.warn(">>>>>>>>>> mixRegisterInfos = %s", mixRegisterInfos.toString())
-        project.logger.warn(">>>>>>>>>> allRegisterInfo = %s", registerInfo.toString())
 
         registerInfo.each { map ->
             RegisterInfo info = new RegisterInfo()
@@ -55,10 +44,6 @@ class AutoRegisterConfig {
             else {
                 project.logger.error('auto register config error: scanInterface, codeInsertToClassName and registerMethodName should not be null\n' + info.toString())
             }
-
-            project.logger.error('>>>>>>>>>>> OOOOOOOOO testfjkdlsjfldsjklfsj\n' + info.toString())
-
-
         }
 
         deleteFile(AutoRegisterHelper.getRegisterInfoCacheFile(project))

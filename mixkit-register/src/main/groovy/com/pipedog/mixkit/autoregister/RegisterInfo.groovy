@@ -1,17 +1,15 @@
 package com.pipedog.mixkit.autoregister
 
 import java.util.regex.Pattern
-/**
- * aop的配置信息
- * @author billy.qi
- * @since 17/3/28 11:48
- */
+
+// AOP 的配置信息
 class RegisterInfo {
     static final DEFAULT_EXCLUDE = [
             '.*/R(\\$[^/]*)?'
             , '.*/BuildConfig$'
     ]
-    //以下是可配置参数
+
+    // 以下是可配置参数
     String interfaceName = ''
     ArrayList<String> superClassNames = []
     String initClassName = ''
@@ -21,14 +19,13 @@ class RegisterInfo {
     ArrayList<String> include = []
     ArrayList<String> exclude = []
 
-    //以下不是可配置参数
+    // 以下不是可配置参数
     ArrayList<Pattern> includePatterns = []
     ArrayList<Pattern> excludePatterns = []
-    File fileContainsInitClass //initClassName的class文件或含有initClassName类的jar文件
+    File fileContainsInitClass // initClassName 的 class 文件或含有 initClassName 类的 jar 文件
     ArrayList<String> classList = new ArrayList<>()
 
-
-    RegisterInfo(){}
+    RegisterInfo() {}
 
     void reset() {
         fileContainsInitClass = null
@@ -69,23 +66,23 @@ class RegisterInfo {
 
     void init() {
         if (include == null) include = new ArrayList<>()
-        if (include.empty) include.add(".*") //如果没有设置则默认为include所有
+        if (include.empty) include.add(".*") // 如果没有设置则默认为include所有
         if (exclude == null) exclude = new ArrayList<>()
         if (!registerClassName)
             registerClassName = initClassName
 
-        //将interfaceName中的'.'转换为'/'
+        // 将interfaceName中的'.'转换为'/'
         if (interfaceName)
             interfaceName = convertDotToSlash(interfaceName)
-        //将superClassName中的'.'转换为'/'
+        // 将superClassName中的'.'转换为'/'
         if (superClassNames == null) superClassNames = new ArrayList<>()
         for (int i = 0; i < superClassNames.size(); i++) {
             def superClass = convertDotToSlash(superClassNames.get(i))
             superClassNames.set(i, superClass)
         }
-        //注册和初始化的方法所在的类默认为同一个类
+        // 注册和初始化的方法所在的类默认为同一个类
         initClassName = convertDotToSlash(initClassName)
-        //默认插入到static块中
+        // 默认插入到static块中
         if (!initMethodName)
             initMethodName = "<clinit>"
         registerClassName = convertDotToSlash(registerClassName)

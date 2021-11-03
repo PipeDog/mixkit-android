@@ -6,11 +6,8 @@ import org.gradle.api.Project
 import java.lang.reflect.Type
 
 import static com.android.builder.model.AndroidProject.FD_INTERMEDIATES
-/**
- * 文件操作辅助类
- * @author zhangkb
- * @since 2018/04/13
- */
+
+// 文件操作辅助类
 class AutoRegisterHelper {
     final static def CACHE_INFO_DIR = "auto-register"
 
