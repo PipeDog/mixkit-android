@@ -20,3 +20,15 @@ dependencies {
     implementation 'com.android.tools.build:gradle-api:4.0.0'
 }
 
+// run command `./gradlew uploadArchives` in project root path to execute task `uploadArchives`
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = 'com.pipedog.mixkit.register'
+            pom.artifactId = 'auto-register'
+            pom.version = 1.0
+            // maven 本地仓库的目录
+            repository(url: uri('../local-repo'))
+        }
+    }
+}
