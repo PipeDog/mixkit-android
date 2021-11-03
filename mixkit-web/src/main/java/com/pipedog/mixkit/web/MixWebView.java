@@ -40,7 +40,7 @@ import com.google.gson.Gson;
 public class MixWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
 
     // 包装外部传递进行来 WebViewClient，并且提供各种回调
-    public class MixWebViewClient extends WebViewClient {
+    private class MixWebViewClient extends WebViewClient {
 
         private WebViewClient mWebViewClient;
 
