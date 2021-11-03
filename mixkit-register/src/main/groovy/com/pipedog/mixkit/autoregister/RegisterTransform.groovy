@@ -44,7 +44,7 @@ class RegisterTransform extends Transform {
      */
     @Override
     boolean isIncremental() {
-        return true
+        return false
     }
 
     @Override
@@ -65,22 +65,12 @@ class RegisterTransform extends Transform {
         boolean leftSlash = File.separator == '/'
 
 
-        def cacheEnabled = config.cacheEnabled
-        println("auto-register-----------isIncremental:${isIncremental}--------config.cacheEnabled:${cacheEnabled}--------------------\n")
+        println("auto-register-----------isIncremental:${isIncremental}------------------------\n")
 
         File jarManagerfile = null
         Map<String, ScanJarHarvest> cacheMap = null
         File cacheFile = null
         Gson gson = null
-
-        if (cacheEnabled) { //开启了缓存
-            gson = new Gson()
-            cacheFile = AutoRegisterHelper.getRegisterCacheFile(project)
-            if (clearCache && cacheFile.exists())
-                cacheFile.delete()
-            cacheMap = AutoRegisterHelper.readToMap(cacheFile, new TypeToken<HashMap<String, ScanJarHarvest>>() {
-            }.getType())
-        }
 
         CodeScanProcessor scanProcessor = new CodeScanProcessor(config.list, cacheMap)
 

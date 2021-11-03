@@ -1,5 +1,6 @@
 package com.pipedog.mixkit.autoregister
 
+import com.pipedog.mixkit.autoregister.builtin.MixRegisterInfo
 import org.gradle.api.Project
 
 /**
@@ -14,11 +15,22 @@ class AutoRegisterConfig {
     ArrayList<RegisterInfo> list = new ArrayList<>()
 
     Project project
-    def cacheEnabled = true
 
     AutoRegisterConfig() {}
 
     void convertConfig() {
+        List<Map<String, Object>> mixRegisterInfos = MixRegisterInfo.getBuiltinRegisterInfos()
+        if (mixRegisterInfos.size() > 0) {
+            registerInfo.addAll(mixRegisterInfos)
+        }
+
+        println '>>>>>>>>>> mixRegisterInfos = ' + mixRegisterInfos.toString()
+        println '>>>>>>>>>> allRegisterInfo = ' + registerInfo.toString()
+
+
+        project.logger.warn(">>>>>>>>>> mixRegisterInfos = %s", mixRegisterInfos.toString())
+        project.logger.warn(">>>>>>>>>> allRegisterInfo = %s", registerInfo.toString())
+
         registerInfo.each { map ->
             RegisterInfo info = new RegisterInfo()
             info.interfaceName = map.get('scanInterface')
@@ -44,14 +56,13 @@ class AutoRegisterConfig {
                 project.logger.error('auto register config error: scanInterface, codeInsertToClassName and registerMethodName should not be null\n' + info.toString())
             }
 
+            project.logger.error('>>>>>>>>>>> OOOOOOOOO testfjkdlsjfldsjklfsj\n' + info.toString())
+
+
         }
 
-        if (cacheEnabled) {
-            checkRegisterInfo()
-        } else {
-            deleteFile(AutoRegisterHelper.getRegisterInfoCacheFile(project))
-            deleteFile(AutoRegisterHelper.getRegisterCacheFile(project))
-        }
+        deleteFile(AutoRegisterHelper.getRegisterInfoCacheFile(project))
+        deleteFile(AutoRegisterHelper.getRegisterCacheFile(project))
     }
 
     private void checkRegisterInfo() {
@@ -96,7 +107,6 @@ class AutoRegisterConfig {
     @Override
     String toString() {
         StringBuilder sb = new StringBuilder(RegisterPlugin.EXT_NAME).append(' = {')
-                .append('\n  cacheEnabled = ').append(cacheEnabled)
                 .append('\n  registerInfo = [\n')
         def size = list.size()
         for (int i = 0; i < size; i++) {

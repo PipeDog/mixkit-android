@@ -2,6 +2,7 @@ package com.pipedog.mixkit.parser;
 
 import android.content.Context;
 
+import com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider;
 import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.tool.*;
 import com.pipedog.mixkit.path.Path;
@@ -39,10 +40,10 @@ public class MixMessageParserManager {
         mParserClassNames = new ArrayList<String>();
         mParserClasses = new HashSet<Class<?>>();
 
-        String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
-        List<Class<?>> providerClasses =
-                MixProviderClassLoader.getClassesWithPackageName(packageName);
-        generateParserClasses(providerClasses);
+//        String packageName = Path.MIX_PARSER_PROVIDER_PACKAGE;
+//        List<Class<?>> providerClasses =
+//                MixProviderClassLoader.getClassesWithPackageName(packageName);
+//        generateParserClasses(providerClasses);
 
         autoCallRegisterParserProvider();
         loadAllParserClasses();
@@ -99,13 +100,10 @@ public class MixMessageParserManager {
         // The insert code will call function `registerParserProvider` here
     }
 
-    private void registerParserProvider(String providerClassName) {
+    private void registerParserProvider(IMixMessageParserProvider provider) {
         // Load all parser class names in current provider
         try {
-            Class aClass = Class.forName(providerClassName);
-            Object provider = aClass.getConstructor().newInstance();
-            Method method = aClass.getMethod(Path.MIX_PARSER_PROVIDER_METHOD);
-            String parserNames = (String)method.invoke(provider);
+            String parserNames = provider.getRegisteredMessageParsersJson();
             List<String> names = mGson.fromJson(parserNames, List.class);
             mParserClassNames.addAll(names);
         } catch (Exception e) {
