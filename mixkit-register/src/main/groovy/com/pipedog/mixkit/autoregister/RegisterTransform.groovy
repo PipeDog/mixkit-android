@@ -44,7 +44,7 @@ class RegisterTransform extends Transform {
                    , boolean isIncremental) throws IOException, TransformException, InterruptedException {
         project.logger.warn("start auto-register transform...")
         config.reset()
-        project.logger.warn(config.toString())
+        Logger.w(config.toString())
         def clearCache = !isIncremental
         // clean build cache
         if (clearCache) {
@@ -107,27 +107,27 @@ class RegisterTransform extends Transform {
         }
 
         def scanFinishTime = System.currentTimeMillis()
-        project.logger.error("register scan all class cost time: " + (scanFinishTime - time) + " ms")
+        Logger.e("register scan all class cost time: " + (scanFinishTime - time) + " ms")
 
         config.list.each { ext ->
             if (ext.fileContainsInitClass) {
                 println('')
                 println("insert register code to file:" + ext.fileContainsInitClass.absolutePath)
                 if (ext.classList.isEmpty()) {
-                    project.logger.error("No class implements found for interface:" + ext.interfaceName)
+                    Logger.e("No class implements found for interface:" + ext.interfaceName)
                 } else {
                     ext.classList.each {
-                        println(it)
+                        Logger.i(it)
                     }
                     CodeInsertProcessor.insertInitCodeTo(ext)
                 }
             } else {
-                project.logger.error("The specified register class not found:" + ext.registerClassName)
+                Logger.e("The specified register class not found:" + ext.registerClassName)
             }
         }
         def finishTime = System.currentTimeMillis()
-        project.logger.error("register insert code cost time: " + (finishTime - scanFinishTime) + " ms")
-        project.logger.error("register cost time: " + (finishTime - time) + " ms")
+        Logger.e("register insert code cost time: " + (finishTime - scanFinishTime) + " ms")
+        Logger.e("register cost time: " + (finishTime - time) + " ms")
     }
 
     void scanJar(JarInput jarInput, TransformOutputProvider outputProvider, CodeScanProcessor scanProcessor) {

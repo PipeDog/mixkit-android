@@ -16,9 +16,10 @@ public class RegisterPlugin implements Plugin<Project> {
         def isApp = project.plugins.hasPlugin(AppPlugin)
         if (!isApp) { return }
 
-        project.extensions.create(EXT_NAME, AutoRegisterConfig)
+        Logger.make(project)
 
-        println 'project(' + project.name + ') apply auto-register plugin'
+        project.extensions.create(EXT_NAME, AutoRegisterConfig)
+        Logger.i('project(' + project.name + ') apply auto-register plugin')
 
         def android = project.extensions.getByType(AppExtension)
         def transformImpl = new RegisterTransform(project)

@@ -42,7 +42,7 @@ class AutoRegisterConfig {
             if (info.validate())
                 list.add(info)
             else {
-                project.logger.error('auto register config error: scanInterface, codeInsertToClassName and registerMethodName should not be null\n' + info.toString())
+                Logger.e('auto register config error: scanInterface, codeInsertToClassName and registerMethodName should not be null\n' + info.toString())
             }
         }
 
@@ -61,10 +61,10 @@ class AutoRegisterConfig {
             def info = registerInfo.text
             sameInfo = info == listInfo
             if (!sameInfo) {
-                project.logger.error("auto-register registerInfo has been changed since project(':$project.name') last build")
+                Logger.e("auto-register registerInfo has been changed since project(':$project.name') last build")
             }
         } else {
-            project.logger.error('auto-register read registerInfo error--------')
+            Logger.e('auto-register read registerInfo error--------')
         }
         if (!sameInfo) {
             deleteFile(AutoRegisterHelper.getRegisterCacheFile(project))
@@ -72,7 +72,7 @@ class AutoRegisterConfig {
         if (registerInfo.canWrite()) {
             registerInfo.write(listInfo)
         } else {
-            project.logger.error('auto-register write registerInfo error--------')
+            Logger.e('auto-register write registerInfo error--------')
         }
     }
 
