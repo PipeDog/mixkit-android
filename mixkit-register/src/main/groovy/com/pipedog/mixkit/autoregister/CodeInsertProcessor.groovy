@@ -43,7 +43,7 @@ class CodeInsertProcessor {
                 InputStream inputStream = file.getInputStream(jarEntry)
                 jarOutputStream.putNextEntry(zipEntry)
                 if (isInitClass(entryName)) {
-                    println('generate code into:' + entryName)
+                    Logger.i('generate code into:' + entryName)
                     def bytes = doGenerateCode(inputStream)
                     jarOutputStream.write(bytes)
                 } else {
