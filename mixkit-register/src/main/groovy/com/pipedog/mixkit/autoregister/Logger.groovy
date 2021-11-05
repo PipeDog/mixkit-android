@@ -12,19 +12,19 @@ class Logger {
 
     static void i(String info) {
         if (null != info && null != logger) {
-            logger.info("MoonBridge:Register == " + info)
+            logger.info("Mix:Register == " + info)
         }
     }
 
     static void e(String error) {
         if (null != error && null != logger) {
-            logger.error("MoonBridge:Register == " + error)
+            logger.error("Mix:Register == " + error)
         }
     }
 
     static void w(String warning) {
         if (null != warning && null != logger) {
-            logger.warn("MoonBridge:Register == " + warning)
+            logger.warn("Mix:Register == " + warning)
         }
     }
 
