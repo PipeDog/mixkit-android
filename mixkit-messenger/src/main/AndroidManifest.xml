@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pipedog.mixkit.messenger">
+
+    <!--  TODO: 补充 server 进程配置  -->
+
+</manifest>
