@@ -47,13 +47,10 @@ public class MessengerDispatcher implements IMessage2Client {
         Bundle bundle = new Bundle();
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
-//        bundle.putParcelable(MessageKeyword.KEY_PARAMETER_NAME, parameter);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-//        Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
-//        Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
-
         String json = mGson.toJson(parameter);
+        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, json);
 
         Message message = Message.obtain();
         message.setData(bundle);

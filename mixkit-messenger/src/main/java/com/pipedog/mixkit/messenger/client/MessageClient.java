@@ -13,6 +13,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
@@ -30,7 +31,9 @@ import java.util.Map;
  */
 public class MessageClient implements IMessage2Server {
 
+    private Gson mGson = new Gson();
     private Context mContext;
+    private IMessageClientDelegate mDelegate;
     private Messenger mServerMessenger;
     private Messenger mClientMessenger = new Messenger(new ClientHandler());
     private ServiceConnection mServiceConnection = new ProcessesConnection();
@@ -40,8 +43,9 @@ public class MessageClient implements IMessage2Server {
         // Use `MessageClient(Context)` instead of current method
     }
 
-    public MessageClient(Context context) {
+    public MessageClient(Context context, IMessageClientDelegate delegate) {
         this.mContext = context;
+        this.mDelegate = delegate;
     }
 
     /**
@@ -123,6 +127,40 @@ public class MessageClient implements IMessage2Server {
     }
 
 
+    // INTERNAL METHODS
+
+    private void request2Client(Message message) {
+        if (mDelegate == null) {
+            return;
+        }
+
+        Bundle bundle = message.getData();
+
+        String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
+        String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
+        String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
+
+        String json = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
+        Map<String, Object> parameter = mGson.fromJson(json, Map.class);
+
+        mDelegate.didReceiveRequestMessage(moduleName, methodName, parameter, callbackId);
+    }
+
+    private void response2Client(Message message) {
+        if (mDelegate == null) {
+            return;
+        }
+
+        Bundle bundle = message.getData();
+
+        String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
+        String json = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
+        Map<String, Object> result = mGson.fromJson(json, Map.class);
+
+        mDelegate.didReceiveResponseMessage(callbackId, result);
+    }
+
+
     // INTERNAL CLASSES
 
     private class ClientHandler extends Handler {
@@ -130,7 +168,18 @@ public class MessageClient implements IMessage2Server {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
 
-            // TODO: 指令处理
+            switch (msg.what) {
+                case MessageNumber.REQUEST_TO_CLIENT: {
+                    request2Client(msg);
+                } break;
+                case MessageNumber.RESPONSE_TO_CLIENT: {
+                    response2Client(msg);
+                } break;
+                default: {
+                    MixLogger.error("Unsupport message number = " + msg.what);
+                } break;
+            }
+
         }
     }
 

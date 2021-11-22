@@ -5,11 +5,15 @@ import android.os.Message;
 import android.os.Parcelable;
 
 import com.pipedog.mixkit.launch.MixLaunchManager;
+import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.tool.MixLogger;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,7 +21,7 @@ import java.util.Map;
  * @author liang
  * @time 2021/11/22
  */
-public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Server {
+public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Server, IMessageClientDelegate {
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
@@ -41,7 +45,7 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
         if (context == null) {
             MixLogger.error("Call method `registerContext` in class `MixLaunchManager` first!");
         }
-        mClient = new MessageClient(context);
+        mClient = new MessageClient(context, this);
     }
 
     /**
@@ -92,6 +96,36 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
         }
 
         mClient.response2Server(processId, callbackId, result);
+    }
+
+
+    // OVERRIDE METHODS FROM `IMessageClientDelegate`
+
+    @Override
+    public void didReceiveRequestMessage(String moduleName,
+                                         String methodName,
+                                         Map<String, Object> parameter,
+                                         String callbackId) {
+
+        Map<String, Object> metaData = new HashMap<>();
+        metaData.put("moduleName", moduleName);
+        metaData.put("methodName", methodName);
+
+        List<Object> arguments = new ArrayList<>();
+        arguments.add(parameter);
+        arguments.add(callbackId);
+        metaData.put("arguments", arguments);
+
+        mBridge.executor().invokeMethod(metaData);
+    }
+
+    @Override
+    public void didReceiveResponseMessage(String callbackId, Map<String, Object> result) {
+        List<Object> arguments = new ArrayList<>();
+        arguments.add(result);
+
+        MessengerExecutor executor = (MessengerExecutor)mBridge.executor();
+        executor.invokeCallback(arguments, callbackId);
     }
 
 }

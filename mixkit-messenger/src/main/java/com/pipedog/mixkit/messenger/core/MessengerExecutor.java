@@ -104,7 +104,7 @@ public class MessengerExecutor implements IMixExecutor {
         return invoker.invoke(bridgeModule, nativeArgs);
     }
 
-    private void invokeCallback(List<Object> arguments, String callbackID) {
+    public void invokeCallback(List<Object> arguments, String callbackID) {
         if (callbackID == null || callbackID.isEmpty()) {
             return;
         }
