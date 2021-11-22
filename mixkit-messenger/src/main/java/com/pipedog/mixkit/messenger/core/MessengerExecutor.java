@@ -1,8 +1,12 @@
-package com.pipedog.mixkit.socket;
+package com.pipedog.mixkit.messenger.core;
+
+import android.os.Parcelable;
 
 import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
+import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
@@ -12,14 +16,15 @@ import com.pipedog.mixkit.tool.MixLogger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-public class SocketExecutor implements IMixExecutor {
+public class MessengerExecutor implements IMixExecutor {
 
-    private class SocketResultCallback implements MixResultCallback {
+    private class MessengerResultCallback implements MixResultCallback {
 
-        public String mCallbackId;
+        protected String mCallbackId;
 
-        public SocketResultCallback(String callbackId) {
+        protected MessengerResultCallback(String callbackId) {
             mCallbackId = callbackId;
         }
 
@@ -31,22 +36,24 @@ public class SocketExecutor implements IMixExecutor {
 
     }
 
-    private SocketBridge mBridge;
+    private MessengerBridge mBridge;
 
-    public SocketExecutor() {
+    public MessengerExecutor() {
         // Do nothing...
     }
 
     @Override
     public void setBridge(IMixBridge bridge) {
-        mBridge = (SocketBridge)bridge;
+        mBridge = (MessengerBridge)bridge;
     }
 
     @Override
     public boolean invokeMethod(Object metaData) {
         MixMessageParserManager parserManager = mBridge.messageParserManager();
         IMixMessageParser parser = parserManager.detectParser(metaData);
-        if (parser == null) { return false; }
+        if (parser == null) {
+            return false;
+        }
 
         IMixMessageParser.IMixMessageBody body = parser.messageBody();
         String moduleName = body.moduleName();
@@ -72,10 +79,10 @@ public class SocketExecutor implements IMixExecutor {
 
         List<Object> arguments = body.arguments();
         if (arguments == null) {
-            arguments = new ArrayList<Object>();
+            arguments = new ArrayList<>();
         }
 
-        List<Object> nativeArgs = new ArrayList<Object>();
+        List<Object> nativeArgs = new ArrayList<>();
 
         for (Object arg : arguments) {
             Object nativeArg = arg;
@@ -83,7 +90,7 @@ public class SocketExecutor implements IMixExecutor {
             if (nativeArg instanceof String) {
                 boolean isCallbackID = ((String)arg).startsWith("_$_mk_callback_$_");
                 if (isCallbackID) {
-                    SocketResultCallback callback = new SocketResultCallback((String)arg);
+                    MessengerResultCallback callback = new MessengerResultCallback((String)arg);
                     nativeArg = callback;
                 }
             }
@@ -99,18 +106,16 @@ public class SocketExecutor implements IMixExecutor {
             return;
         }
 
-        List<Object> callbackArgs = new ArrayList<Object>();
-        callbackArgs.add(callbackID);
-
         if (arguments == null || arguments.isEmpty()) {
             arguments = new ArrayList<>();
         }
-        callbackArgs.add(arguments);
 
-        ISocketEngine socketEngine = mBridge.bridgeDelegate().socketEngine();
-        socketEngine.sendData(callbackArgs.toArray(), new SocketCallback() {
+        Map<String, Parcelable> result = arguments.size() > 0 ? arguments.get(0) : null;
+
+        IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
+        caller.response2Server(callbackID, result, new IMessageCallback() {
             @Override
-            public void onReceiveFailure(Object error) {
+            public void callback(Object error, Map result) {
                 if (error == null) {
                     return;
                 }
@@ -118,6 +123,5 @@ public class SocketExecutor implements IMixExecutor {
             }
         });
     }
-
+    
 }
-

@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.messenger.core;
+package com.pipedog.mixkit.messenger.client;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
