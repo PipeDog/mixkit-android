@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Message;
 import android.os.Parcelable;
 
+import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
+import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
@@ -25,20 +27,9 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
-    private volatile static MessengerManager sMessengerManager;
+    private Map<String, MixResultCallback> mCallbackMap = new HashMap<>();
 
-    public static MessengerManager getInstance() {
-        if (sMessengerManager == null) {
-            synchronized (MessengerManager.class) {
-                if (sMessengerManager == null) {
-                    sMessengerManager = new MessengerManager();
-                }
-            }
-        }
-        return sMessengerManager;
-    }
-
-    private MessengerManager() {
+    public MessengerManager() {
         mBridge = new MessengerBridge(this);
         
         Context context = MixLaunchManager.defaultManager().getContext();
@@ -61,6 +52,24 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
      */
     public void stopConnection() {
         mClient.stopConnection();
+    }
+
+    /**
+     * 想服务端发送功能执行请求
+     * @param processId 目标进程 ID
+     * @param moduleName 模块名称
+     * @param methodName 方法名
+     * @param parameter 请求参数实体
+     * @param callback 回调
+     */
+    public void sendMessage(String processId,
+                            String moduleName,
+                            String methodName,
+                            Map<String, Object> parameter,
+                            MixResultCallback callback) {
+        String callbackId = CallbackIdGenerator.getCallbackId();
+        mCallbackMap.put(callbackId, callback);
+        request2Server(processId, moduleName, methodName, parameter, callbackId);
     }
 
 
@@ -121,11 +130,15 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
 
     @Override
     public void didReceiveResponseMessage(String callbackId, Map<String, Object> result) {
-        List<Object> arguments = new ArrayList<>();
-        arguments.add(result);
+        if (callbackId == null || callbackId.isEmpty()) {
+            return;
+        }
 
-        MessengerExecutor executor = (MessengerExecutor)mBridge.executor();
-        executor.invokeCallback(arguments, callbackId);
+        MixResultCallback callback = mCallbackMap.get(callbackId);
+        mCallbackMap.remove(callbackId);
+
+        Object[] arguments = new Object[]{result};
+        callback.invoke(arguments);
     }
 
 }

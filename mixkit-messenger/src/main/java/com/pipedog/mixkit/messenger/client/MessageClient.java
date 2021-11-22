@@ -129,7 +129,7 @@ public class MessageClient implements IMessage2Server {
 
     // INTERNAL METHODS
 
-    private void request2Client(Message message) {
+    private void receiveRequest2Client(Message message) {
         if (mDelegate == null) {
             return;
         }
@@ -146,7 +146,7 @@ public class MessageClient implements IMessage2Server {
         mDelegate.didReceiveRequestMessage(moduleName, methodName, parameter, callbackId);
     }
 
-    private void response2Client(Message message) {
+    private void receiveResponse2Client(Message message) {
         if (mDelegate == null) {
             return;
         }
@@ -170,10 +170,10 @@ public class MessageClient implements IMessage2Server {
 
             switch (msg.what) {
                 case MessageNumber.REQUEST_TO_CLIENT: {
-                    request2Client(msg);
+                    receiveRequest2Client(msg);
                 } break;
                 case MessageNumber.RESPONSE_TO_CLIENT: {
-                    response2Client(msg);
+                    receiveResponse2Client(msg);
                 } break;
                 default: {
                     MixLogger.error("Unsupport message number = " + msg.what);
