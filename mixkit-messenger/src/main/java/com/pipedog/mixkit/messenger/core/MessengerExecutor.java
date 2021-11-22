@@ -1,12 +1,15 @@
 package com.pipedog.mixkit.messenger.core;
 
+import android.content.Context;
 import android.os.Parcelable;
 
 import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
+import com.pipedog.mixkit.messenger.utils.ProcessUtils;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
@@ -106,22 +109,18 @@ public class MessengerExecutor implements IMixExecutor {
             return;
         }
 
-        if (arguments == null || arguments.isEmpty()) {
+        if (arguments == null) {
             arguments = new ArrayList<>();
         }
 
-        Map<String, Parcelable> result = arguments.size() > 0 ? arguments.get(0) : null;
+        Map<String, Object> result =
+                arguments.size() > 0 ? (Map<String, Object>) arguments.get(0) : null;
+
+        Context context = MixLaunchManager.defaultManager().getContext();
+        String processId = ProcessUtils.getProcessName(context);
 
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(callbackID, result, new IMessageCallback() {
-            @Override
-            public void callback(Object error, Map result) {
-                if (error == null) {
-                    return;
-                }
-                MixLogger.error("invoke socket failed : %s", error.toString());
-            }
-        });
+        caller.response2Server(processId, callbackID, result);
     }
     
 }

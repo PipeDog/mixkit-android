@@ -13,26 +13,30 @@ public interface IMessage2Server {
 
     /**
      * 向服务端（server）发送请求消息
+     *  第 1 步：client1 -> server
+     *
      * @param processId 目标进程标识
      * @param moduleName 模块名
      * @param methodName 方法名
      * @param parameter 请求参数体
-     * @param callback 请求响应回调
+     * @param callbackId 请求响应回调 ID
      */
     void request2Server(String processId,
                         String moduleName,
                         String methodName,
-                        Map<String, Parcelable> parameter,
-                        IMessageCallback callback);
+                        Map<String, Object> parameter,
+                        String callbackId);
 
     /**
      * 向服务端（server）发送响应消息
-     * @param callbackId 回调 ID
+     *  第 3 步：client2 -> server
+     *  
+     * @param processId 目标进程标识
+     * @param callbackId 请求响应回调 ID
      * @param result 响应数据
-     * @param callback 请求响应回调
      */
-    void response2Server(String callbackId,
-                         Map<String, Parcelable> result,
-                         IMessageCallback callback);
+    void response2Server(String processId,
+                         String callbackId,
+                         Map<String, Object> result);
 
 }

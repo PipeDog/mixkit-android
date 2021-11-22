@@ -13,10 +13,12 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.server.MessengerService;
+import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.Map;
@@ -48,9 +50,8 @@ public class MessageClient implements IMessage2Server {
      */
     public boolean startConnection() {
         boolean result = mContext.bindService(
-                new Intent(MessageClient.this, MessengerService.class),
+                new Intent(mContext, MessengerService.class),
                 mServiceConnection, Context.BIND_AUTO_CREATE);
-
         if (!result) {
             MixLogger.error("Create connection with server process failed!");
         }
@@ -74,20 +75,20 @@ public class MessageClient implements IMessage2Server {
 
     
     // OVERRIDE METHODS FROM `IMessage2Server`
-
+    
     @Override
-    public void request2Server(String processId,
+    public void request2Server(String processId, 
                                String moduleName,
                                String methodName,
-                               Map<String, Parcelable> parameter,
-                               IMessageCallback callback) {
+                               Map<String, Object> parameter, 
+                               String callbackId) {
         if (mServerMessenger == null) {
             return;
         }
 
         Bundle bundle = new Bundle();
         // TODO: 数据填充
-
+        
         try {
             Message message = Message.obtain();
             message.replyTo = mClientMessenger;
@@ -100,9 +101,9 @@ public class MessageClient implements IMessage2Server {
     }
 
     @Override
-    public void response2Server(String callbackId,
-                                Map<String, Parcelable> result,
-                                IMessageCallback callback) {
+    public void response2Server(String processId,
+                                String callbackId,
+                                Map<String, Object> result) {
         if (mServerMessenger == null) {
             return;
         }
@@ -133,7 +134,7 @@ public class MessageClient implements IMessage2Server {
         }
     }
 
-    private class ProcessesConnection extends ServiceConnection {
+    private class ProcessesConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mServerMessenger = new Messenger(service);

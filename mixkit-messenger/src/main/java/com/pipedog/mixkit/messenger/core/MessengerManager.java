@@ -39,8 +39,7 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
         
         Context context = MixLaunchManager.defaultManager().getContext();
         if (context == null) {
-            throw new Exception(
-                    "Call method `registerContext` in class `MixLaunchManager` first!");
+            MixLogger.error("Call method `registerContext` in class `MixLaunchManager` first!");
         }
         mClient = new MessageClient(context);
     }
@@ -75,30 +74,24 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
     public void request2Server(String processId,
                                String moduleName,
                                String methodName,
-                               Map<String, Parcelable> parameter,
-                               IMessageCallback callback) {
+                               Map<String, Object> parameter,
+                               String callbackId) {
         if (!mClient.isConnected()) {
-            if (callback != null) {
-                callback.callback("Client dose not connect server!", null);
-            }
             return;
         }
 
-        mClient.request2Server(processId, moduleName, methodName, parameter, callback);
+        mClient.request2Server(processId, moduleName, methodName, parameter, callbackId);
     }
 
     @Override
-    public void response2Server(String callbackId,
-                                Map<String, Parcelable> result,
-                                IMessageCallback callback) {
+    public void response2Server(String processId,
+                                String callbackId,
+                                Map<String, Object> result) {
         if (!mClient.isConnected()) {
-            if (callback != null) {
-                callback.callback("Client dose not connect server!", null);
-            }
             return;
         }
 
-        mClient.response2Server(callbackId, result, callback);
+        mClient.response2Server(processId, callbackId, result);
     }
 
 }

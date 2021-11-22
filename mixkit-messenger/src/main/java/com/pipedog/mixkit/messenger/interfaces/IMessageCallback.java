@@ -16,6 +16,6 @@ public interface IMessageCallback<T> {
      * @param error 错误信息（泛型，外部自己约定类型）
      * @param result 响应结果数据实体
      */
-    void callback(T error, Map<String, Parcelable> result);
+    void callback(T error, Map<String, Object> result);
 
 }
