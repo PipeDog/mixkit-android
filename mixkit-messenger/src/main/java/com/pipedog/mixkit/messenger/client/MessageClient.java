@@ -20,6 +20,8 @@ import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.server.MessengerService;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
+import com.pipedog.mixkit.messenger.utils.ProcessUtils;
+import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.Map;
@@ -91,7 +93,13 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = new Bundle();
-        // TODO: 数据填充
+        bundle.putString(MessageKeyword.KEY_PROCESS_ID, processId);
+        bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
+        bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
+        bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
+
+        String json = mGson.toJson(parameter);
+        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, json);
         
         try {
             Message message = Message.obtain();
@@ -113,8 +121,12 @@ public class MessageClient implements IMessage2Server {
         }
         
         Bundle bundle = new Bundle();
-        // TODO: 数据填充
+        bundle.putString(MessageKeyword.KEY_PROCESS_ID, processId);
+        bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
+        String json = mGson.toJson(result);
+        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, json);
+        
         try {
             Message message = Message.obtain();
             message.replyTo = mClientMessenger;
@@ -160,6 +172,37 @@ public class MessageClient implements IMessage2Server {
         mDelegate.didReceiveResponseMessage(callbackId, result);
     }
 
+    private void bindClient() {
+        Message message = Message.obtain();
+        message.what = MessageNumber.REGISTER_CLIENT;
+        message.replyTo = mClientMessenger;
+
+        try {
+            mServerMessenger.send(message);
+        } catch (Exception e) {
+            MixLogger.error(e.toString());
+        }
+    }
+
+    private void registerModuleData() {
+        Message message = Message.obtain();
+        message.what = MessageNumber.EXPORT_MODULES;
+        message.replyTo = mClientMessenger;
+
+        Bundle bundle = new Bundle();
+        String processId = ProcessUtils.getProcessName(mContext);
+        String moduleData = MixModuleManager.defaultManager().getModuleDataJson();
+        bundle.putString(processId, moduleData);
+
+        message.setData(bundle);
+
+        try {
+            mServerMessenger.send(message);
+        } catch (Exception e) {
+            MixLogger.error(e.toString());
+        }
+    }
+
 
     // INTERNAL CLASSES
 
@@ -189,7 +232,8 @@ public class MessageClient implements IMessage2Server {
             mServerMessenger = new Messenger(service);
             mIsConnected = true;
 
-            // TODO: 绑定 client 及注入 modules 信息到服务端等
+            bindClient();
+            registerModuleData();
         }
 
         @Override

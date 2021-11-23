@@ -5,7 +5,7 @@ import android.os.Message;
 import android.os.Parcelable;
 
 import com.pipedog.mixkit.kernel.MixResultCallback;
-import com.pipedog.mixkit.launch.MixLaunchManager;
+import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
@@ -32,7 +32,7 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
     public MessengerManager() {
         mBridge = new MessengerBridge(this);
         
-        Context context = MixLaunchManager.defaultManager().getContext();
+        Context context = MessengerEngine.getInstance().getContext();
         if (context == null) {
             MixLogger.error("Call method `registerContext` in class `MixLaunchManager` first!");
         }

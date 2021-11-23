@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
-import com.pipedog.mixkit.launch.MixLaunchManager;
+import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.utils.ProcessUtils;
@@ -116,11 +116,9 @@ public class MessengerExecutor implements IMixExecutor {
         Map<String, Object> result =
                 arguments.size() > 0 ? (Map<String, Object>) arguments.get(0) : null;
 
-        Context context = MixLaunchManager.defaultManager().getContext();
-        String processId = ProcessUtils.getProcessName(context);
-
+        String clientId = MessengerEngine.getInstance().getClientId();
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(processId, callbackID, result);
+        caller.response2Server(clientId, callbackID, result);
     }
     
 }
