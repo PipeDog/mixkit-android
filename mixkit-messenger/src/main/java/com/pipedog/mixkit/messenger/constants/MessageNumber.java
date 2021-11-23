@@ -7,7 +7,7 @@ package com.pipedog.mixkit.messenger.constants;
  */
 public class MessageNumber {
 
-    // 初始化指令定义
+    // 初始化、注销指令定义
 
     /**
      * 注册客户端 Messenger
@@ -15,9 +15,9 @@ public class MessageNumber {
     public static final int REGISTER_CLIENT = 1000;
 
     /**
-     * 导出 modules 表信息
+     * 注销客户端 Messenger（暂时未使用）
      */
-    public static final int EXPORT_MODULES = 1001;
+    public static final int UNREGISTER_CLIENT = 1001;
 
 
     // 功能执行调度指令
@@ -54,13 +54,5 @@ public class MessageNumber {
      * 此条指令指响应过程中的 server -> client1
      */
     public static final int RESPONSE_TO_CLIENT = 2003;
-    
-    
-    // 析构指令
-    
-    /**
-     * 注销客户端 Messenger 
-     */
-    public static final int UNREGISTER_CLIENT = 3000;
 
 }

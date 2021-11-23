@@ -97,16 +97,8 @@ public class MessengerDispatcher implements IMessage2Client {
     // HANDLE MESSAGE METHODS
 
     private void receiveRegisterClient(Message message) {
-        // Get key
-        Bundle bundle = message.getData();
-        String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
-
-        // Get value then register into map
         Messenger clientMessenger = message.replyTo;
-        mClientMessengers.put(sourceClientId, clientMessenger);
-    }
 
-    private void receiveExportModules(Message message) {
         // Get key
         Bundle bundle = message.getData();
         String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
@@ -115,6 +107,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String moduleDataJson = bundle.getString(MessageKeyword.KEY_MODULE_DATA);
         Map<String, Object> moduleData = mGson.fromJson(moduleDataJson, Map.class);
 
+        // Register into map
+        mClientMessengers.put(sourceClientId, clientMessenger);
         mModuleDataTable.put(sourceClientId, moduleData);
     }
 
@@ -146,12 +140,6 @@ public class MessengerDispatcher implements IMessage2Client {
         response2Client(sourceClientId, targetClientId, callbackId, response);
     }
 
-    private void receiveUnregisterClient(Message message) {
-        Bundle bundle = message.getData();
-        String clientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
-        mClientMessengers.remove(clientId);
-    }
-
 
     // INTERNAL CLASSES
 
@@ -164,17 +152,11 @@ public class MessengerDispatcher implements IMessage2Client {
                 case MessageNumber.REGISTER_CLIENT: {
                     receiveRegisterClient(msg);
                 } break;
-                case MessageNumber.EXPORT_MODULES: {
-                    receiveExportModules(msg);
-                } break;
                 case MessageNumber.REQUEST_TO_SERVER: {
                     receiveRequest2Server(msg);
                 } break;
                 case MessageNumber.RESPONSE_TO_SERVER: {
                     receiveResponse2Server(msg);
-                } break;
-                case MessageNumber.UNREGISTER_CLIENT: {
-                    receiveUnregisterClient(msg);
                 } break;
                 default: {
                     MixLogger.error("Unsupport message number = " + msg.what);

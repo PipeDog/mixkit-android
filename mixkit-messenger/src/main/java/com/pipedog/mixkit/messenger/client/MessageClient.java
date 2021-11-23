@@ -184,24 +184,9 @@ public class MessageClient implements IMessage2Server {
 
     // INTERNAL METHODS
 
-    private void bindClient() {
+    private void registerClient() {
         Bundle bundle = new Bundle();
-        String sourceClientId = MessengerEngine.getInstance().getClientId();
-        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
 
-        try {
-            Message message = Message.obtain();
-            message.what = MessageNumber.REGISTER_CLIENT;
-            message.replyTo = mClientMessenger;
-            message.setData(bundle);
-            mServerMessenger.send(message);
-        } catch (Exception e) {
-            MixLogger.error(e.toString());
-        }
-    }
-
-    private void registerModuleData() {
-        Bundle bundle = new Bundle();
         String sourceClientId = MessengerEngine.getInstance().getClientId();
         bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
 
@@ -210,7 +195,7 @@ public class MessageClient implements IMessage2Server {
 
         try {
             Message message = Message.obtain();
-            message.what = MessageNumber.EXPORT_MODULES;
+            message.what = MessageNumber.REGISTER_CLIENT;
             message.replyTo = mClientMessenger;
             message.setData(bundle);
             mServerMessenger.send(message);
@@ -253,8 +238,7 @@ public class MessageClient implements IMessage2Server {
             mIsConnected = true;
 
             // Init when connect success
-            bindClient();
-            registerModuleData();
+            registerClient();
         }
 
         @Override
