@@ -6,6 +6,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+/**
+ * 跨进程通信服务
+ * @author liang
+ * @time 2021/11/23
+ */
 public class MessengerService extends Service {
 
     private MessengerDispatcher mMessengerDispatcher = new MessengerDispatcher();

@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
@@ -34,7 +35,6 @@ import java.util.Map;
 public class MessageClient implements IMessage2Server {
 
     private Gson mGson = new Gson();
-    private Context mContext;
     private IMessageClientDelegate mDelegate;
     private Messenger mServerMessenger;
     private Messenger mClientMessenger = new Messenger(new ClientHandler());
@@ -42,11 +42,10 @@ public class MessageClient implements IMessage2Server {
     private boolean mIsConnected = false;
 
     private MessageClient() {
-        // Use `MessageClient(Context)` instead of current method
+
     }
 
-    public MessageClient(Context context, IMessageClientDelegate delegate) {
-        this.mContext = context;
+    public MessageClient(IMessageClientDelegate delegate) {
         this.mDelegate = delegate;
     }
 
@@ -55,12 +54,20 @@ public class MessageClient implements IMessage2Server {
      * @return true 连接成功，false 连接失败
      */
     public boolean startConnection() {
-        boolean result = mContext.bindService(
-                new Intent(mContext, MessengerService.class),
-                mServiceConnection, Context.BIND_AUTO_CREATE);
-        if (!result) {
-            MixLogger.error("Create connection with server process failed!");
+        boolean result = false;
+
+        Intent service = new Intent();
+        service.setAction(MessengerEngine.getInstance().getAction());
+        service.setPackage(MessengerEngine.getInstance().getPackage());
+
+        try {
+            getContext().startService(service);
+            result = getContext().bindService(service, mServiceConnection, 0);
+        } catch (Exception e) {
+            MixLogger.error(e.toString());
+            return false;
         }
+
         return result;
     }
 
@@ -68,7 +75,7 @@ public class MessageClient implements IMessage2Server {
      * 终止连接服务进程
      */
     public void stopConnection() {
-        mContext.unbindService(mServiceConnection);
+        getContext().unbindService(mServiceConnection);
     }
 
     /**
@@ -199,6 +206,10 @@ public class MessageClient implements IMessage2Server {
         } catch (Exception e) {
             MixLogger.error(e.toString());
         }
+    }
+
+    private Context getContext() {
+        return MessengerEngine.getInstance().getContext();
     }
 
 

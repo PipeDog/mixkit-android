@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 夸进程通信入口类
+ * 跨进程通信入口类
  * @author liang
  * @time 2021/11/22
  */
@@ -32,13 +32,7 @@ public class MessengerManager implements
 
     public MessengerManager() {
         mBridge = new MessengerBridge(this);
-        
-        Context context = MessengerEngine.getInstance().getContext();
-        if (context == null) {
-            MixLogger.error("Call method `setContext(Context)` in " +
-                    "interface `IMessengerEngine.IInitialConfiguration` first!");
-        }
-        mClient = new MessageClient(context, this);
+        mClient = new MessageClient(this);
     }
 
 

@@ -7,7 +7,13 @@ import com.pipedog.mixkit.messenger.core.MessengerManager;
 
 import java.util.Map;
 
-public class MessengerEngine implements IMessengerEngine, IMessengerEngine.IInitialConfiguration {
+/**
+ * 跨进程通信引擎实现类
+ * @author liang
+ * @time 2021/11/23
+ */
+public class MessengerEngine
+        implements IMessengerEngine, IMessengerEngine.IInitialConfiguration {
 
     private Context mContext;
     private String mClientId;

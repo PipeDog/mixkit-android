@@ -6,6 +6,38 @@ import com.pipedog.mixkit.kernel.MixResultCallback;
 
 import java.util.Map;
 
+/**
+ * 跨进程通信引擎接口
+ * @author liang
+ * @time 2021/11/23
+ *
+ * 服务端进程需要在 AndroidManifest.xml 中进行如下配置：
+ *  <p>
+ *  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+ *     package="com.xxx.module">
+ *
+ *      <service
+ *          android:name="com.pipedog.mixkit.messenger.server.MessengerService"
+ *          android:enabled="true"
+ *          android:exported="true">
+ *              <intent-filter>
+ *                  <action android:name="com.xxx.service"></action>
+ *                  <category android:name="android.intent.category.DEFAULT" />
+ *              </intent-filter>
+ *      </service>
+ *
+ *
+ *  </manifest>
+ *  </p>
+ *
+ * @NOTE:
+ *  1、在 `manifest` 节点下指定的 `package` 参数需要在初始化引擎时做为参数传入
+ *      IMessengerEngine.IInitialConfiguration -> void setAction(String)
+ *
+ *  2、在 `service` 节点下指定的 `action` 参数需要在初始化引擎室做为参数传入
+ *      IMessengerEngine.IInitialConfiguration -> void setPackage(String)
+ *
+ */
 public interface IMessengerEngine {
 
     // PUBLIC INTERFACES
@@ -23,12 +55,12 @@ public interface IMessengerEngine {
         void setClientId(String clientId);
 
         /**
-         * 设置 Action（在 AndroidManifest.xml 文件中配置的 action 值）
+         * 设置 Action（在服务端进程的 AndroidManifest.xml 文件中配置的 action 值）
          */
         void setAction(String action);
 
         /**
-         * 设置包名（在 AndroidManifest.xml 文件中配置的包名）
+         * 设置服务进程包名（在服务端进程 AndroidManifest.xml 文件中配置的包名）
          */
         void setPackage(String packageName);
 
@@ -54,13 +86,13 @@ public interface IMessengerEngine {
     public boolean launch();
 
     /**
-     * 关闭夸进程消息引擎
+     * 关闭跨进程消息引擎
      */
     public void close();
 
     /**
      * 发送执行消息到指定客户端
-     * @param clientId 进程 ID
+     * @param clientId 目标客户端 ID
      * @param moduleName 模块名称
      * @param methodName 方法名
      * @param parameter 参数包装实例
