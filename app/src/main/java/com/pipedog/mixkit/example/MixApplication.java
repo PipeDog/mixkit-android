@@ -20,7 +20,7 @@ public class MixApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        MessengerEngine engine = MessengerEngine.getInstance();
+        IMessengerEngine engine = MessengerEngine.getInstance();
 
         // 1、初始化配置
         engine.setupConfiguration(new IMessengerEngine.IConfigurationCallback() {
