@@ -31,12 +31,12 @@ public class MessengerExecutor implements IMixExecutor {
         }
 
         @Override
-        public void invoke(Object[] arguments) {
-            if (arguments.length != 1) {
+        public void invoke(Object[] response) {
+            if (response.length != 1) {
                 MixLogger.error("Invalid arguments count!");
             }
 
-            List<Object> args = Arrays.asList(arguments);
+            List<Object> args = Arrays.asList(response);
             invokeCallback(args, mCallbackId);
         }
 

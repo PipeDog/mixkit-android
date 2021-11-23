@@ -43,13 +43,16 @@ public class MixApplication extends Application {
         String moduleName = "";
         String methodName = "";
 
-        engine.sendMessage(clientId, moduleName, methodName,
-                Arrays.asList("argument 1", "argument 2", new MixResultCallback() {
+        MixResultCallback callback = new MixResultCallback() {
             @Override
-            public void invoke(Object[] arguments) {
-
+            public void invoke(Object[] response) {
+                // Handle result here
             }
-        }));
+        };
+
+        engine.sendMessage(clientId, moduleName, methodName,
+                Arrays.asList("argument 1", "argument 2", callback));
+
     }
 
 }
