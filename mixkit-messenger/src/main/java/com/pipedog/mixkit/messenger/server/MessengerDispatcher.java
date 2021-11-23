@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Client;
-import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.lang.reflect.Type;
@@ -49,8 +48,8 @@ public class MessengerDispatcher implements IMessage2Client {
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String json = mGson.toJson(parameter);
-        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, json);
+        String parameterJson = mGson.toJson(parameter);
+        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, parameterJson);
 
         Message message = Message.obtain();
         message.setData(bundle);
@@ -75,8 +74,8 @@ public class MessengerDispatcher implements IMessage2Client {
         Bundle bundle = new Bundle();
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String json = mGson.toJson(result);
-        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, json);
+        String responseJson = mGson.toJson(result);
+        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, responseJson);
 
         Message message = Message.obtain();
         message.setData(bundle);
@@ -90,7 +89,7 @@ public class MessengerDispatcher implements IMessage2Client {
     }
 
 
-    // INTERNAL METHODS
+    // HANDLE MESSAGE METHODS
 
     private void receiveRegisterClient(Message message) {
         // Get key
@@ -108,8 +107,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
 
         // Get value
-        String json = bundle.getString(MessageKeyword.KEY_MODULE_DATA);
-        Map<String, Object> moduleData = mGson.fromJson(json, Map.class);
+        String moduleDataJson = bundle.getString(MessageKeyword.KEY_MODULE_DATA);
+        Map<String, Object> moduleData = mGson.fromJson(moduleDataJson, Map.class);
 
         mModuleDataTable.put(clientId, moduleData);
     }
@@ -122,8 +121,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
 
-        String json = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
-        Map<String, Object> parameter = mGson.fromJson(json, Map.class);
+        String parameterJson = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
+        Map<String, Object> parameter = mGson.fromJson(parameterJson, Map.class);
 
         request2Client(clientId, moduleName, methodName, parameter, callbackId);
     }
@@ -134,8 +133,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
         
-        String json = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
-        Map result = mGson.fromJson(json, Map.class);
+        String responseJson = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
+        Map result = mGson.fromJson(responseJson, Map.class);
         
         response2Client(clientId, callbackId, result);
     }
@@ -176,5 +175,7 @@ public class MessengerDispatcher implements IMessage2Client {
             }
         }
     }
+
+    // TODO: 请求信息检查，如果目标客户端提供信息无法匹配，则本次 request 无效，直接在 server 进行驳回
 
 }

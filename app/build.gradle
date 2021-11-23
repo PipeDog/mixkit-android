@@ -41,6 +41,7 @@ dependencies {
     annotationProcessor project(path: ':mixkit')
 
     implementation project(path: ':mixkit-web')
+    implementation project(path: ':mixkit-messenger')
 
     implementation project(path: ':mixkit-compiler')
     annotationProcessor project(path: ':mixkit-compiler')

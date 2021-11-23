@@ -19,7 +19,6 @@ import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
-import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.server.MessengerService;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.module.MixModuleManager;
@@ -105,8 +104,8 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String json = mGson.toJson(parameter);
-        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, json);
+        String parameterJson = mGson.toJson(parameter);
+        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, parameterJson);
         
         try {
             Message message = Message.obtain();
@@ -131,8 +130,8 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String json = mGson.toJson(result);
-        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, json);
+        String responseJson = mGson.toJson(result);
+        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, responseJson);
         
         try {
             Message message = Message.obtain();
@@ -141,12 +140,12 @@ public class MessageClient implements IMessage2Server {
             message.setData(bundle);
             mServerMessenger.send(message);
         } catch (Exception e) {
-            MixLogger.error("Request to server message send failed, error = %s", e.toString());
+            MixLogger.error("Response to server message send failed, error = %s", e.toString());
         }
     }
 
 
-    // INTERNAL METHODS
+    // HANDLE MESSAGE METHODS
 
     private void receiveRequest2Client(Message message) {
         if (mDelegate == null) {
@@ -158,8 +157,8 @@ public class MessageClient implements IMessage2Server {
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
 
-        String json = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
-        Map<String, Object> parameter = mGson.fromJson(json, Map.class);
+        String parameterJson = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
+        Map<String, Object> parameter = mGson.fromJson(parameterJson, Map.class);
 
         mDelegate.didReceiveRequestMessage(moduleName, methodName, parameter, callbackId);
     }
@@ -171,11 +170,14 @@ public class MessageClient implements IMessage2Server {
 
         Bundle bundle = message.getData();
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
-        String json = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
-        Map<String, Object> result = mGson.fromJson(json, Map.class);
+        String responseJson = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
+        Map<String, Object> result = mGson.fromJson(responseJson, Map.class);
 
         mDelegate.didReceiveResponseMessage(callbackId, result);
     }
+
+
+    // INTERNAL METHODS
 
     private void bindClient() {
         Message message = Message.obtain();
@@ -241,6 +243,7 @@ public class MessageClient implements IMessage2Server {
             mServerMessenger = new Messenger(service);
             mIsConnected = true;
 
+            // Init when connect success
             bindClient();
             registerModuleData();
         }

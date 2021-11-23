@@ -8,7 +8,6 @@ import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
-import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
@@ -17,6 +16,7 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,10 @@ public class MessengerExecutor implements IMixExecutor {
 
         @Override
         public void invoke(Object[] arguments) {
+            if (arguments.length != 1) {
+                MixLogger.error("Invalid arguments count!");
+            }
+
             List<Object> args = Arrays.asList(arguments);
             invokeCallback(args, mCallbackId);
         }
@@ -112,8 +116,8 @@ public class MessengerExecutor implements IMixExecutor {
             arguments = new ArrayList<>();
         }
 
-        Map<String, Object> result =
-                arguments.size() > 0 ? (Map<String, Object>) arguments.get(0) : null;
+        Map<String, Object> result = arguments.size() > 0 ?
+                (Map<String, Object>)arguments.get(0) : new HashMap<>();
 
         String clientId = MessengerEngine.getInstance().getClientId();
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();

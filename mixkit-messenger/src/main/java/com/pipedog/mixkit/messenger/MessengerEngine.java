@@ -19,7 +19,8 @@ public class MessengerEngine
     private String mClientId;
     private String mAction;
     private String mPackage;
-    private MessengerManager mMessengerManager;
+
+    private MessengerManager mMessengerManager = new MessengerManager();
     private volatile static IMessengerEngine sMessengerEngine;
 
     public static IMessengerEngine getInstance() {
@@ -34,7 +35,7 @@ public class MessengerEngine
     }
 
     private MessengerEngine() {
-        mMessengerManager = new MessengerManager();
+
     }
 
     

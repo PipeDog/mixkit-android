@@ -9,7 +9,6 @@ import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
-import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.tool.MixLogger;
 
