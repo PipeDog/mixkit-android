@@ -1,12 +1,17 @@
 package com.pipedog.mixkit.messenger.constants;
 
 public class MessageKeyword {
-    
+
     /**
-     * 客户端 ID
+     * 源客户端（发起通信端）ID
      */
-    public static final String KEY_CLIENT_ID = "clientId";
-    
+    public static final String KEY_SOURCE_CLIENT_ID = "sourceClientId";
+
+    /**
+     * 目标客户端（执行端）ID
+     */
+    public static final String KEY_TARGET_CLIENT_ID = "targetClientId";
+
     /**
      * 导出模块信息
      */

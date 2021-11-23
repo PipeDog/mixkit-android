@@ -8,6 +8,7 @@ import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
+import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.tool.MixLogger;
@@ -65,7 +66,8 @@ public class MessengerManager implements
             serverArgs.add(serverArg);
         }
 
-        request2Server(clientId, moduleName, methodName, serverArgs);
+        String sourceClientId = MessengerEngine.getInstance().getClientId();
+        request2Server(sourceClientId, clientId, moduleName, methodName, serverArgs);
     }
 
 
@@ -79,8 +81,10 @@ public class MessengerManager implements
 
     // OVERRIDE METHODS FROM `IMessage2Server`
 
+
     @Override
-    public void request2Server(String clientId,
+    public void request2Server(String sourceClientId,
+                               String targetClientId,
                                String moduleName,
                                String methodName,
                                List<Object> arguments) {
@@ -88,25 +92,28 @@ public class MessengerManager implements
             return;
         }
 
-        mClient.request2Server(clientId, moduleName, methodName, arguments);
+        mClient.request2Server(sourceClientId, targetClientId, moduleName, methodName, arguments);
     }
 
     @Override
-    public void response2Server(String clientId,
+    public void response2Server(String sourceClientId,
+                                String targetClientId,
                                 String callbackId,
                                 List<Object> response) {
         if (!mClient.isConnected()) {
             return;
         }
 
-        mClient.response2Server(clientId, callbackId, response);
+        mClient.response2Server(sourceClientId, targetClientId, callbackId, response);
     }
 
 
     // OVERRIDE METHODS FROM `IMessageClientDelegate`
 
     @Override
-    public void didReceiveRequestMessage(String moduleName,
+    public void didReceiveRequestMessage(String sourceClientId,
+                                         String targetClientId,
+                                         String moduleName,
                                          String methodName,
                                          List<Object> arguments) {
         Map<String, Object> metaData = new HashMap<>();
@@ -114,9 +121,12 @@ public class MessengerManager implements
         metaData.put("methodName", methodName);
         metaData.put("arguments", arguments);
 
+        // Extra parameters
+        metaData.put(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
+        metaData.put(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
+
         mBridge.executor().invokeMethod(metaData);
     }
-
 
     @Override
     public void didReceiveResponseMessage(String callbackId,

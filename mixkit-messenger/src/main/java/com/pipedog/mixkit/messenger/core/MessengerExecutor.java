@@ -7,6 +7,7 @@ import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
@@ -24,20 +25,22 @@ public class MessengerExecutor implements IMixExecutor {
 
     private class MessengerResultCallback implements MixResultCallback {
 
+        protected String mSourceClientId;
+        protected String mTargetClientId;
         protected String mCallbackId;
 
-        protected MessengerResultCallback(String callbackId) {
+        protected MessengerResultCallback(String sourceClientId,
+                                          String targetClientId,
+                                          String callbackId) {
+            mSourceClientId = sourceClientId;
+            mTargetClientId = targetClientId;
             mCallbackId = callbackId;
         }
 
         @Override
         public void invoke(Object[] response) {
-            if (response.length != 1) {
-                MixLogger.error("Invalid arguments count!");
-            }
-
             List<Object> args = Arrays.asList(response);
-            invokeCallback(args, mCallbackId);
+            invokeCallback(mSourceClientId, mTargetClientId, mCallbackId, args);
         }
 
     }
@@ -90,13 +93,18 @@ public class MessengerExecutor implements IMixExecutor {
 
         List<Object> nativeArgs = new ArrayList<>();
 
+        Map<String, Object> map = (Map<String, Object>)metaData;
+        String sourceClientId = (String) map.get(MessageKeyword.KEY_SOURCE_CLIENT_ID);
+        String targetClientId = (String) map.get(MessageKeyword.KEY_TARGET_CLIENT_ID);
+
         for (Object arg : arguments) {
             Object nativeArg = arg;
 
             if (nativeArg instanceof String) {
                 boolean isCallbackID = ((String)arg).startsWith("_$_mk_callback_$_");
                 if (isCallbackID) {
-                    MessengerResultCallback callback = new MessengerResultCallback((String)arg);
+                    MessengerResultCallback callback = new MessengerResultCallback(
+                            sourceClientId, targetClientId, (String)arg);
                     nativeArg = callback;
                 }
             }
@@ -107,21 +115,20 @@ public class MessengerExecutor implements IMixExecutor {
         return invoker.invoke(bridgeModule, nativeArgs);
     }
 
-    public void invokeCallback(List<Object> arguments, String callbackID) {
+    public void invokeCallback(String sourceClientId,
+                               String targetClientId,
+                               String callbackID,
+                               List<Object> response) {
         if (callbackID == null || callbackID.isEmpty()) {
             return;
         }
 
-        if (arguments == null) {
-            arguments = new ArrayList<>();
+        if (response == null) {
+            response = new ArrayList<>();
         }
 
-        Map<String, Object> result = arguments.size() > 0 ?
-                (Map<String, Object>)arguments.get(0) : new HashMap<>();
-
-        String clientId = MessengerEngine.getInstance().getClientId();
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(clientId, callbackID, arguments);
+        caller.response2Server(sourceClientId, targetClientId, callbackID, response);
     }
     
 }

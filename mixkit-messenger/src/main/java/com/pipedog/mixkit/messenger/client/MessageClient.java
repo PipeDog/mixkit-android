@@ -89,8 +89,10 @@ public class MessageClient implements IMessage2Server {
     
     // OVERRIDE METHODS FROM `IMessage2Server`
 
+
     @Override
-    public void request2Server(String clientId,
+    public void request2Server(String sourceClientId,
+                               String targetClientId,
                                String moduleName,
                                String methodName,
                                List<Object> arguments) {
@@ -99,7 +101,8 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
+        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
+        bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
 
@@ -118,7 +121,8 @@ public class MessageClient implements IMessage2Server {
     }
 
     @Override
-    public void response2Server(String clientId,
+    public void response2Server(String sourceClientId,
+                                String targetClientId,
                                 String callbackId,
                                 List<Object> response) {
         if (mServerMessenger == null) {
@@ -126,7 +130,8 @@ public class MessageClient implements IMessage2Server {
         }
         
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
+        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
+        bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
         String responseJson = mGson.toJson(response);
@@ -152,14 +157,15 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = message.getData();
+        String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
+        String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
         String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
-        String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
 
         String argumentsJson = bundle.getString(MessageKeyword.KEY_ARGUMENTS_NAME);
         List<Object> arguments = mGson.fromJson(argumentsJson, List.class);
 
-        mDelegate.didReceiveRequestMessage(moduleName, methodName, arguments);
+        mDelegate.didReceiveRequestMessage(sourceClientId, targetClientId, moduleName, methodName, arguments);
     }
 
     private void receiveResponse2Client(Message message) {
@@ -179,11 +185,15 @@ public class MessageClient implements IMessage2Server {
     // INTERNAL METHODS
 
     private void bindClient() {
-        Message message = Message.obtain();
-        message.what = MessageNumber.REGISTER_CLIENT;
-        message.replyTo = mClientMessenger;
+        Bundle bundle = new Bundle();
+        String sourceClientId = MessengerEngine.getInstance().getClientId();
+        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
 
         try {
+            Message message = Message.obtain();
+            message.what = MessageNumber.REGISTER_CLIENT;
+            message.replyTo = mClientMessenger;
+            message.setData(bundle);
             mServerMessenger.send(message);
         } catch (Exception e) {
             MixLogger.error(e.toString());
@@ -191,18 +201,18 @@ public class MessageClient implements IMessage2Server {
     }
 
     private void registerModuleData() {
-        Message message = Message.obtain();
-        message.what = MessageNumber.EXPORT_MODULES;
-        message.replyTo = mClientMessenger;
-
         Bundle bundle = new Bundle();
-        String clientId = MessengerEngine.getInstance().getClientId();
-        String moduleData = MixModuleManager.defaultManager().getModuleDataJson();
-        bundle.putString(clientId, moduleData);
+        String sourceClientId = MessengerEngine.getInstance().getClientId();
+        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
 
-        message.setData(bundle);
+        String moduleData = MixModuleManager.defaultManager().getModuleDataJson();
+        bundle.putString(MessageKeyword.KEY_MODULE_DATA, moduleData);
 
         try {
+            Message message = Message.obtain();
+            message.what = MessageNumber.EXPORT_MODULES;
+            message.replyTo = mClientMessenger;
+            message.setData(bundle);
             mServerMessenger.send(message);
         } catch (Exception e) {
             MixLogger.error(e.toString());
