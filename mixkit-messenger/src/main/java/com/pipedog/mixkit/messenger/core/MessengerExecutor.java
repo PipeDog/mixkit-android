@@ -121,7 +121,7 @@ public class MessengerExecutor implements IMixExecutor {
 
         String clientId = MessengerEngine.getInstance().getClientId();
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(clientId, callbackID, result);
+        caller.response2Server(clientId, callbackID, arguments);
     }
     
 }

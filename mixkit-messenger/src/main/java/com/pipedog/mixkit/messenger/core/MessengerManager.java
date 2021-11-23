@@ -48,11 +48,24 @@ public class MessengerManager implements
     public void sendMessage(String clientId,
                             String moduleName,
                             String methodName,
-                            Map<String, Object> parameter,
-                            MixResultCallback callback) {
-        String callbackId = CallbackIdGenerator.getCallbackId();
-        mCallbackMap.put(callbackId, callback);
-        request2Server(clientId, moduleName, methodName, parameter, callbackId);
+                            List<Object> arguments) {
+        arguments = arguments != null ? arguments : new ArrayList<>();
+        List<Object> serverArgs = new ArrayList<>();
+
+        for (Object arg : arguments) {
+            Object serverArg = arg;
+            boolean isCallback = arg instanceof MixResultCallback;
+
+            if (isCallback) {
+                String callbackId = CallbackIdGenerator.getCallbackId();
+                mCallbackMap.put(callbackId, (MixResultCallback) arg);
+                serverArg = callbackId;
+            }
+
+            serverArgs.add(serverArg);
+        }
+
+        request2Server(clientId, moduleName, methodName, serverArgs);
     }
 
 
@@ -70,24 +83,23 @@ public class MessengerManager implements
     public void request2Server(String clientId,
                                String moduleName,
                                String methodName,
-                               Map<String, Object> parameter,
-                               String callbackId) {
+                               List<Object> arguments) {
         if (!mClient.isConnected()) {
             return;
         }
 
-        mClient.request2Server(clientId, moduleName, methodName, parameter, callbackId);
+        mClient.request2Server(clientId, moduleName, methodName, arguments);
     }
 
     @Override
     public void response2Server(String clientId,
                                 String callbackId,
-                                Map<String, Object> result) {
+                                List<Object> response) {
         if (!mClient.isConnected()) {
             return;
         }
 
-        mClient.response2Server(clientId, callbackId, result);
+        mClient.response2Server(clientId, callbackId, response);
     }
 
 
@@ -96,23 +108,19 @@ public class MessengerManager implements
     @Override
     public void didReceiveRequestMessage(String moduleName,
                                          String methodName,
-                                         Map<String, Object> parameter,
-                                         String callbackId) {
-
+                                         List<Object> arguments) {
         Map<String, Object> metaData = new HashMap<>();
         metaData.put("moduleName", moduleName);
         metaData.put("methodName", methodName);
-
-        List<Object> arguments = new ArrayList<>();
-        arguments.add(parameter);
-        arguments.add(callbackId);
         metaData.put("arguments", arguments);
 
         mBridge.executor().invokeMethod(metaData);
     }
 
+
     @Override
-    public void didReceiveResponseMessage(String callbackId, Map<String, Object> result) {
+    public void didReceiveResponseMessage(String callbackId,
+                                          List<Object> response) {
         if (callbackId == null || callbackId.isEmpty()) {
             return;
         }
@@ -120,8 +128,7 @@ public class MessengerManager implements
         MixResultCallback callback = mCallbackMap.get(callbackId);
         mCallbackMap.remove(callbackId);
 
-        Object[] arguments = new Object[]{result};
-        callback.invoke(arguments);
+        callback.invoke(response.toArray());
     }
 
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.core.MessengerManager;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,12 +58,11 @@ public class MessengerEngine
     }
 
     @Override
-    public void sendMessage(String clientId,
+    public void sendMessage(String clientId, 
                             String moduleName, 
                             String methodName,
-                            Map<String, Object> parameter,
-                            MixResultCallback callback) {
-        mMessengerManager.sendMessage(clientId, moduleName, methodName, parameter, callback);
+                            List<Object> arguments) {
+        mMessengerManager.sendMessage(clientId, moduleName, methodName, arguments);
     }
 
     @Override

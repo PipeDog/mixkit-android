@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.pipedog.mixkit.kernel.MixResultCallback;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,14 +96,12 @@ public interface IMessengerEngine {
      * @param clientId 目标客户端 ID
      * @param moduleName 模块名称
      * @param methodName 方法名
-     * @param parameter 参数包装实例
-     * @param callback 消息结果回调
+     * @param arguments 参数列表（包含回调，回调类型为 com.pipedog.mixkit.kernel.MixResultCallback）
      */
     public void sendMessage(String clientId,
                             String moduleName,
                             String methodName,
-                            Map<String, Object> parameter,
-                            MixResultCallback callback);
+                            List<Object> arguments);
 
     /**
      * 获取当前 app 上下文

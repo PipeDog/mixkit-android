@@ -6,7 +6,9 @@ import android.app.Application;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MixApplication extends Application {
@@ -20,15 +22,15 @@ public class MixApplication extends Application {
         String clientId = "";
         String moduleName = "";
         String methodName = "";
-        Map parameter = new HashMap<>();
 
-        MessengerEngine.getInstance().sendMessage(clientId,
-                moduleName, methodName, parameter, new MixResultCallback() {
+        // Arrays.asList("foo","bar");
+        MessengerEngine.getInstance().sendMessage(clientId, moduleName,
+                methodName, Arrays.asList("argument 1", "argument 2", new MixResultCallback() {
             @Override
             public void invoke(Object[] arguments) {
-                
+
             }
-        });
+        }));
 
     }
 

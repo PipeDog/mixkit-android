@@ -25,10 +25,10 @@ public class MessageKeyword {
     /**
      * 参数名称
      */
-    public static final String KEY_PARAMETER_NAME = "parameter";
+    public static final String KEY_ARGUMENTS_NAME = "arguments";
 
     /**
-     * 回调 ID
+     * 回调 ID（仅在响应过程，即 client2 -> server -> client1 过程中会用到）
      */
     public static final String KEY_CALLBACK_ID = "callbackID";
 

@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.messenger.client;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * 客户端代理接口
@@ -13,20 +13,18 @@ public interface IMessageClientDelegate {
      * 接收到请求执行消息
      * @param moduleName 模块名
      * @param methodName 方法名
-     * @param parameter 参数集合
-     * @param callbackId 回调 ID
+     * @param arguments 参数列表（包含回调 ID）
      */
     void didReceiveRequestMessage(String moduleName,
                                   String methodName,
-                                  Map<String, Object> parameter,
-                                  String callbackId);
+                                  List<Object> arguments);
 
     /**
      * 接收到响应消息
      * @param callbackId 回调 ID
-     * @param result 回调结果数据实体
+     * @param response 回调结果数据列表
      */
     void didReceiveResponseMessage(String callbackId,
-                                   Map<String, Object> result);
+                                   List<Object> response);
 
 }

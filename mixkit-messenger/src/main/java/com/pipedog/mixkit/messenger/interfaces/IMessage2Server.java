@@ -2,6 +2,7 @@ package com.pipedog.mixkit.messenger.interfaces;
 
 import android.os.Parcelable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,14 +19,12 @@ public interface IMessage2Server {
      * @param clientId 目标客户端 ID 标识
      * @param moduleName 模块名
      * @param methodName 方法名
-     * @param parameter 请求参数体
-     * @param callbackId 请求响应回调 ID
+     * @param arguments 参数列表，包含 callbackId
      */
     void request2Server(String clientId,
                         String moduleName,
                         String methodName,
-                        Map<String, Object> parameter,
-                        String callbackId);
+                        List<Object> arguments);
 
     /**
      * 向服务端（server）发送响应消息
@@ -33,10 +32,10 @@ public interface IMessage2Server {
      *  
      * @param clientId 目标客户端 ID 标识
      * @param callbackId 请求响应回调 ID
-     * @param result 响应数据
+     * @param response 响应数据列表
      */
     void response2Server(String clientId,
                          String callbackId,
-                         Map<String, Object> result);
+                         List<Object> response);
 
 }

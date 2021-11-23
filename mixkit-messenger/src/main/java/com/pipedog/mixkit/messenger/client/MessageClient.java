@@ -24,6 +24,7 @@ import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,13 +88,12 @@ public class MessageClient implements IMessage2Server {
 
     
     // OVERRIDE METHODS FROM `IMessage2Server`
-    
+
     @Override
-    public void request2Server(String clientId, 
+    public void request2Server(String clientId,
                                String moduleName,
                                String methodName,
-                               Map<String, Object> parameter, 
-                               String callbackId) {
+                               List<Object> arguments) {
         if (mServerMessenger == null) {
             return;
         }
@@ -102,10 +102,9 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
-        bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String parameterJson = mGson.toJson(parameter);
-        bundle.putString(MessageKeyword.KEY_PARAMETER_NAME, parameterJson);
+        String argumentsJson = mGson.toJson(arguments);
+        bundle.putString(MessageKeyword.KEY_ARGUMENTS_NAME, argumentsJson);
         
         try {
             Message message = Message.obtain();
@@ -121,7 +120,7 @@ public class MessageClient implements IMessage2Server {
     @Override
     public void response2Server(String clientId,
                                 String callbackId,
-                                Map<String, Object> result) {
+                                List<Object> response) {
         if (mServerMessenger == null) {
             return;
         }
@@ -130,7 +129,7 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
-        String responseJson = mGson.toJson(result);
+        String responseJson = mGson.toJson(response);
         bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, responseJson);
         
         try {
@@ -157,10 +156,10 @@ public class MessageClient implements IMessage2Server {
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
 
-        String parameterJson = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
-        Map<String, Object> parameter = mGson.fromJson(parameterJson, Map.class);
+        String argumentsJson = bundle.getString(MessageKeyword.KEY_ARGUMENTS_NAME);
+        List<Object> arguments = mGson.fromJson(argumentsJson, List.class);
 
-        mDelegate.didReceiveRequestMessage(moduleName, methodName, parameter, callbackId);
+        mDelegate.didReceiveRequestMessage(moduleName, methodName, arguments);
     }
 
     private void receiveResponse2Client(Message message) {
@@ -171,9 +170,9 @@ public class MessageClient implements IMessage2Server {
         Bundle bundle = message.getData();
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
         String responseJson = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
-        Map<String, Object> result = mGson.fromJson(responseJson, Map.class);
+        List<Object> response = mGson.fromJson(responseJson, List.class);
 
-        mDelegate.didReceiveResponseMessage(callbackId, result);
+        mDelegate.didReceiveResponseMessage(callbackId, response);
     }
 
 
