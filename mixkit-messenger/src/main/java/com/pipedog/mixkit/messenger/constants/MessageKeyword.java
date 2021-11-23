@@ -3,9 +3,9 @@ package com.pipedog.mixkit.messenger.constants;
 public class MessageKeyword {
     
     /**
-     * 进程 ID
+     * 客户端 ID
      */
-    public static final String KEY_PROCESS_ID = "processId";
+    public static final String KEY_CLIENT_ID = "clientId";
     
     /**
      * 导出模块信息

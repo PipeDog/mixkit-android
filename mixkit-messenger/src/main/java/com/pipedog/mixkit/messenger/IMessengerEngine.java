@@ -60,13 +60,13 @@ public interface IMessengerEngine {
 
     /**
      * 发送执行消息到指定客户端
-     * @param processId 进程 ID
+     * @param clientId 进程 ID
      * @param moduleName 模块名称
      * @param methodName 方法名
      * @param parameter 参数包装实例
      * @param callback 消息结果回调
      */
-    public void sendMessage(String processId,
+    public void sendMessage(String clientId,
                             String moduleName,
                             String methodName,
                             Map<String, Object> parameter,

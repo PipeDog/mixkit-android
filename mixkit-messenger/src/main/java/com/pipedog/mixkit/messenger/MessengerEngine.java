@@ -50,12 +50,12 @@ public class MessengerEngine implements IMessengerEngine, IMessengerEngine.IInit
     }
 
     @Override
-    public void sendMessage(String processId,
+    public void sendMessage(String clientId,
                             String moduleName, 
                             String methodName,
                             Map<String, Object> parameter,
                             MixResultCallback callback) {
-        mMessengerManager.sendMessage(processId, moduleName, methodName, parameter, callback);
+        mMessengerManager.sendMessage(clientId, moduleName, methodName, parameter, callback);
     }
 
     @Override

@@ -34,12 +34,12 @@ public class MessengerDispatcher implements IMessage2Client {
     // OVERRIDE METHODS FROM `IMessage2Client`
 
     @Override
-    public void request2Client(String processId,
+    public void request2Client(String clientId,
                                String moduleName,
                                String methodName,
                                Map<String, Object> parameter,
                                String callbackId) {
-        Messenger clientMessenger = mClientMessengers.get(processId);
+        Messenger clientMessenger = mClientMessengers.get(clientId);
         if (clientMessenger == null) {
             return;
         }
@@ -64,10 +64,10 @@ public class MessengerDispatcher implements IMessage2Client {
     }
 
     @Override
-    public void response2Client(String processId,
+    public void response2Client(String clientId,
                                 String callbackId,
                                 Map<String, Object> result) {
-        Messenger clientMessenger = mClientMessengers.get(processId);
+        Messenger clientMessenger = mClientMessengers.get(clientId);
         if (clientMessenger == null) {
             return;
         }
@@ -95,29 +95,29 @@ public class MessengerDispatcher implements IMessage2Client {
     private void receiveRegisterClient(Message message) {
         // Get key
         Bundle bundle = message.getData();
-        String processId = bundle.getString(MessageKeyword.KEY_PROCESS_ID);
+        String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
 
         // Get value then register into map
         Messenger clientMessenger = message.replyTo;
-        mClientMessengers.put(processId, clientMessenger);
+        mClientMessengers.put(clientId, clientMessenger);
     }
 
     private void receiveExportModules(Message message) {
         // Get key
         Bundle bundle = message.getData();
-        String processId = bundle.getString(MessageKeyword.KEY_PROCESS_ID);
+        String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
 
         // Get value
         String json = bundle.getString(MessageKeyword.KEY_MODULE_DATA);
         Map<String, Object> moduleData = mGson.fromJson(json, Map.class);
 
-        mModuleDataTable.put(processId, moduleData);
+        mModuleDataTable.put(clientId, moduleData);
     }
 
     private void receiveRequest2Server(Message message) {
         Bundle bundle = message.getData();
 
-        String processId = bundle.getString(MessageKeyword.KEY_PROCESS_ID);
+        String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
         String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
@@ -125,25 +125,25 @@ public class MessengerDispatcher implements IMessage2Client {
         String json = bundle.getString(MessageKeyword.KEY_PARAMETER_NAME);
         Map<String, Object> parameter = mGson.fromJson(json, Map.class);
 
-        request2Client(processId, moduleName, methodName, parameter, callbackId);
+        request2Client(clientId, moduleName, methodName, parameter, callbackId);
     }
 
     private void receiveResponse2Server(Message message) {
         Bundle bundle = message.getData();
 
-        String processId = bundle.getString(MessageKeyword.KEY_PROCESS_ID);
+        String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
         
         String json = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
         Map result = mGson.fromJson(json, Map.class);
         
-        response2Client(processId, callbackId, result);
+        response2Client(clientId, callbackId, result);
     }
 
     private void receiveUnregisterClient(Message message) {
         Bundle bundle = message.getData();
-        String processId = bundle.getString(MessageKeyword.KEY_PROCESS_ID);
-        mClientMessengers.remove(processId);
+        String clientId = bundle.getString(MessageKeyword.KEY_CLIENT_ID);
+        mClientMessengers.remove(clientId);
     }
 
 

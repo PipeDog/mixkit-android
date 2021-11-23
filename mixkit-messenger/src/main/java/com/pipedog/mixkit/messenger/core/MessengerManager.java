@@ -23,7 +23,8 @@ import java.util.Map;
  * @author liang
  * @time 2021/11/22
  */
-public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Server, IMessageClientDelegate {
+public class MessengerManager implements
+        IMessengerBridgeDelegate, IMessage2Server, IMessageClientDelegate {
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
@@ -34,42 +35,31 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
         
         Context context = MessengerEngine.getInstance().getContext();
         if (context == null) {
-            MixLogger.error("Call method `registerContext` in class `MixLaunchManager` first!");
+            MixLogger.error("Call method `setContext(Context)` in " +
+                    "interface `IMessengerEngine.IInitialConfiguration` first!");
         }
         mClient = new MessageClient(context, this);
     }
 
-    /**
-     * 启动连接
-     * @return true 连接成功，false 连接失败
-     */
+
+    // PUBLIC METHODS
+
     public boolean startConnection() {
         return mClient.startConnection();
     }
 
-    /**
-     * 终止连接服务进程
-     */
     public void stopConnection() {
         mClient.stopConnection();
     }
 
-    /**
-     * 想服务端发送功能执行请求
-     * @param processId 目标进程 ID
-     * @param moduleName 模块名称
-     * @param methodName 方法名
-     * @param parameter 请求参数实体
-     * @param callback 回调
-     */
-    public void sendMessage(String processId,
+    public void sendMessage(String clientId,
                             String moduleName,
                             String methodName,
                             Map<String, Object> parameter,
                             MixResultCallback callback) {
         String callbackId = CallbackIdGenerator.getCallbackId();
         mCallbackMap.put(callbackId, callback);
-        request2Server(processId, moduleName, methodName, parameter, callbackId);
+        request2Server(clientId, moduleName, methodName, parameter, callbackId);
     }
 
 
@@ -84,7 +74,7 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
     // OVERRIDE METHODS FROM `IMessage2Server`
 
     @Override
-    public void request2Server(String processId,
+    public void request2Server(String clientId,
                                String moduleName,
                                String methodName,
                                Map<String, Object> parameter,
@@ -93,18 +83,18 @@ public class MessengerManager implements IMessengerBridgeDelegate, IMessage2Serv
             return;
         }
 
-        mClient.request2Server(processId, moduleName, methodName, parameter, callbackId);
+        mClient.request2Server(clientId, moduleName, methodName, parameter, callbackId);
     }
 
     @Override
-    public void response2Server(String processId,
+    public void response2Server(String clientId,
                                 String callbackId,
                                 Map<String, Object> result) {
         if (!mClient.isConnected()) {
             return;
         }
 
-        mClient.response2Server(processId, callbackId, result);
+        mClient.response2Server(clientId, callbackId, result);
     }
 
 

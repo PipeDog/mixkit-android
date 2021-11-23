@@ -14,13 +14,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageCallback;
 import com.pipedog.mixkit.messenger.server.MessengerService;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
-import com.pipedog.mixkit.messenger.utils.ProcessUtils;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
@@ -83,7 +83,7 @@ public class MessageClient implements IMessage2Server {
     // OVERRIDE METHODS FROM `IMessage2Server`
     
     @Override
-    public void request2Server(String processId, 
+    public void request2Server(String clientId, 
                                String moduleName,
                                String methodName,
                                Map<String, Object> parameter, 
@@ -93,7 +93,7 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_PROCESS_ID, processId);
+        bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
@@ -113,7 +113,7 @@ public class MessageClient implements IMessage2Server {
     }
 
     @Override
-    public void response2Server(String processId,
+    public void response2Server(String clientId,
                                 String callbackId,
                                 Map<String, Object> result) {
         if (mServerMessenger == null) {
@@ -121,7 +121,7 @@ public class MessageClient implements IMessage2Server {
         }
         
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_PROCESS_ID, processId);
+        bundle.putString(MessageKeyword.KEY_CLIENT_ID, clientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
 
         String json = mGson.toJson(result);
@@ -147,7 +147,6 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = message.getData();
-
         String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
@@ -164,7 +163,6 @@ public class MessageClient implements IMessage2Server {
         }
 
         Bundle bundle = message.getData();
-
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
         String json = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
         Map<String, Object> result = mGson.fromJson(json, Map.class);
@@ -190,9 +188,9 @@ public class MessageClient implements IMessage2Server {
         message.replyTo = mClientMessenger;
 
         Bundle bundle = new Bundle();
-        String processId = ProcessUtils.getProcessName(mContext);
+        String clientId = MessengerEngine.getInstance().getClientId();
         String moduleData = MixModuleManager.defaultManager().getModuleDataJson();
-        bundle.putString(processId, moduleData);
+        bundle.putString(clientId, moduleData);
 
         message.setData(bundle);
 
