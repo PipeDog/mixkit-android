@@ -22,6 +22,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="mixkit-android.app" target="11" />
+      <module name="mixkit-android.clientdemo" target="11" />
       <module name="mixkit-android.mixkit" target="11" />
       <module name="mixkit-android.mixkit-messenger" target="11" />
       <module name="mixkit-android.mixkit-socket" target="11" />

@@ -27,32 +27,16 @@ public class MixApplication extends Application {
             @Override
             public void setup(IMessengerEngine.IInitialConfiguration configuration) {
                 configuration.setContext(getApplicationContext());
-                configuration.setClientId("com.client.mainapp");
+                configuration.setClientId("com.client.targetApp");
 
-                // action 及 package 需要在 AndroidManifest.xml 中配置
-                configuration.setAction("");
-                configuration.setPackage("");
+                // action 及 package 需要在服务端进程的 AndroidManifest.xml 中配置
+                configuration.setAction("com.pipedog.testService");
+                configuration.setPackage("com.pipedog.mixkit.example");
             }
         });
 
         // 2、启动引擎
         engine.launch();
-
-        // 3、调用其他进程的方法并获取回调
-        String clientId = "";
-        String moduleName = "";
-        String methodName = "";
-
-        MixResultCallback callback = new MixResultCallback() {
-            @Override
-            public void invoke(Object[] response) {
-                // Handle result here
-            }
-        };
-
-        engine.sendMessage(clientId, moduleName, methodName,
-                Arrays.asList("argument 1", "argument 2", callback));
-
     }
 
 }
