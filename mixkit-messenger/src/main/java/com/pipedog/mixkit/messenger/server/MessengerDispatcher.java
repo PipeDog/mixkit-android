@@ -110,8 +110,6 @@ public class MessengerDispatcher implements IMessage2Client {
         // Register into map
         mClientMessengers.put(sourceClientId, clientMessenger);
         mModuleDataTable.put(sourceClientId, moduleData);
-
-        MixLogger.error(">>>>>>> mModuleDataTable = " + mModuleDataTable.toString());
     }
 
     private void receiveRequest2Server(Message message) {
