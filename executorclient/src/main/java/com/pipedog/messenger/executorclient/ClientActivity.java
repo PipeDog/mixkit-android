@@ -1,25 +1,23 @@
-package com.pipedog.mixkit.example;
+package com.pipedog.messenger.executorclient;
 
-import android.content.Context;
-import android.app.Application;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import android.os.Bundle;
+
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class MixApplication extends Application {
-
-    private Context mContext;
+public class ClientActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_client);
 
+        launchMessengerEngine();
+    }
+
+    private void launchMessengerEngine() {
         IMessengerEngine engine = MessengerEngine.getInstance();
 
         // 1、初始化配置
@@ -27,7 +25,7 @@ public class MixApplication extends Application {
             @Override
             public void setup(IMessengerEngine.IInitialConfiguration configuration) {
                 configuration.setContext(getApplicationContext());
-                configuration.setClientId("com.client.mainApp");
+                configuration.setClientId("com.client.executorApp");
 
                 // action 及 package 需要在服务端进程的 AndroidManifest.xml 中配置
                 configuration.setAction("com.pipedog.testService");
@@ -37,6 +35,13 @@ public class MixApplication extends Application {
 
         // 2、启动引擎
         engine.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        MessengerEngine.getInstance().restart();
     }
 
 }

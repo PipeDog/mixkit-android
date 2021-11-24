@@ -24,7 +24,9 @@
         <service
             android:name="com.pipedog.mixkit.messenger.server.MessengerService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:persistent="true"
+            >
             <intent-filter>
                 <action android:name="com.pipedog.testService" />
                 <category android:name="android.intent.category.DEFAULT" />

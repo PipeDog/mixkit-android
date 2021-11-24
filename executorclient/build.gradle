@@ -1,3 +1,6 @@
+//plugins {
+//    id 'com.android.library'
+//}
 
 apply plugin: 'com.android.application'
 apply plugin: 'mixkit-register'
@@ -40,5 +43,4 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 }

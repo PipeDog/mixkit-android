@@ -20,7 +20,9 @@ import java.util.Map;
  *      <service
  *          android:name="com.pipedog.mixkit.messenger.server.MessengerService"
  *          android:enabled="true"
- *          android:exported="true">
+ *          android:exported="true"
+ *          android:persistent="true"
+ *          >
  *              <intent-filter>
  *                  <action android:name="com.xxx.service"></action>
  *                  <category android:name="android.intent.category.DEFAULT" />
