@@ -89,7 +89,6 @@ public class MessageClient implements IMessage2Server {
     
     // OVERRIDE METHODS FROM `IMessage2Server`
 
-
     @Override
     public void request2Server(String sourceClientId,
                                String targetClientId,
@@ -227,7 +226,6 @@ public class MessageClient implements IMessage2Server {
                     MixLogger.error("Unsupport message number = " + msg.what);
                 } break;
             }
-
         }
     }
 
