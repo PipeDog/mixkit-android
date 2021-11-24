@@ -36,7 +36,7 @@ public class MixApplication extends Application {
         });
 
         // 2、启动引擎
-        engine.launch();
+        engine.start();
     }
 
 }

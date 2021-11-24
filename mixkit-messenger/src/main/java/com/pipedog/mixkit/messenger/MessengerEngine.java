@@ -48,12 +48,17 @@ public class MessengerEngine
     }
 
     @Override
-    public boolean launch() {
+    public boolean start() {
         return mMessengerManager.startConnection();
     }
 
     @Override
-    public void close() {
+    public boolean restart() {
+        return mMessengerManager.startConnection();
+    }
+
+    @Override
+    public void shutdown() {
         mMessengerManager.stopConnection();
     }
 

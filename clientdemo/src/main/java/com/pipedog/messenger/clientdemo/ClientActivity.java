@@ -49,7 +49,14 @@ public class ClientActivity extends AppCompatActivity {
         });
 
         // 2、启动引擎
-        engine.launch();
+        engine.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        MessengerEngine.getInstance().restart();
     }
 
     private void getViews() {

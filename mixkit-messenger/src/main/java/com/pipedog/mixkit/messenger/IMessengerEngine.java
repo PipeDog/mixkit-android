@@ -83,13 +83,19 @@ public interface IMessengerEngine {
     /**
      * 启动跨进程消息引擎
      * @return true 启动成功，false 启动失败
-     **/
-    public boolean launch();
+     */
+    public boolean start();
+
+    /**
+     * 重启跨进程消息引擎
+     * @return true 启动成功，false 启动失败
+     */
+    public boolean restart();
 
     /**
      * 关闭跨进程消息引擎
      */
-    public void close();
+    public void shutdown();
 
     /**
      * 发送执行消息到指定客户端

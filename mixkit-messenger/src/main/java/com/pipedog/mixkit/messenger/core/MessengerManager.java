@@ -81,7 +81,6 @@ public class MessengerManager implements
 
     // OVERRIDE METHODS FROM `IMessage2Server`
 
-
     @Override
     public void request2Server(String sourceClientId,
                                String targetClientId,
