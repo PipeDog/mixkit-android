@@ -129,3 +129,36 @@ public class MessengerTestModule {
 }
 ```
 
+### 跨进程通信自定义服务端监听
+
+创建实现了 `com.pipedog.mixkit.messenger.interfaces.IServerListener` 接口的类，并重写相关方法即可，不需要对该类进行任何额外操作
+
+```
+public class TestServerListener implements IServerListener {
+
+    @Override
+    public void didFailSendMessage2SourceClient(ErrorMessage errorMessage) {
+        // Do something here...
+    }
+
+    @Override
+    public void didFailSendMessage2TargetClient(ErrorMessage errorMessage) {
+        // Do something here...
+    }
+
+}
+```
+
+### 跨进程通信自定义客户端监听
+
+实现 `com.pipedog.mixkit.messenger.interfaces.IClientListener` 接口，然后进行注入即可
+
+```
+1、创建类
+public class TestClientListener implements IClientListener {
+    // 按需重写方法
+}
+
+2、监听绑定
+ClientListenerManager.getInstance().bindListener(this);
+```
