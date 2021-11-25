@@ -47,6 +47,10 @@ public class MessengerDispatcher implements IMessage2Client {
     public void request2Client(RequestMessage requestMessage) {
         Messenger clientMessenger = mClientMessengers.get(requestMessage.getTargetClientId());
         if (clientMessenger == null) {
+            sendError2SourceClient(new ErrorMessage(
+                    requestMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_TARGET_CLIENT,
+                    "No client named" + requestMessage.getTargetClientId() + "was found!",
+                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
             return;
         }
 
@@ -69,6 +73,10 @@ public class MessengerDispatcher implements IMessage2Client {
     public void response2Client(ResponseMessage responseMessage) {
         Messenger clientMessenger = mClientMessengers.get(responseMessage.getSourceClientId());
         if (clientMessenger == null) {
+            sendError2TargetClient(new ErrorMessage(
+                    responseMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_SOURCE_CLIENT,
+                    "The connection was lost with the source client named " + responseMessage.getSourceClientId(),
+                    responseMessage.getSourceClientId(), responseMessage.getTargetClientId()));
             return;
         }
 
@@ -91,6 +99,7 @@ public class MessengerDispatcher implements IMessage2Client {
     public void sendError2SourceClient(ErrorMessage errorMessage) {
         Messenger clientMessenger = mClientMessengers.get(errorMessage.getSourceClientId());
         if (clientMessenger == null) {
+            mServerListenerManager.didFailSendMessage2SourceClient(errorMessage);
             return;
         }
 
@@ -111,6 +120,7 @@ public class MessengerDispatcher implements IMessage2Client {
     public void sendError2TargetClient(ErrorMessage errorMessage) {
         Messenger clientMessenger = mClientMessengers.get(errorMessage.getTargetClientId());
         if (clientMessenger == null) {
+            mServerListenerManager.didFailSendMessage2TargetClient(errorMessage);
             return;
         }
 
