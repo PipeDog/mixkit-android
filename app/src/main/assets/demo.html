@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 
 <head>
@@ -28,23 +29,24 @@
 
     <script>
 
-        var vConsole = new VConsole();
-        let MKTestModule = NativeModules.MKTestModule;
-        let MKLogManager = NativeModules.LogManager;
-        let MKTestLibModule = NativeModules.TestLibModule;
 
         function testAndroidMethod() {
-            let m = {
+            // var vConsole = new VConsole();
+            var MKTestModule = NativeModules.MKTestModule;
+            var MKLogManager = NativeModules.LogManager;
+            var MKTestLibModule = NativeModules.TestLibModule;
+
+            var m = {
                 key1: 'lalalal',
                 key2: 'uuuu',
             };
 
-            let arr = ['aaa', 'bbb', 'ccc', 100];
+            var arr = ['aaa', 'bbb', 'ccc', 100];
 
             MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
                 console.log('receive native callback, response is ' + msg);
                 MKLogManager.log(msg);
-            }, m, arr);
+            }, m, arr, 10101);
         }
 
     </script>

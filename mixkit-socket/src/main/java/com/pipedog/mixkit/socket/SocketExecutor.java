@@ -24,8 +24,8 @@ public class SocketExecutor implements IMixExecutor {
         }
 
         @Override
-        public void invoke(Object[] arguments) {
-            List<Object> args = Arrays.asList(arguments);
+        public void invoke(Object[] response) {
+            List<Object> args = Arrays.asList(response);
             invokeCallback(args, mCallbackId);
         }
 
@@ -111,7 +111,9 @@ public class SocketExecutor implements IMixExecutor {
         socketEngine.sendData(callbackArgs.toArray(), new SocketCallback() {
             @Override
             public void onReceiveFailure(Object error) {
-                if (error == null) { error = ""; }
+                if (error == null) {
+                    return;
+                }
                 MixLogger.error("invoke socket failed : %s", error.toString());
             }
         });

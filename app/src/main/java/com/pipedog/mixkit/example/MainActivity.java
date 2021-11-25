@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import android.util.Log;
 import android.webkit.WebSettings;
 
-import com.pipedog.mixkit.launch.MixLaunchManager;
 import com.pipedog.mixkit.parser.*;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;

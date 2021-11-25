@@ -24,8 +24,8 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         @Override
-        public void invoke(Object[] arguments) {
-            List<Object> args = Arrays.asList(arguments);
+        public void invoke(Object[] response) {
+            List<Object> args = Arrays.asList(response);
             invokeCallback(args, mCallbackId);
         }
 

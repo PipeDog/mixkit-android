@@ -12,15 +12,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mixkitandroid"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
-
             </intent-filter>
         </activity>
+
+        <!-- services -->
+        <service
+            android:name="com.pipedog.mixkit.messenger.server.MessengerService"
+            android:enabled="true"
+            android:exported="true"
+            android:persistent="true"
+            android:process=":serverProcess"
+            >
+            <intent-filter>
+                <action android:name="com.pipedog.testService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <uses-library android:name="org.apache.http.legacy"
+            android:required="false" />
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -87,6 +87,7 @@ public class MixMethodInvoker {
             String declaredType = parameter.type;
             Object from = parameters.get(i);
 
+            // Basic data types
             if (declaredType.equals("byte")) {
                 byte to = MixTypeConverter.toByte(from);
                 parameterArray[i] = to;
@@ -111,7 +112,45 @@ public class MixMethodInvoker {
             } else if (declaredType.equals("char")) {
                 char to = MixTypeConverter.toChar(from);
                 parameterArray[i] = to;
-            } else if (declaredType.equals("java.lang.String")) {
+            }
+
+            // Basic data types wrapper classes
+            else if (declaredType.equals("java.lang.Byte")) {
+                byte b = MixTypeConverter.toByte(from);
+                Byte to = new Byte(b);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Short")) {
+                short s = MixTypeConverter.toShort(from);
+                Short to = new Short(s);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Integer")) {
+                int bi = MixTypeConverter.toInt(from);
+                Integer to = new Integer(bi);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Long")) {
+                long l = MixTypeConverter.toLong(from);
+                Long to = new Long(l);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Float")) {
+                float f = MixTypeConverter.toFloat(from);
+                Float to = new Float(f);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Double")) {
+                double d = MixTypeConverter.toDouble(from);
+                Double to = new Double(d);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Boolean")) {
+                boolean b = MixTypeConverter.toBoolean(from);
+                Boolean to = new Boolean(b);
+                parameterArray[i] = to;
+            } else if (declaredType.equals("java.lang.Character")) {
+                char c = MixTypeConverter.toChar(from);
+                Character to = new Character(c);
+                parameterArray[i] = to;
+            }
+
+            // Other types
+            else if (declaredType.equals("java.lang.String")) {
                 String to = MixTypeConverter.toString(from);
                 parameterArray[i] = to;
             } else {
@@ -127,6 +166,8 @@ public class MixMethodInvoker {
     private static Class getClass(String className) {
         if (sClassMap == null) {
             sClassMap = new HashMap<String, Class<?>>();
+
+            // Basic data types
             sClassMap.put("byte", byte.class);
             sClassMap.put("short", short.class);
             sClassMap.put("int", int.class);
@@ -135,6 +176,21 @@ public class MixMethodInvoker {
             sClassMap.put("double", double.class);
             sClassMap.put("boolean", boolean.class);
             sClassMap.put("char", char.class);
+
+            // Basic data types wrapper classes
+            sClassMap.put("java.lang.Byte", Byte.class);
+            sClassMap.put("java.lang.Short", Short.class);
+            sClassMap.put("java.lang.Integer", Integer.class);
+            sClassMap.put("java.lang.Long", Long.class);
+            sClassMap.put("java.lang.Float", Float.class);
+            sClassMap.put("java.lang.Double", Double.class);
+            sClassMap.put("java.lang.Boolean", Boolean.class);
+            sClassMap.put("java.lang.Character", Character.class);
+        }
+
+        Class cls = sClassMap.get(className);
+        if (cls != null) {
+            return cls;
         }
 
         // Remove the generic suffix, like the follow case:
@@ -148,7 +204,7 @@ public class MixMethodInvoker {
                     tmp, className);
         }
 
-        Class cls = sClassMap.get(className);
+        cls = sClassMap.get(className);
         if (cls == null) {
             try {
                 cls = Class.forName(className);
