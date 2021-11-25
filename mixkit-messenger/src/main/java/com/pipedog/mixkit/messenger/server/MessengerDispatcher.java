@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Client;
+import com.pipedog.mixkit.messenger.model.ErrorMessage;
+import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
+import com.pipedog.mixkit.messenger.model.RequestMessage;
+import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.module.MixModuleData;
 import com.pipedog.mixkit.tool.MixLogger;
 
@@ -34,28 +38,19 @@ public class MessengerDispatcher implements IMessage2Client {
     // OVERRIDE METHODS FROM `IMessage2Client`
 
     @Override
-    public void request2Client(String sourceClientId,
-                               String targetClientId,
-                               String moduleName,
-                               String methodName,
-                               List<Object> arguments) {
-        Messenger clientMessenger = mClientMessengers.get(targetClientId);
+    public void request2Client(RequestMessage requestMessage) {
+        Messenger clientMessenger = mClientMessengers.get(requestMessage.getTargetClientId());
         if (clientMessenger == null) {
             return;
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
-        bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
-        bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
-        bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
-        bundle.putSerializable(MessageKeyword.KEY_ARGUMENTS_NAME, (Serializable) arguments);
-
-        Message message = Message.obtain();
-        message.setData(bundle);
-        message.what = MessageNumber.REQUEST_TO_CLIENT;
+        bundle.putSerializable(MessageKeyword.KEY_REQUEST_DATA, requestMessage);
 
         try {
+            Message message = Message.obtain();
+            message.setData(bundle);
+            message.what = MessageNumber.REQUEST_TO_CLIENT;
             clientMessenger.send(message);
         } catch (Exception e) {
             MixLogger.error(e.toString());
@@ -63,30 +58,28 @@ public class MessengerDispatcher implements IMessage2Client {
     }
 
     @Override
-    public void response2Client(String sourceClientId,
-                                String targetClientId,
-                                String callbackId,
-                                List<Object> response) {
-        Messenger clientMessenger = mClientMessengers.get(sourceClientId);
+    public void response2Client(ResponseMessage responseMessage) {
+        Messenger clientMessenger = mClientMessengers.get(responseMessage.getSourceClientId());
         if (clientMessenger == null) {
             return;
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
-        bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
-        bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
-        bundle.putSerializable(MessageKeyword.KEY_RESPONSE_DATA, (Serializable) response);
-
-        Message message = Message.obtain();
-        message.setData(bundle);
-        message.what = MessageNumber.RESPONSE_TO_CLIENT;
+        bundle.putSerializable(MessageKeyword.KEY_RESPONSE_DATA, responseMessage);
 
         try {
+            Message message = Message.obtain();
+            message.setData(bundle);
+            message.what = MessageNumber.RESPONSE_TO_CLIENT;
             clientMessenger.send(message);
         } catch (Exception e) {
             MixLogger.error(e.toString());
         }
+    }
+
+    @Override
+    public void sendError2Client(ErrorMessage errorMessage) {
+
     }
 
 
@@ -95,40 +88,24 @@ public class MessengerDispatcher implements IMessage2Client {
     private void receiveRegisterClient(Message message) {
         Messenger clientMessenger = message.replyTo;
 
-        // Get key
         Bundle bundle = message.getData();
-        String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
+        RegisterClientMessage clientMessage = (RegisterClientMessage) bundle.getSerializable(MessageKeyword.KEY_REGISTER_CLIENT);
+        String sourceClientId = clientMessage.getSourceClientId();
 
-        // Get value
-        Map<String, MixModuleData> moduleData =
-                (Map<String, MixModuleData>) bundle.getSerializable(MessageKeyword.KEY_MODULE_DATA);
-
-        // Register into map
         mClientMessengers.put(sourceClientId, clientMessenger);
-        mModuleDataTable.put(sourceClientId, moduleData);
+        mModuleDataTable.put(sourceClientId, clientMessage.getModuleDataMap());
     }
 
     private void receiveRequest2Server(Message message) {
         Bundle bundle = message.getData();
-
-        String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
-        String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
-        String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
-        String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
-        List<Object> arguments = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_ARGUMENTS_NAME);
-
-        request2Client(sourceClientId, targetClientId, moduleName, methodName, arguments);
+        RequestMessage requestMessage = (RequestMessage) bundle.getSerializable(MessageKeyword.KEY_REQUEST_DATA);
+        request2Client(requestMessage);
     }
 
     private void receiveResponse2Server(Message message) {
         Bundle bundle = message.getData();
-
-        String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
-        String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
-        String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
-        List<Object> response = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
-
-        response2Client(sourceClientId, targetClientId, callbackId, response);
+        ResponseMessage responseMessage = (ResponseMessage) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
+        response2Client(responseMessage);
     }
 
 

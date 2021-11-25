@@ -9,6 +9,7 @@ import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
+import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
@@ -40,6 +41,7 @@ public class MessengerExecutor implements IMixExecutor {
         @Override
         public void invoke(Object[] response) {
             List<Object> args = Arrays.asList(response);
+
             invokeCallback(mSourceClientId, mTargetClientId, mCallbackId, args);
         }
 
@@ -94,8 +96,8 @@ public class MessengerExecutor implements IMixExecutor {
         List<Object> nativeArgs = new ArrayList<>();
 
         Map<String, Object> map = (Map<String, Object>)metaData;
-        String sourceClientId = (String) map.get(MessageKeyword.KEY_SOURCE_CLIENT_ID);
-        String targetClientId = (String) map.get(MessageKeyword.KEY_TARGET_CLIENT_ID);
+        String sourceClientId = (String) map.get("sourceClientId");
+        String targetClientId = (String) map.get("targetClientId");
 
         for (Object arg : arguments) {
             Object nativeArg = arg;
@@ -128,7 +130,12 @@ public class MessengerExecutor implements IMixExecutor {
         }
 
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(sourceClientId, targetClientId, callbackID, response);
+        caller.response2Server(new ResponseMessage(
+                sourceClientId,
+                targetClientId,
+                callbackID,
+                response
+        ));
     }
     
 }

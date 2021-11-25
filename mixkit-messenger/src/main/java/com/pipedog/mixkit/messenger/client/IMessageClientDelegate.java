@@ -1,5 +1,8 @@
 package com.pipedog.mixkit.messenger.client;
 
+import com.pipedog.mixkit.messenger.model.RequestMessage;
+import com.pipedog.mixkit.messenger.model.ResponseMessage;
+
 import java.util.List;
 
 /**
@@ -11,24 +14,14 @@ public interface IMessageClientDelegate {
 
     /**
      * 接收到请求执行消息
-     * @param sourceClientId 源（通信发起）客户端 ID
-     * @param targetClientId 目标客户端 ID
-     * @param moduleName 模块名
-     * @param methodName 方法名
-     * @param arguments 参数列表（包含回调 ID）
+     * @param requestMessage 请求消息数据实例
      */
-    void didReceiveRequestMessage(String sourceClientId,
-                                  String targetClientId,
-                                  String moduleName,
-                                  String methodName,
-                                  List<Object> arguments);
+    void didReceiveRequestMessage(RequestMessage requestMessage);
 
     /**
      * 接收到响应消息
-     * @param callbackId 回调 ID
-     * @param response 回调结果数据列表
+     * @param responseMessage 响应信息数据实例
      */
-    void didReceiveResponseMessage(String callbackId,
-                                   List<Object> response);
+    void didReceiveResponseMessage(ResponseMessage responseMessage);
 
 }

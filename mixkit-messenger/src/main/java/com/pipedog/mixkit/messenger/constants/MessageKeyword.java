@@ -3,43 +3,23 @@ package com.pipedog.mixkit.messenger.constants;
 public class MessageKeyword {
 
     /**
-     * 源客户端（发起通信端）ID
+     * 注册客户端（client）到服务（server）
      */
-    public static final String KEY_SOURCE_CLIENT_ID = "sourceClientId";
+    public static final String KEY_REGISTER_CLIENT = "registerClient";
 
     /**
-     * 目标客户端（执行端）ID
+     * 请求消息数据 Key
      */
-    public static final String KEY_TARGET_CLIENT_ID = "targetClientId";
+    public static final String KEY_REQUEST_DATA = "request";
 
     /**
-     * 导出模块信息
+     * 响应消息数据 Key
      */
-    public static final String KEY_MODULE_DATA = "moduleData";
-    
-    /**
-     * 模块名称
-     */
-    public static final String KEY_MODULE_NAME = "moduleName";
-    
-    /**
-     * 函数名称
-     */
-    public static final String KEY_METHOD_NAME = "methodName";
-    
-    /**
-     * 参数名称
-     */
-    public static final String KEY_ARGUMENTS_NAME = "arguments";
+    public static final String KEY_RESPONSE_DATA = "response";
 
     /**
-     * 回调 ID（仅在响应过程，即 client2 -> server -> client1 过程中会用到）
+     * 错误消息数据 Key
      */
-    public static final String KEY_CALLBACK_ID = "callbackID";
-
-    /**
-     * 响应数据
-     */
-    public static final String KEY_RESPONSE_DATA = "responseData";
+    public static final String KEY_ERROR_DATA = "error";
     
 }
