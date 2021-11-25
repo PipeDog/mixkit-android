@@ -22,6 +22,7 @@ import java.util.Map;
  *          android:enabled="true"
  *          android:exported="true"
  *          android:persistent="true"
+ *          android:process=":customServerProcessName"
  *          >
  *              <intent-filter>
  *                  <action android:name="com.xxx.service"></action>

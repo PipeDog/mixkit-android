@@ -27,6 +27,7 @@ public class DemoModule {
 
         Map<String, Object> data = new HashMap<>();
         data.put("key", "value");
+        data.put("from", "executorClient");
         response.add(data);
 
         callback.invoke(response.toArray());

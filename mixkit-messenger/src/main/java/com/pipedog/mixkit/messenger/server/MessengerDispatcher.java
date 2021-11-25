@@ -8,12 +8,13 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Client;
+import com.pipedog.mixkit.module.MixModuleData;
 import com.pipedog.mixkit.tool.MixLogger;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,9 @@ import java.util.Map;
 
 public class MessengerDispatcher implements IMessage2Client {
 
-    private Gson mGson = new Gson();
     private Messenger mServerMessenger = new Messenger(new ServerHandler());
     private Map<String, Messenger> mClientMessengers = new HashMap<String, Messenger>();
-    private Map<String, Map<String, Object>> mModuleDataTable = new HashMap<>();
+    private Map<String, Map<String, MixModuleData>> mModuleDataTable = new HashMap<>();
 
     public Messenger getMessenger() {
         return mServerMessenger;
@@ -49,9 +49,7 @@ public class MessengerDispatcher implements IMessage2Client {
         bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
-
-        String argumentsJson = mGson.toJson(arguments);
-        bundle.putString(MessageKeyword.KEY_ARGUMENTS_NAME, argumentsJson);
+        bundle.putSerializable(MessageKeyword.KEY_ARGUMENTS_NAME, (Serializable) arguments);
 
         Message message = Message.obtain();
         message.setData(bundle);
@@ -78,9 +76,7 @@ public class MessengerDispatcher implements IMessage2Client {
         bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
         bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
-
-        String responseJson = mGson.toJson(response);
-        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, responseJson);
+        bundle.putSerializable(MessageKeyword.KEY_RESPONSE_DATA, (Serializable) response);
 
         Message message = Message.obtain();
         message.setData(bundle);
@@ -104,8 +100,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
 
         // Get value
-        String moduleDataJson = bundle.getString(MessageKeyword.KEY_MODULE_DATA);
-        Map<String, Object> moduleData = mGson.fromJson(moduleDataJson, Map.class);
+        Map<String, MixModuleData> moduleData =
+                (Map<String, MixModuleData>) bundle.getSerializable(MessageKeyword.KEY_MODULE_DATA);
 
         // Register into map
         mClientMessengers.put(sourceClientId, clientMessenger);
@@ -119,10 +115,7 @@ public class MessengerDispatcher implements IMessage2Client {
         String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
         String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
-        String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
-
-        String argumentsJson = bundle.getString(MessageKeyword.KEY_ARGUMENTS_NAME);
-        List<Object> arguments = mGson.fromJson(argumentsJson, List.class);
+        List<Object> arguments = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_ARGUMENTS_NAME);
 
         request2Client(sourceClientId, targetClientId, moduleName, methodName, arguments);
     }
@@ -133,10 +126,8 @@ public class MessengerDispatcher implements IMessage2Client {
         String sourceClientId = bundle.getString(MessageKeyword.KEY_SOURCE_CLIENT_ID);
         String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
-        
-        String responseJson = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
-        List<Object> response = mGson.fromJson(responseJson, List.class);
-        
+        List<Object> response = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
+
         response2Client(sourceClientId, targetClientId, callbackId, response);
     }
 

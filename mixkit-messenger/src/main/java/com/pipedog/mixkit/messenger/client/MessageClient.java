@@ -13,7 +13,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
@@ -21,9 +20,11 @@ import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.server.MessengerService;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
+import com.pipedog.mixkit.module.MixModuleData;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,6 @@ import java.util.Map;
  */
 public class MessageClient implements IMessage2Server {
 
-    private Gson mGson = new Gson();
     private IMessageClientDelegate mDelegate;
     private Messenger mServerMessenger;
     private Messenger mClientMessenger = new Messenger(new ClientHandler());
@@ -104,9 +104,7 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_MODULE_NAME, moduleName);
         bundle.putString(MessageKeyword.KEY_METHOD_NAME, methodName);
-
-        String argumentsJson = mGson.toJson(arguments);
-        bundle.putString(MessageKeyword.KEY_ARGUMENTS_NAME, argumentsJson);
+        bundle.putSerializable(MessageKeyword.KEY_ARGUMENTS_NAME, (Serializable) arguments);
         
         try {
             Message message = Message.obtain();
@@ -132,9 +130,7 @@ public class MessageClient implements IMessage2Server {
         bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
         bundle.putString(MessageKeyword.KEY_TARGET_CLIENT_ID, targetClientId);
         bundle.putString(MessageKeyword.KEY_CALLBACK_ID, callbackId);
-
-        String responseJson = mGson.toJson(response);
-        bundle.putString(MessageKeyword.KEY_RESPONSE_DATA, responseJson);
+        bundle.putSerializable(MessageKeyword.KEY_RESPONSE_DATA, (Serializable) response);
         
         try {
             Message message = Message.obtain();
@@ -160,9 +156,7 @@ public class MessageClient implements IMessage2Server {
         String targetClientId = bundle.getString(MessageKeyword.KEY_TARGET_CLIENT_ID);
         String moduleName = bundle.getString(MessageKeyword.KEY_MODULE_NAME);
         String methodName = bundle.getString(MessageKeyword.KEY_METHOD_NAME);
-
-        String argumentsJson = bundle.getString(MessageKeyword.KEY_ARGUMENTS_NAME);
-        List<Object> arguments = mGson.fromJson(argumentsJson, List.class);
+        List<Object> arguments = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_ARGUMENTS_NAME);
 
         mDelegate.didReceiveRequestMessage(sourceClientId, targetClientId, moduleName, methodName, arguments);
     }
@@ -174,8 +168,7 @@ public class MessageClient implements IMessage2Server {
 
         Bundle bundle = message.getData();
         String callbackId = bundle.getString(MessageKeyword.KEY_CALLBACK_ID);
-        String responseJson = bundle.getString(MessageKeyword.KEY_RESPONSE_DATA);
-        List<Object> response = mGson.fromJson(responseJson, List.class);
+        List<Object> response = (List<Object>) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
 
         mDelegate.didReceiveResponseMessage(callbackId, response);
     }
@@ -189,8 +182,8 @@ public class MessageClient implements IMessage2Server {
         String sourceClientId = MessengerEngine.getInstance().getClientId();
         bundle.putString(MessageKeyword.KEY_SOURCE_CLIENT_ID, sourceClientId);
 
-        String moduleData = MixModuleManager.defaultManager().getModuleDataJson();
-        bundle.putString(MessageKeyword.KEY_MODULE_DATA, moduleData);
+        Map<String, MixModuleData> moduleData = MixModuleManager.defaultManager().getModuleDataMap();
+        bundle.putSerializable(MessageKeyword.KEY_MODULE_DATA, (Serializable) moduleData);
 
         try {
             Message message = Message.obtain();
