@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
 }
 
+apply plugin: 'mixkit-register'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"

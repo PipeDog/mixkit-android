@@ -13,6 +13,7 @@ class MixRegisterInfo {
         List<Map<String, Object>> infos = new ArrayList<>()
         infos.add(getModuleProviderRegisterInfo())
         infos.add(getParserProviderRegisterInfo())
+        infos.add(getMessengerServerListenerRegisterInfo())
         return infos
     }
 
@@ -31,6 +32,15 @@ class MixRegisterInfo {
         map.put(KEY_CODE_INSERT_TO_CLASS_NAME, "com.pipedog.mixkit.parser.MixMessageParserManager")
         map.put(KEY_CODE_INSERT_TO_METHOD_NAME, "autoCallRegisterParserProvider")
         map.put(KEY_REAL_REGISTER_METHOD_NAME, "registerParserProvider")
+        return map
+    }
+
+    private static Map<String, Object> getMessengerServerListenerRegisterInfo() {
+        Map<String, Object> map = new HashMap<>()
+        map.put(KEY_SCAN_INTERFACE_NAME, "com.pipedog.mixkit.messenger.interfaces.IServerListener")
+        map.put(KEY_CODE_INSERT_TO_CLASS_NAME, "com.pipedog.mixkit.messenger.server.ServerListenerManager")
+        map.put(KEY_CODE_INSERT_TO_METHOD_NAME, "autoRegisterServerListener")
+        map.put(KEY_REAL_REGISTER_METHOD_NAME, "registerServerListener")
         return map
     }
 

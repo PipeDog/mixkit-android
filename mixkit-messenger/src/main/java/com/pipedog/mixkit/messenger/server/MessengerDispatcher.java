@@ -27,9 +27,14 @@ import java.util.Map;
 
 public class MessengerDispatcher implements IMessage2Client {
 
+    private ServerListenerManager mServerListenerManager = new ServerListenerManager();
     private Messenger mServerMessenger = new Messenger(new ServerHandler());
     private Map<String, Messenger> mClientMessengers = new HashMap<String, Messenger>();
     private Map<String, Map<String, MixModuleData>> mModuleDataTable = new HashMap<>();
+
+    public MessengerDispatcher() {
+
+    }
 
     public Messenger getMessenger() {
         return mServerMessenger;
@@ -98,7 +103,7 @@ public class MessengerDispatcher implements IMessage2Client {
             message.what = MessageNumber.ERROR_IN_COMMUNICATION;
             clientMessenger.send(message);
         } catch (Exception e) {
-            MixLogger.error(e.toString());
+            mServerListenerManager.didFailSendMessage2SourceClient(errorMessage);
         }
     }
 
@@ -118,7 +123,7 @@ public class MessengerDispatcher implements IMessage2Client {
             message.what = MessageNumber.ERROR_IN_COMMUNICATION;
             clientMessenger.send(message);
         } catch (Exception e) {
-            MixLogger.error(e.toString());
+            mServerListenerManager.didFailSendMessage2TargetClient(errorMessage);
         }
     }
 
