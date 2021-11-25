@@ -31,9 +31,15 @@ public interface IMessage2Client {
     void response2Client(ResponseMessage responseMessage);
 
     /**
-     * 发送错误消息至客户端（client）
+     * 发送错误消息至源（请求发起）客户端（client）
      * @param errorMessage 错误消息数据实体
      */
-    void sendError2Client(ErrorMessage errorMessage);
+    void sendError2SourceClient(ErrorMessage errorMessage);
+
+    /**
+     * 发送错误消息至目标（请求执行）客户端（client）
+     * @param errorMessage 错误消息数据实体
+     */
+    void sendError2TargetClient(ErrorMessage errorMessage);
 
 }

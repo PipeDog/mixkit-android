@@ -15,7 +15,7 @@ public interface IClientListener {
 
     // HANDLE ERROR METHODS
 
-    void didReceiveErrorMessage(ErrorMessage errorMessage) {
+    default void didReceiveErrorMessage(ErrorMessage errorMessage) {
         MixLogger.error(errorMessage.toString());
     }
 

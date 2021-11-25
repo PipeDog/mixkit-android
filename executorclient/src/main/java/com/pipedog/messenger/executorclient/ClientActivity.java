@@ -6,8 +6,10 @@ import android.os.Bundle;
 
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 
-public class ClientActivity extends AppCompatActivity {
+public class ClientActivity extends AppCompatActivity implements IClientListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class ClientActivity extends AppCompatActivity {
         super.onResume();
 
         MessengerEngine.getInstance().restart();
+        ClientListenerManager.getInstance().bindListener(this);
     }
 
 }

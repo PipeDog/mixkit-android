@@ -8,6 +8,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Client;
@@ -53,7 +54,13 @@ public class MessengerDispatcher implements IMessage2Client {
             message.what = MessageNumber.REQUEST_TO_CLIENT;
             clientMessenger.send(message);
         } catch (Exception e) {
-            MixLogger.error(e.toString());
+            sendError2SourceClient(new ErrorMessage(
+                    requestMessage.getTraceId(),
+                    ErrorCode.ERR_DISCONNECT_TARGET_CLIENT,
+                    e.toString(),
+                    requestMessage.getSourceClientId(),
+                    requestMessage.getTargetClientId()
+            ));
         }
     }
 
@@ -73,13 +80,54 @@ public class MessengerDispatcher implements IMessage2Client {
             message.what = MessageNumber.RESPONSE_TO_CLIENT;
             clientMessenger.send(message);
         } catch (Exception e) {
+            sendError2TargetClient(new ErrorMessage(
+                    responseMessage.getTraceId(),
+                    ErrorCode.ERR_DISCONNECT_SOURCE_CLIENT,
+                    e.toString(),
+                    responseMessage.getSourceClientId(),
+                    responseMessage.getTargetClientId()
+            ));
+        }
+    }
+
+    @Override
+    public void sendError2SourceClient(ErrorMessage errorMessage) {
+        Messenger clientMessenger = mClientMessengers.get(errorMessage.getSourceClientId());
+        if (clientMessenger == null) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MessageKeyword.KEY_ERROR_DATA, errorMessage);
+
+        try {
+            Message message = Message.obtain();
+            message.setData(bundle);
+            message.what = MessageNumber.ERROR_IN_COMMUNICATION;
+            clientMessenger.send(message);
+        } catch (Exception e) {
             MixLogger.error(e.toString());
         }
     }
 
     @Override
-    public void sendError2Client(ErrorMessage errorMessage) {
+    public void sendError2TargetClient(ErrorMessage errorMessage) {
+        Messenger clientMessenger = mClientMessengers.get(errorMessage.getTargetClientId());
+        if (clientMessenger == null) {
+            return;
+        }
 
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MessageKeyword.KEY_ERROR_DATA, errorMessage);
+
+        try {
+            Message message = Message.obtain();
+            message.setData(bundle);
+            message.what = MessageNumber.ERROR_IN_COMMUNICATION;
+            clientMessenger.send(message);
+        } catch (Exception e) {
+            MixLogger.error(e.toString());
+        }
     }
 
 
@@ -108,6 +156,11 @@ public class MessengerDispatcher implements IMessage2Client {
         response2Client(responseMessage);
     }
 
+    private void receiveInvokeError(Message message) {
+        Bundle bundle = message.getData();
+        ErrorMessage errorMessage = (ErrorMessage) bundle.getSerializable(MessageKeyword.KEY_ERROR_DATA);
+        sendError2SourceClient(errorMessage);
+    }
 
     // INTERNAL CLASSES
 
@@ -126,13 +179,14 @@ public class MessengerDispatcher implements IMessage2Client {
                 case MessageNumber.RESPONSE_TO_SERVER: {
                     receiveResponse2Server(msg);
                 } break;
+                case MessageNumber.ERROR_WHEN_INVOKE: {
+                    receiveInvokeError(msg);
+                } break;
                 default: {
                     MixLogger.error("Unsupport message number = " + msg.what);
                 } break;
             }
         }
     }
-
-    // TODO: 请求信息检查，如果目标客户端提供信息无法匹配，则本次 request 无效，直接在 server 进行驳回
 
 }

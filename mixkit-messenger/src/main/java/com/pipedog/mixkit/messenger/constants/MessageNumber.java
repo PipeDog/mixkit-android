@@ -59,13 +59,13 @@ public class MessageNumber {
     // 错误指令定义
 
     /**
-     * 请求过程中出现错误
+     * 通信过程中出现错误
      */
-    public static final int REQUEST_ERROR = 3000;
+    public static final int ERROR_IN_COMMUNICATION = 3000;
 
     /**
-     * 响应过程中出现错误
+     * 源（目标）客户端执行目标函数失败
      */
-    public static final int RESPONSE_ERROR = 3001;
+    public static final int ERROR_WHEN_INVOKE = 3001;
 
 }

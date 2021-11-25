@@ -32,4 +32,9 @@ public class ErrorCode {
      */
     public static final int ERR_DISCONNECT_SOURCE_CLIENT = 40001;
 
+    /**
+     * 目标客户端执行通信（目标函数）失败
+     */
+    public static final int ERR_INVOKE_METHOD_FAILED = 50000;
+
 }

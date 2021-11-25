@@ -60,8 +60,9 @@ public class MessageClient implements IMessage2Server {
         service.setPackage(getEngine().getPackage());
 
         try {
-            getContext().startService(service);
-            result = getContext().bindService(service, mServiceConnection, 0);
+            Context context = getEngine().getContext();
+            context.startService(service);
+            result = context.bindService(service, mServiceConnection, 0);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
                     null,
@@ -80,7 +81,7 @@ public class MessageClient implements IMessage2Server {
      * 终止连接服务进程
      */
     public void stopConnection() {
-        getContext().unbindService(mServiceConnection);
+        getEngine().getContext().unbindService(mServiceConnection);
     }
 
     /**
@@ -152,7 +153,30 @@ public class MessageClient implements IMessage2Server {
 
     @Override
     public void sendError2Server(ErrorMessage errorMessage) {
-        getListenerManager().didReceiveErrorMessage(errorMessage);
+        if (mServerMessenger == null) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(MessageKeyword.KEY_ERROR_DATA, errorMessage);
+
+        try {
+            Message message = Message.obtain();
+            message.replyTo = mClientMessenger;
+            message.what = MessageNumber.ERROR_WHEN_INVOKE;
+            message.setData(bundle);
+            mServerMessenger.send(message);
+
+            getListenerManager().didReceiveErrorMessage(errorMessage);
+        } catch (Exception e) {
+            getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                    errorMessage.getTraceId(),
+                    ErrorCode.ERR_DISCONNECT_SERVER,
+                    e.toString(),
+                    errorMessage.getSourceClientId(),
+                    errorMessage.getTargetClientId()
+            ));
+        }
     }
 
 
@@ -241,11 +265,11 @@ public class MessageClient implements IMessage2Server {
                 case MessageNumber.RESPONSE_TO_CLIENT: {
                     receiveResponse2Client(msg);
                 } break;
-                case MessageNumber.REQUEST_ERROR: {
-                    receiveError(message);
+                case MessageNumber.ERROR_IN_COMMUNICATION: {
+                    receiveError(msg);
                 } break;
-                case MessageNumber.RESPONSE_ERROR: {
-                    receiveError(message);
+                case MessageNumber.ERROR_WHEN_INVOKE: {
+                    receiveError(msg);
                 } break;
                 default: {
                     MixLogger.error("Unsupport message number = " + msg.what);

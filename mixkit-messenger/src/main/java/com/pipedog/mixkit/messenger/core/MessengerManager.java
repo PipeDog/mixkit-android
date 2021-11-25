@@ -2,6 +2,7 @@ package com.pipedog.mixkit.messenger.core;
 
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @time 2021/11/22
  */
 public class MessengerManager implements
-        IMessengerBridgeDelegate, IMessage2Server, IMessageClientDelegate {
+        IMessengerBridgeDelegate, IMessageClientDelegate {
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
@@ -69,7 +70,7 @@ public class MessengerManager implements
         }
 
         String sourceClientId = MessengerEngine.getInstance().getClientId();
-        request2Server(new RequestMessage(
+        mClient.request2Server(new RequestMessage(
                 traceId,
                 sourceClientId,
                 targetClientId,
@@ -89,32 +90,6 @@ public class MessengerManager implements
     }
 
 
-    // OVERRIDE METHODS FROM `IMessage2Server`
-
-    @Override
-    public void request2Server(RequestMessage requestMessage) {
-        if (!mClient.isConnected()) {
-            return;
-        }
-
-        mClient.request2Server(requestMessage);
-    }
-
-    @Override
-    public void response2Server(ResponseMessage responseMessage) {
-        if (!mClient.isConnected()) {
-            return;
-        }
-
-        mClient.response2Server(responseMessage);
-    }
-
-    @Override
-    public void sendError2Server(ErrorMessage errorMessage) {
-
-    }
-
-
     // OVERRIDE METHODS FROM `IMessageClientDelegate`
 
     @Override
@@ -125,21 +100,31 @@ public class MessengerManager implements
         metaData.put("arguments", requestMessage.getArguments());
 
         // Extra parameters
+        metaData.put("traceId", requestMessage.getTraceId());
         metaData.put("sourceClientId", requestMessage.getSourceClientId());
         metaData.put("targetClientId", requestMessage.getTargetClientId());
-        mBridge.executor().invokeMethod(metaData);
+
+        boolean result = mBridge.executor().invokeMethod(metaData);
+        if (!result) {
+            mClient.sendError2Server(new ErrorMessage(
+                    requestMessage.getTraceId(),
+                    ErrorCode.ERR_INVOKE_METHOD_FAILED,
+                    "Invoke method failed!" + requestMessage.toString(),
+                    requestMessage.getSourceClientId(),
+                    requestMessage.getTargetClientId()
+            ));
+        }
     }
 
     @Override
     public void didReceiveResponseMessage(ResponseMessage responseMessage) {
+        String traceId = responseMessage.getTraceId();
         String callbackId = responseMessage.getCallbackId();
-        if (callbackId == null || callbackId.isEmpty()) {
-            return;
-        }
 
-        MixResultCallback callback = mCallbackMap.get(callbackId);
-        mCallbackMap.remove(callbackId);
+        Map<String, MixResultCallback> callbacks = mCallbackMap.get(traceId);
+        mCallbackMap.remove(traceId);
 
+        MixResultCallback callback = callbacks.get(callbackId);
         callback.invoke(responseMessage.getResponse().toArray());
     }
 

@@ -10,13 +10,15 @@ import android.widget.TextView;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class SendMsgClientActivity extends AppCompatActivity {
+public class SendMsgClientActivity extends AppCompatActivity implements IClientListener {
 
     private Button mButton;
     private Button mExeButton;
@@ -58,6 +60,7 @@ public class SendMsgClientActivity extends AppCompatActivity {
         super.onResume();
 
         MessengerEngine.getInstance().restart();
+        ClientListenerManager.getInstance().bindListener(this);
     }
 
     private void getViews() {
