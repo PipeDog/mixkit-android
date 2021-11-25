@@ -55,12 +55,8 @@ public class MessengerDispatcher implements IMessage2Client {
             clientMessenger.send(message);
         } catch (Exception e) {
             sendError2SourceClient(new ErrorMessage(
-                    requestMessage.getTraceId(),
-                    ErrorCode.ERR_DISCONNECT_TARGET_CLIENT,
-                    e.toString(),
-                    requestMessage.getSourceClientId(),
-                    requestMessage.getTargetClientId()
-            ));
+                    requestMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_TARGET_CLIENT, e.toString(),
+                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
         }
     }
 
@@ -81,12 +77,8 @@ public class MessengerDispatcher implements IMessage2Client {
             clientMessenger.send(message);
         } catch (Exception e) {
             sendError2TargetClient(new ErrorMessage(
-                    responseMessage.getTraceId(),
-                    ErrorCode.ERR_DISCONNECT_SOURCE_CLIENT,
-                    e.toString(),
-                    responseMessage.getSourceClientId(),
-                    responseMessage.getTargetClientId()
-            ));
+                    responseMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_SOURCE_CLIENT, e.toString(),
+                    responseMessage.getSourceClientId(), responseMessage.getTargetClientId()));
         }
     }
 

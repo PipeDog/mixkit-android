@@ -71,13 +71,8 @@ public class MessengerManager implements
 
         String sourceClientId = MessengerEngine.getInstance().getClientId();
         mClient.request2Server(new RequestMessage(
-                traceId,
-                sourceClientId,
-                targetClientId,
-                moduleName,
-                methodName,
-                serverArgs
-        ));
+                traceId, sourceClientId, targetClientId,
+                moduleName, methodName, serverArgs));
         return traceId;
     }
 
@@ -107,12 +102,9 @@ public class MessengerManager implements
         boolean result = mBridge.executor().invokeMethod(metaData);
         if (!result) {
             mClient.sendError2Server(new ErrorMessage(
-                    requestMessage.getTraceId(),
-                    ErrorCode.ERR_INVOKE_METHOD_FAILED,
+                    requestMessage.getTraceId(), ErrorCode.ERR_INVOKE_METHOD_FAILED,
                     "Invoke method failed!" + requestMessage.toString(),
-                    requestMessage.getSourceClientId(),
-                    requestMessage.getTargetClientId()
-            ));
+                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
         }
     }
 

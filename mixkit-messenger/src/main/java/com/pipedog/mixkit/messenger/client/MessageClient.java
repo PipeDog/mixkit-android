@@ -65,12 +65,8 @@ public class MessageClient implements IMessage2Server {
             result = context.bindService(service, mServiceConnection, 0);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    null,
-                    ErrorCode.ERR_CONNECTION_FAILED,
-                    e.toString(),
-                    getEngine().getClientId(),
-                    null
-            ));
+                    null, ErrorCode.ERR_CONNECTION_FAILED,
+                    e.toString(), getEngine().getClientId(), null));
             return false;
         }
 
@@ -98,6 +94,8 @@ public class MessageClient implements IMessage2Server {
     @Override
     public void request2Server(RequestMessage requestMessage) {
         if (mServerMessenger == null) {
+            onServiceDisconnected(requestMessage.getTraceId(),
+                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId());
             return;
         }
 
@@ -114,18 +112,16 @@ public class MessageClient implements IMessage2Server {
             getListenerManager().didSendRequestMessage(requestMessage);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    requestMessage.getTraceId(),
-                    ErrorCode.ERR_DISCONNECT_SERVER,
-                    e.toString(),
-                    requestMessage.getSourceClientId(),
-                    requestMessage.getTargetClientId()
-            ));
+                    requestMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_SERVER, e.toString(),
+                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
         }
     }
 
     @Override
     public void response2Server(ResponseMessage responseMessage) {
         if (mServerMessenger == null) {
+            onServiceDisconnected(responseMessage.getTraceId(),
+                    responseMessage.getSourceClientId(), responseMessage.getTargetClientId());
             return;
         }
         
@@ -142,18 +138,16 @@ public class MessageClient implements IMessage2Server {
             getListenerManager().didSendResponseMessage(responseMessage);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    responseMessage.getTraceId(),
-                    ErrorCode.ERR_DISCONNECT_SERVER,
-                    e.toString(),
-                    responseMessage.getSourceClientId(),
-                    responseMessage.getTargetClientId()
-            ));
+                    responseMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_SERVER, e.toString(),
+                    responseMessage.getSourceClientId(), responseMessage.getTargetClientId()));
         }
     }
 
     @Override
     public void sendError2Server(ErrorMessage errorMessage) {
         if (mServerMessenger == null) {
+            onServiceDisconnected(errorMessage.getTraceId(),
+                    errorMessage.getSourceClientId(), errorMessage.getTargetClientId());
             return;
         }
 
@@ -170,12 +164,8 @@ public class MessageClient implements IMessage2Server {
             getListenerManager().didReceiveErrorMessage(errorMessage);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    errorMessage.getTraceId(),
-                    ErrorCode.ERR_DISCONNECT_SERVER,
-                    e.toString(),
-                    errorMessage.getSourceClientId(),
-                    errorMessage.getTargetClientId()
-            ));
+                    errorMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_SERVER, e.toString(),
+                    errorMessage.getSourceClientId(), errorMessage.getTargetClientId()));
         }
     }
 
@@ -184,7 +174,8 @@ public class MessageClient implements IMessage2Server {
 
     private void receiveRequest2Client(Message message) {
         Bundle bundle = message.getData();
-        RequestMessage requestMessage = (RequestMessage) bundle.getSerializable(MessageKeyword.KEY_REQUEST_DATA);
+        RequestMessage requestMessage =
+                (RequestMessage) bundle.getSerializable(MessageKeyword.KEY_REQUEST_DATA);
 
         mDelegate.didReceiveRequestMessage(requestMessage);
         getListenerManager().didReceiveRequestMessage(requestMessage);
@@ -192,7 +183,8 @@ public class MessageClient implements IMessage2Server {
 
     private void receiveResponse2Client(Message message) {
         Bundle bundle = message.getData();
-        ResponseMessage responseMessage = (ResponseMessage) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
+        ResponseMessage responseMessage =
+                (ResponseMessage) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
 
         mDelegate.didReceiveResponseMessage(responseMessage);
         getListenerManager().didReceiveResponseMessage(responseMessage);
@@ -200,7 +192,8 @@ public class MessageClient implements IMessage2Server {
 
     private void receiveError(Message message) {
         Bundle bundle = message.getData();
-        ErrorMessage errorMessage = (ErrorMessage) bundle.getSerializable(MessageKeyword.KEY_ERROR_DATA);
+        ErrorMessage errorMessage =
+                (ErrorMessage) bundle.getSerializable(MessageKeyword.KEY_ERROR_DATA);
 
         mDelegate.didReceiveErrorMessage(errorMessage);
         getListenerManager().didReceiveErrorMessage(errorMessage);
@@ -213,9 +206,7 @@ public class MessageClient implements IMessage2Server {
         String traceId = TraceIdGenerator.getTraceId();
         String sourceClientId = getEngine().getClientId();
         RegisterClientMessage registerClientMessage = new RegisterClientMessage(
-                traceId, sourceClientId,
-                MixModuleManager.defaultManager().getModuleDataMap()
-        );
+                traceId, sourceClientId, MixModuleManager.defaultManager().getModuleDataMap());
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(MessageKeyword.KEY_REGISTER_CLIENT, registerClientMessage);
@@ -230,13 +221,15 @@ public class MessageClient implements IMessage2Server {
             getListenerManager().didSendRegisterClientMessage(registerClientMessage);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    traceId,
-                    ErrorCode.ERR_REGISTER_CLIENT_FAILED,
-                    e.toString(),
-                    sourceClientId,
-                    null
-            ));
+                    traceId, ErrorCode.ERR_REGISTER_CLIENT_FAILED,
+                    e.toString(), sourceClientId, null));
         }
+    }
+
+    private void onServiceDisconnected(String traceId, String sourceClientId, String targetClientId) {
+        getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                traceId, ErrorCode.ERR_DISCONNECT_SERVER,
+                "Disconnect with server!", sourceClientId, targetClientId));
     }
 
 

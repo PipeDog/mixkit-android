@@ -2,6 +2,8 @@ package com.pipedog.mixkit.messenger;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.pipedog.mixkit.kernel.MixResultCallback;
 
 import java.util.List;
@@ -51,27 +53,27 @@ public interface IMessengerEngine {
         /**
          * 设置 app 上下文
          */
-        void setContext(Context context);
+        void setContext(@NonNull Context context);
 
         /**
          * 设置当前客户端 ID 标识（允许自定义）
          */
-        void setClientId(String clientId);
+        void setClientId(@NonNull String clientId);
 
         /**
          * 设置 Action（在服务端进程的 AndroidManifest.xml 文件中配置的 action 值）
          */
-        void setAction(String action);
+        void setAction(@NonNull String action);
 
         /**
          * 设置服务进程包名（在服务端进程 AndroidManifest.xml 文件中配置的包名）
          */
-        void setPackage(String packageName);
+        void setPackage(@NonNull String packageName);
 
     }
 
     public interface IConfigurationCallback {
-        void setup(IInitialConfiguration configuration);
+        void setup(@NonNull IInitialConfiguration configuration);
     }
 
 
@@ -81,7 +83,7 @@ public interface IMessengerEngine {
      * 初始化配置
      * @param callback 配置回调
      */
-    public void setupConfiguration(IConfigurationCallback callback);
+    public void setupConfiguration(@NonNull IConfigurationCallback callback);
 
     /**
      * 启动跨进程消息引擎
@@ -108,10 +110,10 @@ public interface IMessengerEngine {
      * @param arguments 参数列表（包含回调，回调类型为 com.pipedog.mixkit.kernel.MixResultCallback）
      * @return 本次请求的 traceId（可以做为唯一标识来进行使用）
      */
-    public String sendMessage(String clientId,
-                              String moduleName,
-                              String methodName,
-                              List<Object> arguments);
+    public @NonNull String sendMessage(@NonNull String clientId,
+                                       @NonNull String moduleName,
+                                       @NonNull String methodName,
+                                       @NonNull List<Object> arguments);
 
     /**
      * 获取当前 app 上下文

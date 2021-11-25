@@ -44,7 +44,6 @@ public class MessengerExecutor implements IMixExecutor {
         @Override
         public void invoke(Object[] response) {
             List<Object> args = Arrays.asList(response);
-
             invokeCallback(mTraceId, mSourceClientId, mTargetClientId, mCallbackId, args);
         }
 
@@ -136,12 +135,7 @@ public class MessengerExecutor implements IMixExecutor {
 
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
         caller.response2Server(new ResponseMessage(
-                traceId,
-                sourceClientId,
-                targetClientId,
-                callbackID,
-                response
-        ));
+                traceId, sourceClientId, targetClientId, callbackID, response));
     }
     
 }
