@@ -1,5 +1,6 @@
 package com.pipedog.mixkit.messenger.interfaces;
 
+import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 
@@ -23,5 +24,11 @@ public interface IMessageClientDelegate {
      * @param responseMessage 响应信息数据实例
      */
     void didReceiveResponseMessage(ResponseMessage responseMessage);
+
+    /**
+     * 接收到错误消息
+     * @param errorMessage 错误信息数据实例
+     */
+    void didReceiveErrorMessage(ErrorMessage errorMessage);
 
 }

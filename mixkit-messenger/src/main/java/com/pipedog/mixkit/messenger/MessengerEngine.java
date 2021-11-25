@@ -63,11 +63,11 @@ public class MessengerEngine
     }
 
     @Override
-    public void sendMessage(String clientId, 
-                            String moduleName, 
-                            String methodName,
-                            List<Object> arguments) {
-        mMessengerManager.sendMessage(clientId, moduleName, methodName, arguments);
+    public String sendMessage(String clientId,
+                              String moduleName,
+                              String methodName,
+                              List<Object> arguments) {
+        return mMessengerManager.sendMessage(clientId, moduleName, methodName, arguments);
     }
 
     @Override

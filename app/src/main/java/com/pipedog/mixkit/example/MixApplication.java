@@ -6,13 +6,15 @@ import android.app.Application;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MixApplication extends Application {
+public class MixApplication extends Application implements IClientListener {
 
     private Context mContext;
 
@@ -37,6 +39,9 @@ public class MixApplication extends Application {
 
         // 2、启动引擎
         engine.start();
+
+        // 3、绑定监听
+        ClientListenerManager.getInstance().bindListener(this);
     }
 
 }

@@ -3,6 +3,7 @@ package com.pipedog.mixkit.messenger.client;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 import com.pipedog.mixkit.messenger.interfaces.IClientListenerManager;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;
+import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 
@@ -49,6 +50,13 @@ public class ClientListenerManager implements IClientListenerManager {
 
 
     // OVERRIDE METHODS FROM `IClientListenerManager`
+
+    @Override
+    public void didSendRegisterClientMessage(RegisterClientMessage registerClientMessage) {
+        for (IClientListener listener : mClientListeners) {
+            listener.didSendRegisterClientMessage(registerClientMessage);
+        }
+    }
 
     @Override
     public void didSendRequestMessage(RequestMessage requestMessage) {

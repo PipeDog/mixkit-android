@@ -12,7 +12,9 @@ import android.os.Messenger;
 
 import androidx.annotation.NonNull;
 
+import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
@@ -54,14 +56,20 @@ public class MessageClient implements IMessage2Server {
         boolean result = false;
 
         Intent service = new Intent();
-        service.setAction(MessengerEngine.getInstance().getAction());
-        service.setPackage(MessengerEngine.getInstance().getPackage());
+        service.setAction(getEngine().getAction());
+        service.setPackage(getEngine().getPackage());
 
         try {
             getContext().startService(service);
             result = getContext().bindService(service, mServiceConnection, 0);
         } catch (Exception e) {
-            MixLogger.error(e.toString());
+            getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                    null,
+                    ErrorCode.ERR_CONNECTION_FAILED,
+                    e.toString(),
+                    getEngine().getClientId(),
+                    null
+            ));
             return false;
         }
 
@@ -101,8 +109,16 @@ public class MessageClient implements IMessage2Server {
             message.what = MessageNumber.REQUEST_TO_SERVER;
             message.setData(bundle);
             mServerMessenger.send(message);
+
+            getListenerManager().didSendRequestMessage(requestMessage);
         } catch (Exception e) {
-            MixLogger.error("Request to server message send failed, error = %s", e.toString());
+            getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                    requestMessage.getTraceId(),
+                    ErrorCode.ERR_DISCONNECT_SERVER,
+                    e.toString(),
+                    requestMessage.getSourceClientId(),
+                    requestMessage.getTargetClientId()
+            ));
         }
     }
 
@@ -121,48 +137,59 @@ public class MessageClient implements IMessage2Server {
             message.what = MessageNumber.RESPONSE_TO_SERVER;
             message.setData(bundle);
             mServerMessenger.send(message);
+
+            getListenerManager().didSendResponseMessage(responseMessage);
         } catch (Exception e) {
-            MixLogger.error("Response to server message send failed, error = %s", e.toString());
+            getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                    responseMessage.getTraceId(),
+                    ErrorCode.ERR_DISCONNECT_SERVER,
+                    e.toString(),
+                    responseMessage.getSourceClientId(),
+                    responseMessage.getTargetClientId()
+            ));
         }
     }
 
     @Override
     public void sendError2Server(ErrorMessage errorMessage) {
-
+        getListenerManager().didReceiveErrorMessage(errorMessage);
     }
 
 
     // HANDLE MESSAGE METHODS
 
     private void receiveRequest2Client(Message message) {
-        if (mDelegate == null) {
-            return;
-        }
-
         Bundle bundle = message.getData();
         RequestMessage requestMessage = (RequestMessage) bundle.getSerializable(MessageKeyword.KEY_REQUEST_DATA);
 
         mDelegate.didReceiveRequestMessage(requestMessage);
+        getListenerManager().didReceiveRequestMessage(requestMessage);
     }
 
     private void receiveResponse2Client(Message message) {
-        if (mDelegate == null) {
-            return;
-        }
-
         Bundle bundle = message.getData();
         ResponseMessage responseMessage = (ResponseMessage) bundle.getSerializable(MessageKeyword.KEY_RESPONSE_DATA);
 
         mDelegate.didReceiveResponseMessage(responseMessage);
+        getListenerManager().didReceiveResponseMessage(responseMessage);
+    }
+
+    private void receiveError(Message message) {
+        Bundle bundle = message.getData();
+        ErrorMessage errorMessage = (ErrorMessage) bundle.getSerializable(MessageKeyword.KEY_ERROR_DATA);
+
+        mDelegate.didReceiveErrorMessage(errorMessage);
+        getListenerManager().didReceiveErrorMessage(errorMessage);
     }
 
 
     // INTERNAL METHODS
 
     private void registerClient() {
+        String traceId = TraceIdGenerator.getTraceId();
+        String sourceClientId = getEngine().getClientId();
         RegisterClientMessage registerClientMessage = new RegisterClientMessage(
-                TraceIdGenerator.getTraceId(),
-                MessengerEngine.getInstance().getClientId(),
+                traceId, sourceClientId,
                 MixModuleManager.defaultManager().getModuleDataMap()
         );
 
@@ -175,13 +202,28 @@ public class MessageClient implements IMessage2Server {
             message.replyTo = mClientMessenger;
             message.setData(bundle);
             mServerMessenger.send(message);
+
+            getListenerManager().didSendRegisterClientMessage(registerClientMessage);
         } catch (Exception e) {
-            MixLogger.error(e.toString());
+            getListenerManager().didReceiveErrorMessage(new ErrorMessage(
+                    traceId,
+                    ErrorCode.ERR_REGISTER_CLIENT_FAILED,
+                    e.toString(),
+                    sourceClientId,
+                    null
+            ));
         }
     }
 
-    private Context getContext() {
-        return MessengerEngine.getInstance().getContext();
+
+    // GETTER METHODS
+
+    private IMessengerEngine getEngine() {
+        return MessengerEngine.getInstance();
+    }
+
+    private ClientListenerManager getListenerManager() {
+        return ClientListenerManager.getInstance();
     }
 
 
@@ -199,6 +241,12 @@ public class MessageClient implements IMessage2Server {
                 case MessageNumber.RESPONSE_TO_CLIENT: {
                     receiveResponse2Client(msg);
                 } break;
+                case MessageNumber.REQUEST_ERROR: {
+                    receiveError(message);
+                } break;
+                case MessageNumber.RESPONSE_ERROR: {
+                    receiveError(message);
+                } break;
                 default: {
                     MixLogger.error("Unsupport message number = " + msg.what);
                 } break;
@@ -214,12 +262,15 @@ public class MessageClient implements IMessage2Server {
 
             // Init when connect success
             registerClient();
+            getListenerManager().onServiceConnected();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mServerMessenger = null;
             mIsConnected = false;
+
+            getListenerManager().onServiceDisconnected();
         }
     }
 

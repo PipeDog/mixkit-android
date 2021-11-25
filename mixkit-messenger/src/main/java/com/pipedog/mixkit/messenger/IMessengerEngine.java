@@ -106,11 +106,12 @@ public interface IMessengerEngine {
      * @param moduleName 模块名称
      * @param methodName 方法名
      * @param arguments 参数列表（包含回调，回调类型为 com.pipedog.mixkit.kernel.MixResultCallback）
+     * @return 本次请求的 traceId（可以做为唯一标识来进行使用）
      */
-    public void sendMessage(String clientId,
-                            String moduleName,
-                            String methodName,
-                            List<Object> arguments);
+    public String sendMessage(String clientId,
+                              String moduleName,
+                              String methodName,
+                              List<Object> arguments);
 
     /**
      * 获取当前 app 上下文

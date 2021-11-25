@@ -26,7 +26,7 @@ public class MessengerManager implements
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
-    private Map<String, MixResultCallback> mCallbackMap = new HashMap<>();
+    private Map<String, Map<String, MixResultCallback>> mCallbackMap = new HashMap<>();
 
     public MessengerManager() {
         mBridge = new MessengerBridge(this);
@@ -44,12 +44,16 @@ public class MessengerManager implements
         mClient.stopConnection();
     }
 
-    public void sendMessage(String clientId,
-                            String moduleName,
-                            String methodName,
-                            List<Object> arguments) {
+    public String sendMessage(String targetClientId,
+                              String moduleName,
+                              String methodName,
+                              List<Object> arguments) {
         arguments = arguments != null ? arguments : new ArrayList<>();
         List<Object> serverArgs = new ArrayList<>();
+
+        String traceId = TraceIdGenerator.getTraceId();
+        Map<String, MixResultCallback> callbacks = new HashMap<>();
+        mCallbackMap.put(traceId, callbacks);
 
         for (Object arg : arguments) {
             Object serverArg = arg;
@@ -57,7 +61,7 @@ public class MessengerManager implements
 
             if (isCallback) {
                 String callbackId = CallbackIdGenerator.getCallbackId();
-                mCallbackMap.put(callbackId, (MixResultCallback) arg);
+                callbacks.put(callbackId, (MixResultCallback) arg);
                 serverArg = callbackId;
             }
 
@@ -66,13 +70,14 @@ public class MessengerManager implements
 
         String sourceClientId = MessengerEngine.getInstance().getClientId();
         request2Server(new RequestMessage(
-                TraceIdGenerator.getTraceId(),
+                traceId,
                 sourceClientId,
-                clientId,
+                targetClientId,
                 moduleName,
                 methodName,
                 serverArgs
         ));
+        return traceId;
     }
 
 
@@ -136,6 +141,11 @@ public class MessengerManager implements
         mCallbackMap.remove(callbackId);
 
         callback.invoke(responseMessage.getResponse().toArray());
+    }
+
+    @Override
+    public void didReceiveErrorMessage(ErrorMessage errorMessage) {
+        mCallbackMap.remove(errorMessage.getTraceId());
     }
 
 }
