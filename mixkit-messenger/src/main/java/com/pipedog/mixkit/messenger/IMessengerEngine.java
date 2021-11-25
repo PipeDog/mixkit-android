@@ -104,10 +104,15 @@ public interface IMessengerEngine {
 
     /**
      * 发送执行消息到指定客户端
+     *
      * @param clientId 目标客户端 ID
      * @param moduleName 模块名称
      * @param methodName 方法名
-     * @param arguments 参数列表（包含回调，回调类型为 com.pipedog.mixkit.kernel.MixResultCallback）
+     * @param arguments 参数列表（包含回调，回调类型为 com.pipedog.mixkit.kernel.MixResultCallback），
+     *                  （1）你可以同时在参数列表中传递多个回调，但要注意，你最多只会收到一个回调；
+     *                  （2）一旦因为进程之间的连接出现问题，或者目标（执行）客户端执行功能失败，你会在
+     *                      ClientListener 中收到失败的回调，这时参数列表中的所有回调都会失效，不会再响应；
+     *                  （3）你可以通过 ClientListenerManager 中进行 ClientListener 的注册；
      * @return 本次请求的 traceId（可以做为唯一标识来进行使用）
      */
     public @NonNull String sendMessage(@NonNull String clientId,
