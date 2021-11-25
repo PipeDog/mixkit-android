@@ -10,17 +10,20 @@ import java.util.List;
  */
 public class RequestMessage implements Serializable {
 
+    private String traceId;
     private String sourceClientId;
     private String targetClientId;
     private String moduleName;
     private String methodName;
     private List<Object> arguments;
 
-    public RequestMessage(String sourceClientId,
+    public RequestMessage(String traceId,
+                          String sourceClientId,
                           String targetClientId,
                           String moduleName,
                           String methodName,
                           List<Object> arguments) {
+        this.traceId = traceId;
         this.sourceClientId = sourceClientId;
         this.targetClientId = targetClientId;
         this.moduleName = moduleName;
@@ -30,6 +33,14 @@ public class RequestMessage implements Serializable {
 
 
     // GETTER、SETTER METHODS
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
 
     public String getSourceClientId() {
         return sourceClientId;
@@ -77,7 +88,8 @@ public class RequestMessage implements Serializable {
     @Override
     public String toString() {
         return "RequestMessage{" +
-                "sourceClientId='" + sourceClientId + '\'' +
+                "traceId='" + traceId + '\'' +
+                ", sourceClientId='" + sourceClientId + '\'' +
                 ", targetClientId='" + targetClientId + '\'' +
                 ", moduleName='" + moduleName + '\'' +
                 ", methodName='" + methodName + '\'' +

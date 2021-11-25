@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.messenger.client;
+package com.pipedog.mixkit.messenger.interfaces;
 
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;

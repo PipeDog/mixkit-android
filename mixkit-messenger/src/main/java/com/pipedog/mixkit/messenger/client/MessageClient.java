@@ -9,28 +9,21 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
+import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
-import com.pipedog.mixkit.messenger.server.MessengerService;
-import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
-import com.pipedog.mixkit.module.MixModuleData;
+import com.pipedog.mixkit.messenger.utils.TraceIdGenerator;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 客户端抽象类
@@ -168,6 +161,7 @@ public class MessageClient implements IMessage2Server {
 
     private void registerClient() {
         RegisterClientMessage registerClientMessage = new RegisterClientMessage(
+                TraceIdGenerator.getTraceId(),
                 MessengerEngine.getInstance().getClientId(),
                 MixModuleManager.defaultManager().getModuleDataMap()
         );

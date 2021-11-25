@@ -1,20 +1,15 @@
 package com.pipedog.mixkit.messenger.core;
 
-import android.content.Context;
-import android.os.Message;
-import android.os.Parcelable;
-
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.MessengerEngine;
-import com.pipedog.mixkit.messenger.client.IMessageClientDelegate;
+import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
-import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
-import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.messenger.utils.TraceIdGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +66,7 @@ public class MessengerManager implements
 
         String sourceClientId = MessengerEngine.getInstance().getClientId();
         request2Server(new RequestMessage(
+                TraceIdGenerator.getTraceId(),
                 sourceClientId,
                 clientId,
                 moduleName,

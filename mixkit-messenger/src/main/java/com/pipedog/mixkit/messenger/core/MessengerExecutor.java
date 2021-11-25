@@ -26,13 +26,16 @@ public class MessengerExecutor implements IMixExecutor {
 
     private class MessengerResultCallback implements MixResultCallback {
 
+        protected String mTraceId;
         protected String mSourceClientId;
         protected String mTargetClientId;
         protected String mCallbackId;
 
-        protected MessengerResultCallback(String sourceClientId,
+        protected MessengerResultCallback(String traceId,
+                                          String sourceClientId,
                                           String targetClientId,
                                           String callbackId) {
+            mTraceId = traceId;
             mSourceClientId = sourceClientId;
             mTargetClientId = targetClientId;
             mCallbackId = callbackId;
@@ -42,7 +45,7 @@ public class MessengerExecutor implements IMixExecutor {
         public void invoke(Object[] response) {
             List<Object> args = Arrays.asList(response);
 
-            invokeCallback(mSourceClientId, mTargetClientId, mCallbackId, args);
+            invokeCallback(mTraceId, mSourceClientId, mTargetClientId, mCallbackId, args);
         }
 
     }
@@ -96,6 +99,7 @@ public class MessengerExecutor implements IMixExecutor {
         List<Object> nativeArgs = new ArrayList<>();
 
         Map<String, Object> map = (Map<String, Object>)metaData;
+        String traceId = (String) map.get("traceId");
         String sourceClientId = (String) map.get("sourceClientId");
         String targetClientId = (String) map.get("targetClientId");
 
@@ -106,7 +110,7 @@ public class MessengerExecutor implements IMixExecutor {
                 boolean isCallbackID = ((String)arg).startsWith("_$_mk_callback_$_");
                 if (isCallbackID) {
                     MessengerResultCallback callback = new MessengerResultCallback(
-                            sourceClientId, targetClientId, (String)arg);
+                            traceId, sourceClientId, targetClientId, (String)arg);
                     nativeArg = callback;
                 }
             }
@@ -117,7 +121,8 @@ public class MessengerExecutor implements IMixExecutor {
         return invoker.invoke(bridgeModule, nativeArgs);
     }
 
-    public void invokeCallback(String sourceClientId,
+    public void invokeCallback(String traceId,
+                               String sourceClientId,
                                String targetClientId,
                                String callbackID,
                                List<Object> response) {
@@ -131,6 +136,7 @@ public class MessengerExecutor implements IMixExecutor {
 
         IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
         caller.response2Server(new ResponseMessage(
+                traceId,
                 sourceClientId,
                 targetClientId,
                 callbackID,

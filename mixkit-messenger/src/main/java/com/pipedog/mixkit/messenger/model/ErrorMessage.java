@@ -9,15 +9,18 @@ import java.io.Serializable;
  */
 public class ErrorMessage implements Serializable {
 
+    private String traceId;
     private int code;
     private String message;
     private String sourceClientId;
     private String targetClientId;
 
-    public ErrorMessage(int code,
+    public ErrorMessage(String traceId,
+                        int code,
                         String message,
                         String sourceClientId,
                         String targetClientId) {
+        this.traceId = traceId;
         this.code = code;
         this.message = message;
         this.sourceClientId = sourceClientId;
@@ -26,6 +29,14 @@ public class ErrorMessage implements Serializable {
 
 
     // GETTER、SETTER METHODS
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
 
     public int getCode() {
         return code;
@@ -65,7 +76,8 @@ public class ErrorMessage implements Serializable {
     @Override
     public String toString() {
         return "ErrorMessage{" +
-                "code=" + code +
+                "traceId='" + traceId + '\'' +
+                ", code=" + code +
                 ", message='" + message + '\'' +
                 ", sourceClientId='" + sourceClientId + '\'' +
                 ", targetClientId='" + targetClientId + '\'' +

@@ -12,16 +12,28 @@ import java.util.Map;
  */
 public class RegisterClientMessage implements Serializable {
 
+    private String traceId;
     private String sourceClientId;
     private Map<String, MixModuleData> moduleDataMap;
 
-    public RegisterClientMessage(String sourceClientId, Map<String, MixModuleData> moduleDataMap) {
+    public RegisterClientMessage(String traceId,
+                                 String sourceClientId,
+                                 Map<String, MixModuleData> moduleDataMap) {
+        this.traceId = traceId;
         this.sourceClientId = sourceClientId;
         this.moduleDataMap = moduleDataMap;
     }
 
 
     // GETTER、SETTER METHODS
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
 
     public String getSourceClientId() {
         return sourceClientId;
@@ -45,7 +57,8 @@ public class RegisterClientMessage implements Serializable {
     @Override
     public String toString() {
         return "RegisterClientMessage{" +
-                "sourceClientId='" + sourceClientId + '\'' +
+                "traceId='" + traceId + '\'' +
+                ", sourceClientId='" + sourceClientId + '\'' +
                 ", moduleDataMap=" + moduleDataMap +
                 '}';
     }

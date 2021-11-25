@@ -10,15 +10,18 @@ import java.util.List;
  */
 public class ResponseMessage implements Serializable {
 
+    private String traceId;
     private String sourceClientId;
     private String targetClientId;
     private String callbackId;
     private List<Object> response;
 
-    public ResponseMessage(String sourceClientId,
+    public ResponseMessage(String traceId,
+                           String sourceClientId,
                            String targetClientId,
                            String callbackId,
                            List<Object> response) {
+        this.traceId = traceId;
         this.sourceClientId = sourceClientId;
         this.targetClientId = targetClientId;
         this.callbackId = callbackId;
@@ -27,6 +30,14 @@ public class ResponseMessage implements Serializable {
 
 
     // GETTER、SETTER METHODS
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
 
     public String getSourceClientId() {
         return sourceClientId;
@@ -66,7 +77,8 @@ public class ResponseMessage implements Serializable {
     @Override
     public String toString() {
         return "ResponseMessage{" +
-                "sourceClientId='" + sourceClientId + '\'' +
+                "traceId='" + traceId + '\'' +
+                ", sourceClientId='" + sourceClientId + '\'' +
                 ", targetClientId='" + targetClientId + '\'' +
                 ", callbackId='" + callbackId + '\'' +
                 ", response=" + response +
