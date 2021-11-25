@@ -22,8 +22,9 @@ dependencies {
 }
 ```
 
-## 跨进程通信配置示例
-### 服务所在项目工程 AndroidManifest.xml 文件配置
+## 跨进程通信示例
+
+### 跨进程服务所在项目工程 AndroidManifest.xml 文件配置
 
 ```
 // 1、此处 package 值需要做为初始化参数传入引擎
@@ -61,5 +62,70 @@ dependencies {
     </application>
 
 </manifest>
+```
+
+### 跨进程通信客户端请求指令发送示例
+
+```
+private void startEngine() {
+    IMessengerEngine engine = MessengerEngine.getInstance();
+
+    // 1、初始化配置
+    engine.setupConfiguration(new IMessengerEngine.IConfigurationCallback() {
+        @Override
+        public void setup(IMessengerEngine.IInitialConfiguration configuration) {
+            configuration.setContext(getApplicationContext());
+            configuration.setClientId("com.client.executorApp");
+
+            // action 及 package 需要在服务端进程的 AndroidManifest.xml 中配置
+            configuration.setAction("com.pipedog.testService");
+            configuration.setPackage("com.pipedog.mixkit.example");
+        }
+    });
+
+    // 2、启动引擎
+    engine.start();
+}
+
+private void sendMessage() {
+    // 3、调用其他进程的方法并获取回调
+    String clientId = "com.client.mainApp";
+    String moduleName = "MessengerTestModule";
+    String methodName = "testMethod";
+
+    MixResultCallback callback = new MixResultCallback() {
+        @Override
+        public void invoke(Object[] response) {
+            // Handle result here
+        }
+    };
+
+    engine.sendMessage(clientId, moduleName, methodName,
+        Arrays.asList("argument 1", "argument 2", callback));
+}
+```
+
+## 自定义 Module 实现执行功能（Web、Socket 以及 Messenger 等可以通用）
+
+```
+// 1、注解自定义 Module 名称
+@MixModule(name = "MessengerTestModule")
+public class MessengerTestModule {
+
+    // 2、注解自定义 Method 名称
+    @MixMethod(name = "testMethod")
+    public void testMethod(String str, 
+        Integer i, int bi, MixResultCallback callback, 
+        Map<String, Object> m, List<Object> list) {
+            
+        // 3、处理业务逻辑
+        // ...
+
+        // 4. 结果回调（回调结果为数组类型，但一般只存放一个元素）
+        List<Object> response = new ArrayList<>();
+        callback.invoke(response.toArray());
+    }
+
+}
 ```
 
