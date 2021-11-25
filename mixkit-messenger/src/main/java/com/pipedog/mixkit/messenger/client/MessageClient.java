@@ -23,7 +23,6 @@ import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
-import com.pipedog.mixkit.messenger.utils.TraceIdGenerator;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
@@ -203,10 +202,9 @@ public class MessageClient implements IMessage2Server {
     // INTERNAL METHODS
 
     private void registerClient() {
-        String traceId = TraceIdGenerator.getTraceId();
         String sourceClientId = getEngine().getClientId();
         RegisterClientMessage registerClientMessage = new RegisterClientMessage(
-                traceId, sourceClientId, MixModuleManager.defaultManager().getModuleDataMap());
+                sourceClientId, MixModuleManager.defaultManager().getModuleDataMap());
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(MessageKeyword.KEY_REGISTER_CLIENT, registerClientMessage);
@@ -221,7 +219,7 @@ public class MessageClient implements IMessage2Server {
             getListenerManager().didSendRegisterClientMessage(registerClientMessage);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
-                    traceId, ErrorCode.ERR_REGISTER_CLIENT_FAILED,
+                    null, ErrorCode.ERR_REGISTER_CLIENT_FAILED,
                     e.toString(), sourceClientId, null));
         }
     }
