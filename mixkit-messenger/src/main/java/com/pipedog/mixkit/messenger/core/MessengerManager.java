@@ -10,6 +10,7 @@ import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
+import com.pipedog.mixkit.messenger.utils.ThreadUtils;
 import com.pipedog.mixkit.messenger.utils.TraceIdGenerator;
 
 import java.util.ArrayList;
@@ -99,13 +100,18 @@ public class MessengerManager implements
         metaData.put("sourceClientId", requestMessage.getSourceClientId());
         metaData.put("targetClientId", requestMessage.getTargetClientId());
 
-        boolean result = mBridge.executor().invokeMethod(metaData);
-        if (!result) {
-            mClient.sendError2Server(new ErrorMessage(
-                    requestMessage.getTraceId(), ErrorCode.ERR_INVOKE_METHOD_FAILED,
-                    "Invoke method failed!" + requestMessage.toString(),
-                    requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
-        }
+        ThreadUtils.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean result = mBridge.executor().invokeMethod(metaData);
+                if (!result) {
+                    mClient.sendError2Server(new ErrorMessage(
+                            requestMessage.getTraceId(), ErrorCode.ERR_INVOKE_METHOD_FAILED,
+                            "Invoke method failed!" + requestMessage.toString(),
+                            requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
+                }
+            }
+        });
     }
 
     @Override
@@ -117,7 +123,13 @@ public class MessengerManager implements
         mCallbackMap.remove(traceId);
 
         MixResultCallback callback = callbacks.get(callbackId);
-        callback.invoke(responseMessage.getResponse().toArray());
+
+        ThreadUtils.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                callback.invoke(responseMessage.getResponse().toArray());
+            }
+        });
     }
 
     @Override

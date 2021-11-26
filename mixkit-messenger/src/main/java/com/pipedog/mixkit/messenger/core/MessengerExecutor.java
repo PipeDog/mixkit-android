@@ -10,6 +10,7 @@ import com.pipedog.mixkit.messenger.MessengerEngine;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
+import com.pipedog.mixkit.messenger.utils.ThreadUtils;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
@@ -129,13 +130,16 @@ public class MessengerExecutor implements IMixExecutor {
             return;
         }
 
-        if (response == null) {
-            response = new ArrayList<>();
-        }
+        List<Object> resp = response != null ? response : new ArrayList<>();
 
-        IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
-        caller.response2Server(new ResponseMessage(
-                traceId, sourceClientId, targetClientId, callbackID, response));
+        ThreadUtils.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                IMessage2Server caller = mBridge.bridgeDelegate().serverCaller();
+                caller.response2Server(new ResponseMessage(
+                        traceId, sourceClientId, targetClientId, callbackID, resp));
+            }
+        });
     }
     
 }
