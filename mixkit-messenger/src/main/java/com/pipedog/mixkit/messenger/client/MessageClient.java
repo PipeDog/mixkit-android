@@ -275,9 +275,8 @@ public class MessageClient implements IMessage2Server {
             mServerMessenger = new Messenger(service);
             mIsConnected = true;
 
-            // Init when connect success
-            registerClient();
             getListenerManager().onServiceConnected();
+            registerClient();
         }
 
         @Override
