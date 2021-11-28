@@ -37,6 +37,7 @@ public class MessageClient implements IMessage2Server {
     private Messenger mServerMessenger;
     private Messenger mClientMessenger = new Messenger(new ClientHandler());
     private ServiceConnection mServiceConnection = new ProcessesConnection();
+    private Intent mService;
     private boolean mIsConnected = false;
 
     private MessageClient() {
@@ -54,14 +55,14 @@ public class MessageClient implements IMessage2Server {
     public boolean startConnection() {
         boolean result = false;
 
-        Intent service = new Intent();
-        service.setAction(getEngine().getAction());
-        service.setPackage(getEngine().getPackage());
+        mService = new Intent();
+        mService.setAction(getEngine().getAction());
+        mService.setPackage(getEngine().getPackage());
 
         try {
             Context context = getEngine().getContext();
-            context.startService(service);
-            result = context.bindService(service, mServiceConnection, 0);
+            context.startService(mService);
+            result = context.bindService(mService, mServiceConnection, 0);
         } catch (Exception e) {
             getListenerManager().didReceiveErrorMessage(new ErrorMessage(
                     null, ErrorCode.ERR_CONNECTION_FAILED,
@@ -77,6 +78,7 @@ public class MessageClient implements IMessage2Server {
      */
     public void stopConnection() {
         getEngine().getContext().unbindService(mServiceConnection);
+        getEngine().getContext().stopService(mService);
     }
 
     /**
