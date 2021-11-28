@@ -49,7 +49,7 @@ public class MessengerDispatcher implements IMessage2Client {
         if (clientMessenger == null) {
             sendError2SourceClient(new ErrorMessage(
                     requestMessage.getTraceId(), ErrorCode.ERR_DISCONNECT_TARGET_CLIENT,
-                    "No client named" + requestMessage.getTargetClientId() + "was found!",
+                    "No client named " + requestMessage.getTargetClientId() + " was found!",
                     requestMessage.getSourceClientId(), requestMessage.getTargetClientId()));
             return;
         }
