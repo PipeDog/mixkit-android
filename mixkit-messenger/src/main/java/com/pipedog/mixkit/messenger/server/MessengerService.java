@@ -18,7 +18,7 @@ public class MessengerService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mMessengerDispatcher.getMessenger().getBinder();
+        return mMessengerDispatcher.getServerMessenger().getBinder();
     }
     
 }
