@@ -3,16 +3,10 @@ package com.pipedog.mixkit.example;
 import android.content.Context;
 import android.app.Application;
 
-import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
-import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MixApplication extends Application implements IClientListener {
 

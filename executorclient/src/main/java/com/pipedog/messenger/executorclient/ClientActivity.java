@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
-import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 
 public class ClientActivity extends AppCompatActivity implements IClientListener {

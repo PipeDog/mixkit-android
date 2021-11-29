@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.messenger.server;
+package com.pipedog.mixkit.messenger.builtin;
 
 import com.pipedog.mixkit.messenger.interfaces.IServerListener;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;

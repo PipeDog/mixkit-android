@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.messenger.client;
+package com.pipedog.mixkit.messenger.manager;
 
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 import com.pipedog.mixkit.messenger.interfaces.IClientListenerManager;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.IMessengerEngine;
 import com.pipedog.mixkit.messenger.MessengerEngine;
-import com.pipedog.mixkit.messenger.client.ClientListenerManager;
+import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 import com.pipedog.mixkit.tool.MixLogger;
 
