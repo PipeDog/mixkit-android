@@ -3,8 +3,7 @@ plugins {
 }
 
 apply plugin: 'com.github.dcendents.android-maven'
-
-group='com.github.PipeDog'
+group = 'com.github.PipeDog'
 
 android {
     compileSdkVersion 30

@@ -3,6 +3,8 @@ plugins {
 }
 
 apply plugin: 'mixkit-register'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.PipeDog'
 
 android {
     compileSdkVersion 30
