@@ -17,7 +17,6 @@ dependencies {
     implementation localGroovy()
 
     implementation 'com.android.tools.build:gradle:4.0.0'
-    implementation 'com.android.tools.build:gradle-api:4.0.0'
 }
 
 // run command `./gradlew uploadArchives` in project root path to execute task `uploadArchives`

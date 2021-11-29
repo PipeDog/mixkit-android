@@ -36,4 +36,6 @@ dependencies {
 
     implementation project(path: ':mixkit')
     annotationProcessor project(path: ':mixkit-compiler')
+
+    implementation'androidx.annotation:annotation:+'
 }
