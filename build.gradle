@@ -15,6 +15,7 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath 'com.pipedog.mixkit.register:auto-register:1.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
@@ -23,6 +24,7 @@ allprojects {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+        maven { url "https://jitpack.io" }
     }
 }
 
