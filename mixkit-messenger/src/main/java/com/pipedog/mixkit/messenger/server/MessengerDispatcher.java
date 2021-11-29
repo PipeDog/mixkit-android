@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
@@ -12,17 +11,16 @@ import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Client;
+import com.pipedog.mixkit.messenger.manager.ServerListenerManager;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
+import com.pipedog.mixkit.messenger.manager.MessageVerifierManager;
 import com.pipedog.mixkit.module.MixModuleData;
 import com.pipedog.mixkit.tool.MixLogger;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MessengerDispatcher implements IMessage2Client {
@@ -31,6 +29,7 @@ public class MessengerDispatcher implements IMessage2Client {
     private Messenger mServerMessenger = new Messenger(new ServerHandler());
     private Map<String, Messenger> mClientMessengers = new HashMap<String, Messenger>();
     private Map<String, Map<String, MixModuleData>> mModuleDataTable = new HashMap<>();
+    private MessageVerifierManager mMessageVerifierManager = new MessageVerifierManager(MessageVerifierManager.MANAGER_TYPE_SERVER);
 
     public MessengerDispatcher() {
 
@@ -175,6 +174,10 @@ public class MessengerDispatcher implements IMessage2Client {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+
+            if (!mMessageVerifierManager.isValidMessage(msg)) {
+                return;
+            }
 
             switch (msg.what) {
                 case MessageNumber.REGISTER_CLIENT: {

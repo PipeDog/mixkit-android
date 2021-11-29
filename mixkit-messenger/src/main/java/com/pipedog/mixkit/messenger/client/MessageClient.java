@@ -19,10 +19,12 @@ import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
+import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
+import com.pipedog.mixkit.messenger.manager.MessageVerifierManager;
 import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
@@ -39,6 +41,7 @@ public class MessageClient implements IMessage2Server {
     private ServiceConnection mServiceConnection = new ProcessesConnection();
     private Intent mService;
     private boolean mIsConnected = false;
+    private MessageVerifierManager mMessageVerifierManager = new MessageVerifierManager(MessageVerifierManager.MANAGER_TYPE_CLIENT);
 
     private MessageClient() {
 
@@ -250,6 +253,10 @@ public class MessageClient implements IMessage2Server {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+
+            if (!mMessageVerifierManager.isValidMessage(msg)) {
+                return;
+            }
 
             switch (msg.what) {
                 case MessageNumber.REQUEST_TO_CLIENT: {
