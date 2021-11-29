@@ -18,6 +18,9 @@ class MixRegisterInfo {
         return infos
     }
 
+
+    // FOR EXPORT MODULES
+
     private static Map<String, Object> getModuleProviderRegisterInfo() {
         Map<String, Object> map = new HashMap<>()
         map.put(KEY_SCAN_INTERFACE_NAME, "com.pipedog.mixkit.compiler.provider.IMixModuleProvider")
@@ -35,6 +38,9 @@ class MixRegisterInfo {
         map.put(KEY_REAL_REGISTER_METHOD_NAME, "registerParserProvider")
         return map
     }
+
+
+    // FOR LIB `mixkit-messenger`
 
     private static Map<String, Object> getMessengerServerListenerRegisterInfo() {
         Map<String, Object> map = new HashMap<>()
