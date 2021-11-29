@@ -16,6 +16,10 @@ public class MessageVerifierManager {
     private int mType;
     private List<IMessageVerifier> mVerifiers = new ArrayList<>();
 
+    /**
+     * 构造器函数
+     * @param type 验证管理者类型（MANAGER_TYPE_SERVER 为服务端，MANAGER_TYPE_CLIENT 为客户端）
+     */
     public MessageVerifierManager(int type) {
         mType = type;
         autoRegisterVerifier();
@@ -41,7 +45,7 @@ public class MessageVerifierManager {
         } else { }
     }
 
-    public boolean isValidMessage(Message message) {
+    public boolean isValidMessage(final Message message) {
         if (mVerifiers.isEmpty()) {
             return true;
         }

@@ -162,3 +162,25 @@ public class TestClientListener implements IClientListener {
 2、监听绑定
 ClientListenerManager.getInstance().bindListener(this);
 ```
+
+### 跨进程通信消息校验（支持服务端、客户端双端校验）
+
+创建实现了 `com.pipedog.mixkit.messenger.interfaces.IMessageVerifier` 接口的类，并重写其方法：
+
+```
+public class TestMessageVerifier implements IMessageVerifier {
+
+    @Override
+    public int getVerifierType() {
+        // 这里同时用于服务端和客户端双端验证，如果单独支持客户端或服务端，直接返回该值即可
+        return IMessageVerifier.VERIFIER_TYPE_SERVER | IMessageVerifier.VERIFIER_TYPE_CLIENT;
+    }
+
+    @Override
+    public boolean isValidMessage(Message message) {
+        // 在这里对 message 进行校验，如果不符合规则或者来源不明，则应返回 false，则此条 message 会被忽略
+        return true;
+    }
+
+}
+```

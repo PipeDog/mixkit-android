@@ -9,7 +9,14 @@ import android.os.Message;
  */
 public interface IMessageVerifier {
 
+    /**
+     * 用于服务端校验逻辑
+     */
     public static final int VERIFIER_TYPE_SERVER = 1 << 0;
+
+    /**
+     * 用于客户端校验逻辑
+     */
     public static final int VERIFIER_TYPE_CLIENT = 1 << 1;
 
     /**
@@ -24,6 +31,6 @@ public interface IMessageVerifier {
      * 校验消息的安全性等，来决定该消息是否应该被处理
      * @return true 继续处理该消息，false 忽略该消息（不予响应，不会进行回调等任何处理）
      */
-    boolean isValidMessage(Message message);
+    boolean isValidMessage(final Message message);
 
 }
