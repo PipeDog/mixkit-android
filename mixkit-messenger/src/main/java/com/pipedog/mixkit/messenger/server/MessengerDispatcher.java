@@ -36,7 +36,7 @@ public class MessengerDispatcher implements IMessage2Client {
 
     }
 
-    public Messenger getMessenger() {
+    public Messenger getServerMessenger() {
         return mServerMessenger;
     }
 
