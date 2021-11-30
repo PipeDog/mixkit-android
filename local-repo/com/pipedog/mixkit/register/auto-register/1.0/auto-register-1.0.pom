@@ -11,6 +11,12 @@
       <artifactId>gradle</artifactId>
       <version>4.0.0</version>
       <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>*</artifactId>
+          <groupId>com.sun.activation</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>

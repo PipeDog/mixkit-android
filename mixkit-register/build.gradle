@@ -16,7 +16,11 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
 
-    implementation 'com.android.tools.build:gradle:4.0.0'
+    implementation ('com.android.tools.build:gradle:4.0.0') {
+        // com.sun.activation:javax.activation:1.2.0
+        // javax.activation:javax.activation-api:1.2.0
+        exclude group: 'com.sun.activation'
+    }
 }
 
 // run command `./gradlew uploadArchives` in project root path to execute task `uploadArchives`
