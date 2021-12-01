@@ -24,11 +24,11 @@ public interface IMessageVerifier {
     @Retention(RetentionPolicy.SOURCE)
     public @interface VerifierType {}
 
-    // 用于服务端校验逻辑
+    /** 用于服务端校验逻辑 */
     public static final int VERIFIER_TYPE_SERVER = 1 << 0;
-    // 用于客户端校验逻辑
+    /** 用于客户端校验逻辑 */
     public static final int VERIFIER_TYPE_CLIENT = 1 << 1;
-    // 校验逻辑适用于双端
+    /** 校验逻辑适用于双端 */
     public static final int VERIFIER_TYPE_ALL = VERIFIER_TYPE_SERVER | VERIFIER_TYPE_CLIENT;
 
     /**
