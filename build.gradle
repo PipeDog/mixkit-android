@@ -7,6 +7,9 @@ buildscript {
         maven {
             url uri('local-repo')
         }
+        maven {
+            url uri('localrepo-plugin')
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
@@ -16,6 +19,7 @@ buildscript {
 
         classpath 'com.pipedog.mixkit.register:auto-register:1.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.pipedog.mixkit:mixkit-plugin:0.0.1'
     }
 }
 

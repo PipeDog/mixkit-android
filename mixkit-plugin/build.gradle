@@ -1,0 +1,35 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    repositories {
+        mavenLocal()
+        google()
+        jcenter()
+    }
+
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation 'com.android.tools.build:gradle:4.0.0'
+}
+
+// group:moduleName:version, @eg:
+// com.pipedog.mixkit:mixkit-plugin:0.0.1
+group = 'com.pipedog.mixkit'
+version = '0.0.1'
+
+// run command `./gradlew uploadArchives` in project root path to execute task `uploadArchives`
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // maven 本地仓库的目录
+            repository(url: uri('../localrepo-plugin'))
+        }
+    }
+}
