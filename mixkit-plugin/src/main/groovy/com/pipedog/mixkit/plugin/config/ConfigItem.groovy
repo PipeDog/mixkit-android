@@ -34,6 +34,19 @@ class ConfigItem {
         this.generateToClassName = generateToClassName
         this.generateToMethodName = generateToMethodName
         this.registerMethodName = registerMethodName
+
+        convertIfNeeded()
+    }
+
+    private void convertIfNeeded() {
+        interfaceName = convertDotToSlash(interfaceName)
+        generateToClassName = convertDotToSlash(generateToClassName)
+        generateToMethodName = convertDotToSlash(generateToMethodName)
+        registerMethodName = convertDotToSlash(registerMethodName)
+    }
+
+    private String convertDotToSlash(String str) {
+        return str ? str.replaceAll('\\.', '/').intern() : str
     }
 
 

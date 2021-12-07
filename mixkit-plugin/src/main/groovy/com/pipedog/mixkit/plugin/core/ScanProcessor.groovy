@@ -68,12 +68,12 @@ class ScanProcessor {
     /**
      * 检查此 entryName 是否是被注入注册代码的类，如果是则记录此文件（class 文件或 jar 包文件），用于后续的注册代码注入
      */
-    private boolean checkTargetClass(String entryName, File destFile) {
+    boolean checkTargetClass(String entryName, File destFile) {
         return checkTargetClass(entryName, destFile, "")
     }
 
 
-    private boolean checkTargetClass(String entryName, File destFile, String srcFilePath) {
+    boolean checkTargetClass(String entryName, File destFile, String srcFilePath) {
         if (entryName == null || !entryName.endsWith(".class")) {
             return false
         }
@@ -111,7 +111,7 @@ class ScanProcessor {
      *      android/support/v4/BuildConfig.class
      *      com/lib/pipedog/common/util/UITools.class
      * */
-    private boolean shouldProcessClass(String entryName) {
+    boolean shouldProcessClass(String entryName) {
         if (entryName == null || !entryName.endsWith(".class")) {
             return false
         }
@@ -132,7 +132,7 @@ class ScanProcessor {
         return !path.contains("com.android.support") && !path.contains("/android/m2repository")
     }
 
-    private static boolean shouldProcessClass(String entryName, ConfigItem configItem) {
+    boolean shouldProcessClass(String entryName, ConfigItem configItem) {
         // TODO:
         // 如果存在指定扫描范围，则判断 entryName 是否在该 package 路径下，如果是则 return true，不是则 return false
         // 如果没有指定扫描范围，则默认返回 true
@@ -144,14 +144,14 @@ class ScanProcessor {
      * 处理 class 的注入
      * @param file class 文件
      */
-    private boolean scanClass(File file) {
+    boolean scanClass(File file) {
         return scanClass(file.newInputStream(), file.absolutePath)
     }
 
     /**
      * refer hack class when object init
      */
-    private boolean scanClass(InputStream inputStream, String filePath) {
+    boolean scanClass(InputStream inputStream, String filePath) {
         ClassReader cr = new ClassReader(inputStream)
         ClassWriter cw = new ClassWriter(cr, 0)
         ScanClassVisitor cv = new ScanClassVisitor(Opcodes.ASM6, cw, filePath)

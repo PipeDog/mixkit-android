@@ -4,6 +4,10 @@ class ConfigManager {
 
     private ArrayList<ConfigItem> configItems;
 
+    ConfigManager() {
+        configItems = BuiltinConfigItems.getConfigItems()
+    }
+
     ArrayList<ConfigItem> getConfigItems() {
         return configItems
     }
