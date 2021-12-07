@@ -57,11 +57,16 @@ class RegisterTransform extends Transform {
     @Override
     void transform(TransformInvocation transformInvocation)
             throws TransformException, InterruptedException, IOException {
-        Logger.i("Start mixkit-plugin transform...")
+        scanClasses(transformInvocation)
+        insertCode()
+    }
 
+
+    // PRIVATE METHODS
+
+    private void scanClasses(TransformInvocation transformInvocation) {
         PerfMonitor.startPerf("Trans|Scan")
 
-        boolean isLeftSlash = File.separator == '/'
         ScanProcessor scanProcessor = new ScanProcessor(configManager.getConfigItems())
         TransformOutputProvider outputProvider = transformInvocation.outputProvider
 
@@ -70,19 +75,7 @@ class RegisterTransform extends Transform {
 
             // 遍历 Jar
             input.jarInputs.each { JarInput jarInput ->
-                PerfMonitor.startPerf("Trans|Scan|Jar")
-
-                // 获得输入文件
-                File src = jarInput.file
-
-                // 遍历 Jar 的字节码类文件，找到需要自动注册的类
-                File dest = getDestFile(jarInput, outputProvider)
-                scanProcessor.scanJar(src, dest)
-
-                // Copy Jar 文件到 transform 目录
-                FileUtils.copyFile(src, dest)
-
-                PerfMonitor.endPerf("Trans|Scan|Jar")
+                scanJarFile(jarInput, outputProvider, scanProcessor)
             }
 
             // 遍历目录
@@ -98,25 +91,7 @@ class RegisterTransform extends Transform {
 
                 // 遍历目录下的每个文件
                 directoryInput.file.eachFileRecurse { File file ->
-                    def path = file.absolutePath.replace(root, "")
-                    if (!file.isFile()) {
-                        return
-                    }
-
-                    def entryName = path
-                    if (!isLeftSlash) {
-                        entryName = entryName.replaceAll("\\\\", "/")
-                    }
-
-                    PerfMonitor.startPerf("Trans|Scan|Class")
-
-                    scanProcessor.checkTargetClass(
-                            entryName, new File(dest.absolutePath + File.separator + path))
-                    if (scanProcessor.shouldProcessClass(entryName)) {
-                        scanProcessor.scanClass(file)
-                    }
-
-                    PerfMonitor.endPerf("Trans|Scan|Class")
+                    scanClassFile(file, root, dest, scanProcessor)
                 }
 
                 FileUtils.copyDirectory(directoryInput.file, dest)
@@ -125,7 +100,9 @@ class RegisterTransform extends Transform {
         }
 
         PerfMonitor.endPerf("Trans|Scan")
+    }
 
+    private void insertCode() {
         PerfMonitor.startPerf("Trans|GenCode")
 
         configManager.configItems.each { ConfigItem item ->
@@ -146,14 +123,48 @@ class RegisterTransform extends Transform {
         }
 
         PerfMonitor.endPerf("Trans|GenCode")
-
-        Logger.i("End mixkit-plugin transform...")
     }
 
+    private void scanJarFile(JarInput jarInput,
+                             TransformOutputProvider outputProvider,
+                             ScanProcessor scanProcessor) {
+        PerfMonitor.startPerf("Trans|Scan|Jar")
 
-    // PRIVATE METHODS
+        // 获得输入文件
+        File src = jarInput.file
 
-    File getDestFile(JarInput jarInput, TransformOutputProvider outputProvider) {
+        // 遍历 Jar 的字节码类文件，找到需要自动注册的类
+        File dest = getDestFile(jarInput, outputProvider)
+        scanProcessor.scanJar(src, dest)
+
+        // Copy Jar 文件到 transform 目录
+        FileUtils.copyFile(src, dest)
+
+        PerfMonitor.endPerf("Trans|Scan|Jar")
+    }
+
+    private void scanClassFile(File file, String rootPath, File dest, ScanProcessor scanProcessor) {
+        def path = file.absolutePath.replace(rootPath, "")
+        if (!file.isFile()) {
+            return
+        }
+
+        def entryName = path
+        boolean isLeftSlash = File.separator == '/'
+        if (!isLeftSlash) {
+            entryName = entryName.replaceAll("\\\\", "/")
+        }
+
+        scanProcessor.checkTargetClass(
+                entryName, new File(dest.absolutePath + File.separator + path))
+        if (scanProcessor.shouldProcessClass(entryName)) {
+            PerfMonitor.startPerf("Trans|Scan|Class")
+            scanProcessor.scanClass(file)
+            PerfMonitor.endPerf("Trans|Scan|Class")
+        }
+    }
+
+    private File getDestFile(JarInput jarInput, TransformOutputProvider outputProvider) {
         def destName = jarInput.name
 
         // 重命名输出文件，因为可能同名，会覆盖
