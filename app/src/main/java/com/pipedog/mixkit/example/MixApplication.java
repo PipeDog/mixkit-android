@@ -3,8 +3,8 @@ package com.pipedog.mixkit.example;
 import android.content.Context;
 import android.app.Application;
 
-import com.pipedog.mixkit.messenger.IMessengerEngine;
-import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.IClientEngine;
+import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 
@@ -16,12 +16,12 @@ public class MixApplication extends Application implements IClientListener {
     public void onCreate() {
         super.onCreate();
 
-        IMessengerEngine engine = MessengerEngine.getInstance();
+        IClientEngine engine = ClientEngine.getInstance();
 
         // 1、初始化配置
-        engine.setupConfiguration(new IMessengerEngine.IConfigurationCallback() {
+        engine.setupConfiguration(new IClientEngine.IConfigurationCallback() {
             @Override
-            public void setup(IMessengerEngine.IInitialConfiguration configuration) {
+            public void setup(IClientEngine.IInitialConfiguration configuration) {
                 configuration.setContext(getApplicationContext());
                 configuration.setClientId("com.client.mainApp");
 

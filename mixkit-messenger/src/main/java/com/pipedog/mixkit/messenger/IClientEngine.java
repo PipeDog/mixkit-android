@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 跨进程通信引擎接口
+ * 跨进程通信客户端引擎接口
  * @author liang
  * @time 2021/11/23
  *
@@ -44,7 +44,7 @@ import java.util.Map;
  *      IMessengerEngine.IInitialConfiguration -> void setPackage(String)
  *
  */
-public interface IMessengerEngine {
+public interface IClientEngine {
 
     // PUBLIC INTERFACES
 

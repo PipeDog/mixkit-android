@@ -12,8 +12,8 @@ import android.os.Messenger;
 
 import androidx.annotation.NonNull;
 
-import com.pipedog.mixkit.messenger.IMessengerEngine;
-import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.IClientEngine;
+import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
@@ -238,8 +238,8 @@ public class MessageClient implements IMessage2Server {
 
     // GETTER METHODS
 
-    private IMessengerEngine getEngine() {
-        return MessengerEngine.getInstance();
+    private IClientEngine getEngine() {
+        return ClientEngine.getInstance();
     }
 
     private ClientListenerManager getListenerManager() {

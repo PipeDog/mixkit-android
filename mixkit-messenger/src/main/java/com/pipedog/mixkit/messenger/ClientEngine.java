@@ -2,19 +2,17 @@ package com.pipedog.mixkit.messenger;
 
 import android.content.Context;
 
-import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.messenger.core.MessengerManager;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * 跨进程通信引擎实现类
+ * 跨进程通信客户端引擎实现类
  * @author liang
  * @time 2021/11/23
  */
-public class MessengerEngine
-        implements IMessengerEngine, IMessengerEngine.IInitialConfiguration {
+public class ClientEngine
+        implements IClientEngine, IClientEngine.IInitialConfiguration {
 
     private Context mContext;
     private String mClientId;
@@ -22,28 +20,28 @@ public class MessengerEngine
     private String mPackage;
 
     private MessengerManager mMessengerManager = new MessengerManager();
-    private volatile static IMessengerEngine sMessengerEngine;
+    private volatile static IClientEngine sClientEngine;
 
-    public static IMessengerEngine getInstance() {
-        if (sMessengerEngine == null) {
-            synchronized (MessengerEngine.class) {
-                if (sMessengerEngine == null) {
-                    sMessengerEngine = new MessengerEngine();
+    public static IClientEngine getInstance() {
+        if (sClientEngine == null) {
+            synchronized (ClientEngine.class) {
+                if (sClientEngine == null) {
+                    sClientEngine = new ClientEngine();
                 }
             }
         }
-        return sMessengerEngine;
+        return sClientEngine;
     }
 
-    private MessengerEngine() {
+    private ClientEngine() {
 
     }
 
     
-    // OVERRIDE METHODS FROM `IMessengerEngine`
+    // OVERRIDE METHODS FROM `IClientEngine`
     
     @Override
-    public void setupConfiguration(IMessengerEngine.IConfigurationCallback callback) {
+    public void setupConfiguration(IClientEngine.IConfigurationCallback callback) {
         callback.setup(this);
     }
 
@@ -91,7 +89,7 @@ public class MessengerEngine
     }
 
 
-    // OVERRIDE METHODS FROM `IMessengerEngine.IInitialConfiguration`
+    // OVERRIDE METHODS FROM `IClientEngine.IInitialConfiguration`
 
     @Override
     public void setContext(Context context) {

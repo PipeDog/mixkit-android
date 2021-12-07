@@ -1,13 +1,8 @@
 package com.pipedog.mixkit.messenger.core;
 
-import android.content.Context;
-import android.os.Parcelable;
-
 import com.pipedog.mixkit.kernel.IMixBridge;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
-import com.pipedog.mixkit.messenger.MessengerEngine;
-import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.utils.ThreadUtils;
@@ -19,7 +14,6 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
