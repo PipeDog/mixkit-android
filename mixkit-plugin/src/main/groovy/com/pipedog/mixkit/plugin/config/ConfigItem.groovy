@@ -8,7 +8,7 @@ class ConfigItem {
     File fileContainsInitClass
 
     /**
-     * 在这个列表中扫描 {@link #interfaceName} 类名的结果
+     * 实现 {@link #interfaceName} 接口的类列表
      */
     ArrayList<String> classList = new ArrayList<>()
 
@@ -65,6 +65,19 @@ class ConfigItem {
      */
     String getRegisterMethodName() {
         return registerMethodName
+    }
+
+
+    // OVERRIDE METHODS
+
+    @Override
+    String toString() {
+        return "ConfigItem{\n" +
+                "\tinterfaceName = " + interfaceName + ',\n' +
+                "\tgenerateToClassName = " + generateToClassName + ',\n' +
+                "\tgenerateToMethodName = " + generateToMethodName + ',\n' +
+                "\tregisterMethodName = " + registerMethodName + ',\n' +
+                '}';
     }
 
 }

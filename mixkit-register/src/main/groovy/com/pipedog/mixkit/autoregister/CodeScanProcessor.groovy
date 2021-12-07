@@ -75,7 +75,7 @@ class CodeScanProcessor {
 
     boolean checkInitClass(String entryName, File destFile, String srcFilePath) {
         if (entryName == null || !entryName.endsWith(".class")) {
-            return
+            return false
         }
 
         entryName = entryName.substring(0, entryName.lastIndexOf('.'))
