@@ -12,19 +12,19 @@ class Logger {
 
     static void i(String info) {
         if (null != info && null != sLogger) {
-            sLogger.info("Mix:Register == " + info)
+            sLogger.info("[Mix:Register] " + info)
         }
     }
 
     static void w(String warning) {
         if (null != warning && null != sLogger) {
-            sLogger.warn("Mix:Register == " + warning)
+            sLogger.warn("[Mix:Register] " + warning)
         }
     }
 
     static void e(String error) {
         if (null != error && null != sLogger) {
-            sLogger.error("Mix:Register == " + error)
+            sLogger.error("[Mix:Register] " + error)
         }
     }
 

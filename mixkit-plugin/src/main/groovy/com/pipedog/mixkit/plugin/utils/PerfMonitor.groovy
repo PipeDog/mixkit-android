@@ -37,6 +37,7 @@ class PerfMonitor {
         Long endTime = System.currentTimeMillis()
         Long cost = endTime - startTime
 
+        recordMap.remove(key)
         Logger.i("[" + key + "] " + "cost time : " + cost + "ms")
     }
 
