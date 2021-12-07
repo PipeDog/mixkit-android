@@ -8,7 +8,6 @@ import org.objectweb.asm.Opcodes
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
-import java.util.regex.Pattern
 
 /**
  * 代码扫描器（Jar 包及 .class 文件扫描）
@@ -41,8 +40,7 @@ class ScanProcessor {
             JarEntry jarEntry = (JarEntry) enumeration.nextElement()
             String entryName = jarEntry.getName()
 
-            // support 包不扫描
-            if (entryName.startsWith("android/support")) {
+            if (hitBlockList(entryName)) {
                 break
             }
 
@@ -128,16 +126,24 @@ class ScanProcessor {
         return false
     }
 
-    private static boolean shouldProcessPreDexJar(String path) {
-        return !path.contains("com.android.support") && !path.contains("/android/m2repository")
-    }
-
     boolean shouldProcessClass(String entryName, ConfigItem configItem) {
-        // TODO:
-        // 如果存在指定扫描范围，则判断 entryName 是否在该 package 路径下，如果是则 return true，不是则 return false
-        // 如果没有指定扫描范围，则默认返回 true
-        // return entryName != null && entryName.startsWith(ScanSetting.ROUTER_CLASS_PACKAGE_NAME)
-        return true
+        if (entryName == null) {
+            return false
+        }
+
+        ArrayList<String> scanPackageNames = configItem.getScanPackageNames()
+        if (scanPackageNames == null || scanPackageNames.isEmpty()) {
+            return true
+        }
+
+        for (int i = 0; i < scanPackageNames.size(); i++) {
+            String packageName = scanPackageNames.get(i)
+            if (entryName.startsWith(packageName)) {
+                return true
+            }
+        }
+
+        return false
     }
 
     /**
@@ -160,6 +166,14 @@ class ScanProcessor {
         inputStream.close()
         return cv.found
     }
+
+    /**
+     * 某些 package 不需要扫描，在此进行过滤
+     */
+    boolean hitBlockList(String entryName) {
+        return entryName.startsWith("android/support") || entryName.startsWith("/android/m2repository")
+    }
+
 
     // INTERNAL CLASS
 

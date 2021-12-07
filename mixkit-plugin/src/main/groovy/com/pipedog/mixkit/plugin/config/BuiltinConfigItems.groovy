@@ -1,5 +1,10 @@
 package com.pipedog.mixkit.plugin.config
 
+/**
+ * 内置配置项
+ * @author liang
+ * @time 2021/12/07
+ */
 class BuiltinConfigItems {
 
     static ArrayList<ConfigItem> getConfigItems() {
@@ -19,7 +24,10 @@ class BuiltinConfigItems {
                 "com.pipedog.mixkit.compiler.provider.IMixModuleProvider",
                 "com.pipedog.mixkit.module.MixModuleManager",
                 "autoCallRegisterModuleProvider",
-                "registerModuleProvider"
+                "registerModuleProvider",
+                new ArrayList<String>() {{
+                    add("com.pipedog.mixkit.compiler.dynamic.module")
+                }}
         )
     }
 
@@ -28,7 +36,10 @@ class BuiltinConfigItems {
                 "com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider",
                 "com.pipedog.mixkit.parser.MixMessageParserManager",
                 "autoCallRegisterParserProvider",
-                "registerParserProvider"
+                "registerParserProvider",
+                new ArrayList<String>() {{
+                    add("com.pipedog.mixkit.compiler.dynamic.parser")
+                }}
         )
     }
 
@@ -40,7 +51,8 @@ class BuiltinConfigItems {
                 "com.pipedog.mixkit.messenger.interfaces.IServerListener",
                 "com.pipedog.mixkit.messenger.manager.ServerListenerManager",
                 "autoRegisterServerListener",
-                "registerServerListener"
+                "registerServerListener",
+                null
         )
     }
 
@@ -49,7 +61,8 @@ class BuiltinConfigItems {
                 "com.pipedog.mixkit.messenger.interfaces.IMessageVerifier",
                 "com.pipedog.mixkit.messenger.manager.MessageVerifierManager",
                 "autoRegisterVerifier",
-                "registerVerifier"
+                "registerVerifier",
+                null
         )
     }
 

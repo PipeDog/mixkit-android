@@ -1,31 +1,22 @@
 package com.pipedog.mixkit.plugin.core
 
-import com.android.build.api.transform.Context
 import com.android.build.api.transform.DirectoryInput
 import com.android.build.api.transform.Format
 import com.android.build.api.transform.JarInput
 import com.android.build.api.transform.QualifiedContent
-import com.android.build.api.transform.Status
 import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformInvocation
 import com.android.build.api.transform.TransformOutputProvider
 import com.android.build.gradle.internal.pipeline.TransformManager
-import com.google.gson.Gson
 import com.pipedog.mixkit.plugin.config.ConfigItem
 import com.pipedog.mixkit.plugin.config.ConfigManager
 import com.pipedog.mixkit.plugin.utils.Logger
+import com.pipedog.mixkit.plugin.utils.PerfMonitor
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
-import org.objectweb.asm.Opcodes
-
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
 
 class RegisterTransform extends Transform {
 
@@ -68,6 +59,8 @@ class RegisterTransform extends Transform {
             throws TransformException, InterruptedException, IOException {
         Logger.i("Start mixkit-plugin transform...")
 
+        PerfMonitor.startPerf("Trans|Scan")
+
         boolean isLeftSlash = File.separator == '/'
         ScanProcessor scanProcessor = new ScanProcessor(configManager.getConfigItems())
         TransformOutputProvider outputProvider = transformInvocation.outputProvider
@@ -77,7 +70,19 @@ class RegisterTransform extends Transform {
 
             // 遍历 Jar
             input.jarInputs.each { JarInput jarInput ->
-                scanJar(jarInput, outputProvider, scanProcessor)
+                PerfMonitor.startPerf("Trans|Scan|Jar")
+
+                // 获得输入文件
+                File src = jarInput.file
+
+                // 遍历 Jar 的字节码类文件，找到需要自动注册的类
+                File dest = getDestFile(jarInput, outputProvider)
+                scanProcessor.scanJar(src, dest)
+
+                // Copy Jar 文件到 transform 目录
+                FileUtils.copyFile(src, dest)
+
+                PerfMonitor.endPerf("Trans|Scan|Jar")
             }
 
             // 遍历目录
@@ -103,17 +108,25 @@ class RegisterTransform extends Transform {
                         entryName = entryName.replaceAll("\\\\", "/")
                     }
 
+                    PerfMonitor.startPerf("Trans|Scan|Class")
+
                     scanProcessor.checkTargetClass(
                             entryName, new File(dest.absolutePath + File.separator + path))
                     if (scanProcessor.shouldProcessClass(entryName)) {
                         scanProcessor.scanClass(file)
                     }
+
+                    PerfMonitor.endPerf("Trans|Scan|Class")
                 }
 
                 FileUtils.copyDirectory(directoryInput.file, dest)
             }
 
         }
+
+        PerfMonitor.endPerf("Trans|Scan")
+
+        PerfMonitor.startPerf("Trans|GenCode")
 
         configManager.configItems.each { ConfigItem item ->
             if (!item.fileContainsInitClass) {
@@ -132,25 +145,13 @@ class RegisterTransform extends Transform {
             CodeGenProcessor.insertInitCodeTo(item)
         }
 
+        PerfMonitor.endPerf("Trans|GenCode")
+
         Logger.i("End mixkit-plugin transform...")
     }
 
 
     // PRIVATE METHODS
-
-    private void scanJar(JarInput jarInput,
-                         TransformOutputProvider outputProvider,
-                         ScanProcessor scanProcessor) {
-        // 获得输入文件
-        File src = jarInput.file
-
-        // 遍历 Jar 的字节码类文件，找到需要自动注册的类
-        File dest = getDestFile(jarInput, outputProvider)
-        scanProcessor.scanJar(src, dest)
-
-        // Copy Jar 文件到 transform 目录：build/transforms/mixkit-plugin/
-        FileUtils.copyFile(src, dest)
-    }
 
     File getDestFile(JarInput jarInput, TransformOutputProvider outputProvider) {
         def destName = jarInput.name

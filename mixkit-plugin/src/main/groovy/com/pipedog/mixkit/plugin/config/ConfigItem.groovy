@@ -12,10 +12,11 @@ class ConfigItem {
      */
     ArrayList<String> classList = new ArrayList<>()
 
-    private String interfaceName;
-    private String generateToClassName;
-    private String generateToMethodName;
-    private String registerMethodName;
+    private String interfaceName
+    private String generateToClassName
+    private String generateToMethodName
+    private String registerMethodName
+    private ArrayList<String> scanPackageNames
 
     /**
      * 初始化配置信息
@@ -24,16 +25,19 @@ class ConfigItem {
      * @param generateToClassName 注册代码将会被生成到这个类中
      * @param generateToMethodName 注册代码将会被生成到这个方法中
      * @param registerMethodName 在 {@link #generateToClassName} 类中的注册方法名
+     * @param scanPackageNames 指定要扫描的包
      */
     ConfigItem(
             String interfaceName,
             String generateToClassName,
             String generateToMethodName,
-            String registerMethodName) {
+            String registerMethodName,
+            ArrayList<String> scanPackageNames) {
         this.interfaceName = interfaceName
         this.generateToClassName = generateToClassName
         this.generateToMethodName = generateToMethodName
         this.registerMethodName = registerMethodName
+        this.scanPackageNames = scanPackageNames ?: new ArrayList<>()
 
         convertIfNeeded()
     }
@@ -43,6 +47,13 @@ class ConfigItem {
         generateToClassName = convertDotToSlash(generateToClassName)
         generateToMethodName = convertDotToSlash(generateToMethodName)
         registerMethodName = convertDotToSlash(registerMethodName)
+
+        ArrayList<String> convertedScanPackageNames = new ArrayList<>()
+        for (int i = 0; i < scanPackageNames.size(); i++) {
+            String packageName = convertDotToSlash(scanPackageNames.get(i))
+            convertedScanPackageNames.add(packageName)
+        }
+        scanPackageNames = convertedScanPackageNames
     }
 
     private String convertDotToSlash(String str) {
@@ -80,6 +91,13 @@ class ConfigItem {
         return registerMethodName
     }
 
+    /**
+     * 指定需要扫描的 package，如果为空则默认扫描所有包
+     */
+    ArrayList<String> getScanPackageNames() {
+        return scanPackageNames
+    }
+
 
     // OVERRIDE METHODS
 
@@ -90,6 +108,7 @@ class ConfigItem {
                 "\tgenerateToClassName = " + generateToClassName + ',\n' +
                 "\tgenerateToMethodName = " + generateToMethodName + ',\n' +
                 "\tregisterMethodName = " + registerMethodName + ',\n' +
+                "\tscanPackageNames = " + scanPackageNames.toString() + ',\n' +
                 '}';
     }
 

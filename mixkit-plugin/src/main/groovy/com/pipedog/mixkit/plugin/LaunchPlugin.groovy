@@ -12,7 +12,7 @@ class LaunchPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
-        println("配置成功 => Call apply")
+        println("`mixkit-plugin` launched")
 
         def isApp = project.plugins.hasPlugin(AppPlugin)
         if (!isApp) {
