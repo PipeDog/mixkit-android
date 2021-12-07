@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
 }
 
-//apply plugin: 'mixkit-register'
 apply plugin: 'mixkit-plugin'
 
 android {

@@ -17,7 +17,6 @@
             <option value="$PROJECT_DIR$/mixkit-compiler" />
             <option value="$PROJECT_DIR$/mixkit-messenger" />
             <option value="$PROJECT_DIR$/mixkit-plugin" />
-            <option value="$PROJECT_DIR$/mixkit-register" />
             <option value="$PROJECT_DIR$/mixkit-socket" />
             <option value="$PROJECT_DIR$/mixkit-web" />
           </set>
