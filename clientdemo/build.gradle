@@ -39,3 +39,23 @@ dependencies {
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 }
+
+// 自定义插件配置
+
+/*
+project.ext.registerConfig = [
+        [
+                'interfaceName' : '',
+                'generateToClassName' : '',
+                'generateToMethodName' : '',
+                'registerMethodName' : '',
+                'scanPackageNames' : [
+                    ''
+                ]
+        ]
+]
+
+mixPluginConfig {
+    registerItems = registerConfig
+}
+ */

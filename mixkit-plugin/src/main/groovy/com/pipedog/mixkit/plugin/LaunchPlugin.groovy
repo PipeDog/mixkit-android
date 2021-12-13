@@ -10,6 +10,8 @@ import org.gradle.api.Project
 
 class LaunchPlugin implements Plugin<Project> {
 
+    public static final String EXTENSION_NAME = "mixPluginConfig"
+
     @Override
     void apply(Project project) {
         println("`mixkit-plugin` launched")
@@ -21,12 +23,18 @@ class LaunchPlugin implements Plugin<Project> {
 
         Logger.init(project)
 
-        ConfigManager configManager = new ConfigManager()
-        def transform = new RegisterTransform(project)
-        transform.setConfigManager(configManager)
+        project.extensions.create(EXTENSION_NAME, ConfigManager)
 
+        def transform = new RegisterTransform(project)
         def android = project.extensions.getByType(AppExtension)
         android.registerTransform(transform)
+
+        // 配置参数完成回调
+        project.afterEvaluate {
+            ConfigManager configManager = project.extensions.findByName(EXTENSION_NAME) as ConfigManager
+            configManager.mergeConfig()
+            transform.setConfigManager(configManager)
+        }
     }
 
 }
