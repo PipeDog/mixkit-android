@@ -108,7 +108,7 @@ class ScanProcessor {
      *  jar 包中的文件，eg：
      *      android/support/v4/BuildConfig.class
      *      com/lib/pipedog/common/util/UITools.class
-     * */
+     */
     boolean shouldProcessClass(String entryName) {
         if (entryName == null || !entryName.endsWith(".class")) {
             return false
@@ -189,6 +189,7 @@ class ScanProcessor {
 
 
         // OVERRIDE METHODS
+
         @Override
         void visit(int version, int access, String name,
                    String signature, String superName, String[] interfaces) {
