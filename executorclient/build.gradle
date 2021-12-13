@@ -3,7 +3,7 @@
 //}
 
 apply plugin: 'com.android.application'
-apply plugin: 'mixkit-register'
+apply plugin: 'mixkit-plugin'
 
 android {
     compileSdkVersion 30
@@ -15,7 +15,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -40,7 +39,4 @@ dependencies {
     annotationProcessor project(path: ':mixkit')
 
     implementation project(path: ':mixkit-messenger')
-
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
 }

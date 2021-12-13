@@ -2,7 +2,9 @@ plugins {
     id 'com.android.library'
 }
 
-apply plugin: 'mixkit-register'
+apply plugin: 'mixkit-plugin'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.PipeDog'
 
 android {
     compileSdkVersion 30
@@ -14,7 +16,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -37,5 +38,4 @@ dependencies {
     annotationProcessor project(path: ':mixkit-compiler')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
 }

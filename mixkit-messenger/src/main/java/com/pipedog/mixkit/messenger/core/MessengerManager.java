@@ -1,7 +1,7 @@
 package com.pipedog.mixkit.messenger.core;
 
 import com.pipedog.mixkit.kernel.MixResultCallback;
-import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.client.MessageClient;
@@ -70,7 +70,7 @@ public class MessengerManager implements
             serverArgs.add(serverArg);
         }
 
-        String sourceClientId = MessengerEngine.getInstance().getClientId();
+        String sourceClientId = ClientEngine.getInstance().getClientId();
         mClient.request2Server(new RequestMessage(
                 traceId, sourceClientId, targetClientId,
                 moduleName, methodName, serverArgs));

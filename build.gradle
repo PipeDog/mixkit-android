@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
 
         maven {
-            url uri('local-repo')
+            url uri('localrepo-plugin')
         }
     }
     dependencies {
@@ -14,7 +14,8 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
 
-        classpath 'com.pipedog.mixkit.register:auto-register:1.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.pipedog.mixkit:mixkit-plugin:0.0.1'
     }
 }
 
@@ -23,6 +24,7 @@ allprojects {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+        maven { url "https://jitpack.io" }
     }
 }
 

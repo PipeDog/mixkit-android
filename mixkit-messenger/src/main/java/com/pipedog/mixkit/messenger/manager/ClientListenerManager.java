@@ -13,9 +13,9 @@ import java.util.Set;
 public class ClientListenerManager implements IClientListenerManager {
 
     private Set<IClientListener> mClientListeners = new HashSet<>();
-    private volatile static ClientListenerManager sClientListenerManager;
+    private volatile static IClientListenerManager sClientListenerManager;
 
-    public static ClientListenerManager getInstance() {
+    public static IClientListenerManager getInstance() {
         if (sClientListenerManager == null) {
             synchronized (ClientListenerManager.class) {
                 sClientListenerManager = new ClientListenerManager();
@@ -28,6 +28,10 @@ public class ClientListenerManager implements IClientListenerManager {
 
     }
 
+
+    // OVERRIDE METHODS FROM `IClientListenerManager`
+
+    @Override
     public void bindListener(IClientListener listener) {
         if (listener == null) {
             return;
@@ -36,6 +40,7 @@ public class ClientListenerManager implements IClientListenerManager {
         mClientListeners.add(listener);
     }
 
+    @Override
     public void unbindListener(IClientListener listener) {
         if (listener == null) {
             return;
@@ -44,12 +49,10 @@ public class ClientListenerManager implements IClientListenerManager {
         mClientListeners.remove(listener);
     }
 
+    @Override
     public void removeAllListeners() {
         mClientListeners.clear();
     }
-
-
-    // OVERRIDE METHODS FROM `IClientListenerManager`
 
     @Override
     public void didSendRegisterClientMessage(RegisterClientMessage registerClientMessage) {

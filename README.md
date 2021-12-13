@@ -4,7 +4,7 @@
 
 ```
 // 需要自定义 module 的工程添加
-apply plugin: 'mixkit-register'
+apply plugin: 'mixkit-plugin'
 
 dependencies {
     // 工程中都需要引入

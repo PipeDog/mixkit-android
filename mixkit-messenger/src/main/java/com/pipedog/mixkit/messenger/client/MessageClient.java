@@ -12,11 +12,12 @@ import android.os.Messenger;
 
 import androidx.annotation.NonNull;
 
-import com.pipedog.mixkit.messenger.IMessengerEngine;
-import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.IClientEngine;
+import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.constants.MessageKeyword;
 import com.pipedog.mixkit.messenger.constants.MessageNumber;
+import com.pipedog.mixkit.messenger.interfaces.IClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
 import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
@@ -238,11 +239,11 @@ public class MessageClient implements IMessage2Server {
 
     // GETTER METHODS
 
-    private IMessengerEngine getEngine() {
-        return MessengerEngine.getInstance();
+    private IClientEngine getEngine() {
+        return ClientEngine.getInstance();
     }
 
-    private ClientListenerManager getListenerManager() {
+    private IClientListenerManager getListenerManager() {
         return ClientListenerManager.getInstance();
     }
 

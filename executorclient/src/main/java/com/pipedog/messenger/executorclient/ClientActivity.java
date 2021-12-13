@@ -1,15 +1,14 @@
 package com.pipedog.messenger.executorclient;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
 
-import com.pipedog.mixkit.messenger.IMessengerEngine;
-import com.pipedog.mixkit.messenger.MessengerEngine;
+import com.pipedog.mixkit.messenger.IClientEngine;
+import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
 import com.pipedog.mixkit.messenger.interfaces.IClientListener;
 
-public class ClientActivity extends AppCompatActivity implements IClientListener {
+public class ClientActivity extends Activity implements IClientListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +19,12 @@ public class ClientActivity extends AppCompatActivity implements IClientListener
     }
 
     private void launchMessengerEngine() {
-        IMessengerEngine engine = MessengerEngine.getInstance();
+        IClientEngine engine = ClientEngine.getInstance();
 
         // 1、初始化配置
-        engine.setupConfiguration(new IMessengerEngine.IConfigurationCallback() {
+        engine.setupConfiguration(new IClientEngine.IConfigurationCallback() {
             @Override
-            public void setup(IMessengerEngine.IInitialConfiguration configuration) {
+            public void setup(IClientEngine.IInitialConfiguration configuration) {
                 configuration.setContext(getApplicationContext());
                 configuration.setClientId("com.client.executorApp");
 
@@ -43,7 +42,7 @@ public class ClientActivity extends AppCompatActivity implements IClientListener
     protected void onResume() {
         super.onResume();
 
-        MessengerEngine.getInstance().restart();
+        ClientEngine.getInstance().restart();
         ClientListenerManager.getInstance().bindListener(this);
     }
 

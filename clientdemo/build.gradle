@@ -1,6 +1,6 @@
 
 apply plugin: 'com.android.application'
-apply plugin: 'mixkit-register'
+apply plugin: 'mixkit-plugin'
 
 android {
     compileSdkVersion 30
@@ -12,7 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -38,7 +37,25 @@ dependencies {
 
     implementation project(path: ':mixkit-messenger')
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 }
+
+// 自定义插件配置
+
+/*
+project.ext.registerConfig = [
+        [
+                'interfaceName' : '',
+                'generateToClassName' : '',
+                'generateToMethodName' : '',
+                'registerMethodName' : '',
+                'scanPackageNames' : [
+                    ''
+                ]
+        ]
+]
+
+mixPluginConfig {
+    registerItems = registerConfig
+}
+ */
