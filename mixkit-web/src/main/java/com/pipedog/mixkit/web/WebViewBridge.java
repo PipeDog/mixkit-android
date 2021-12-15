@@ -5,6 +5,10 @@ import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixModuleCreator;
 import com.pipedog.mixkit.parser.MixMessageParserManager;
 
+/**
+ * native-js 交互 bridge 实现
+ * @author liang
+ */
 public class WebViewBridge implements IMixBridge {
 
     private IWebViewBridgeDelegate mDelegate;

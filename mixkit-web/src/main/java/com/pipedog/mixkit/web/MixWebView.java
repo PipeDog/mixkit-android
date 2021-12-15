@@ -34,9 +34,16 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
 
-// Chrome debug address:
-// chrome://inspect/#devices
-
+/**
+ * 支持 native-js 交互的 web 视图，使用时将系统的 WebView 替换成当前类即可
+ * Chrome 调试地址：chrome://inspect/#devices
+ *
+ * 注意：
+ *      MixWebView 仅提供了 bridge 交互的基础能力，其他诸如 User-Agent、Cookie 等
+ *      信息的管理，以及 UI 定制等内容业务层应该统一抽象出一个 WebSDK 去进行处理，不建
+ *      议在 mixkit-web 中直接进行二次开发，应该尽量避免功能上的耦合
+ * @author liang
+ */
 public class MixWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
 
     // 包装外部传递进行来 WebViewClient，并且提供各种回调
@@ -448,7 +455,7 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
     }
 
     @Override
-    public IScriptEngine scriptEngine() {
+    public IScriptEngine getScriptEngine() {
         return (IScriptEngine)this;
     }
 

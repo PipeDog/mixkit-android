@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 消息执行器实现（webView 接收到的消息会被传递至这里，并最终执行）
+ * @author liang
+ */
 public class WebViewExecutor implements IMixExecutor {
 
     private class WebResultCallback implements MixResultCallback {
@@ -118,7 +122,7 @@ public class WebViewExecutor implements IMixExecutor {
         }
         jsArgs.add(arguments);
 
-        IScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
+        IScriptEngine scriptEngine = mBridge.bridgeDelegate().getScriptEngine();
         scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {

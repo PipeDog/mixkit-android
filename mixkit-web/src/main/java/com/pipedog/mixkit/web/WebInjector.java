@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * 自定义 module 信息注入器（js 侧会根据这里提供的数据去构建响应的实例及函数，以供 js 的业务层直接调用）
+ * @author liang
+ */
 public class WebInjector {
 
     private static String sModuleDataJson;
