@@ -13,6 +13,10 @@ import com.pipedog.mixkit.path.Path;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.compiler.provider.IMixModuleProvider;
 
+/**
+ * 自定义 module 管理器（通过注解导出的信息最终会在这里被收集并整理）
+ * @author liang
+ */
 public class MixModuleManager {
 
     private Gson mGson;

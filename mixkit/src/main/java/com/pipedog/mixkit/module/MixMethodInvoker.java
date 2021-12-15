@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * 方法调用功能抽象（自定义 module 中的函数最终在这里被调用）
+ * @author liang
+ */
 public class MixMethodInvoker {
 
     private static final int NOT_FOUND = -1;

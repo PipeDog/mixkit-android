@@ -23,6 +23,10 @@ import javax.lang.model.util.Elements;
 import com.pipedog.mixkit.annotation.MixMessageParser;
 import com.pipedog.mixkit.path.Path;
 
+/**
+ * 消息解析器注解处理（相关信息会被写入到编译期生成的 java 文件中，该文件以 MixMessageParserProvider 开头）
+ * @author liang
+ */
 public class MixMessageParserProcessor {
 
     private final Logger mLogger;

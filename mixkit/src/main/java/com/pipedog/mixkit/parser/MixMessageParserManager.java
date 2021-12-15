@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import java.lang.Boolean;
 
+/**
+ * 消息解析管理器（负责根据消息体原始数据匹配生成相应解析器实例）
+ * @author liang
+ */
 public class MixMessageParserManager {
 
     private Gson mGson;

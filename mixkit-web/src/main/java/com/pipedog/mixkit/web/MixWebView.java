@@ -322,13 +322,13 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
             Map map = mGson.fromJson(message, Map.class);
 
             if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
-                mWebViewBridge.executor().invokeMethod(map);
+                mWebViewBridge.getExecutor().invokeMethod(map);
             } else {
                 Handler mainHandler = new Handler(Looper.getMainLooper());
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebViewBridge.executor().invokeMethod(map);
+                        mWebViewBridge.getExecutor().invokeMethod(map);
                     }
                 });
             }

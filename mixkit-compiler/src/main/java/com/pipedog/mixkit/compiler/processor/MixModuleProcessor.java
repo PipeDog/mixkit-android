@@ -33,6 +33,10 @@ import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.path.Path;
 
+/**
+ * 自定义 module 注解处理（相关信息会被写入到编译期生成的 java 文件中，该文件以 MixModuleProvider 开头）
+ * @author liang
+ */
 public class MixModuleProcessor {
 
     private final Logger mLogger;

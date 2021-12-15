@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+ * 内置默认数据解析器
+ * @author liang
+ */
 @MixMessageParser(name = "BuiltinMessageParser")
 public class MixBuiltinMessageParser implements IMixMessageParser {
 
@@ -22,7 +26,7 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
         }
 
         @Override
-        public String moduleName() {
+        public String getModuleName() {
             if (mModuleName == null) {
                 return "";
             }
@@ -30,7 +34,7 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
         }
 
         @Override
-        public String methodName() {
+        public String getMethodName() {
             if (mMethodName == null) {
                 return "";
             }
@@ -38,7 +42,7 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
         }
 
         @Override
-        public List<Object> arguments() {
+        public List<Object> getArguments() {
             if (mArguments == null || mArguments.isEmpty()) {
                 return new ArrayList<Object>();
             }

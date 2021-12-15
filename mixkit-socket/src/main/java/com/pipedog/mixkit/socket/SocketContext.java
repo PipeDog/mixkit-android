@@ -51,7 +51,7 @@ public class SocketContext implements ISocketEngine, IWebSocketDelegate, ISocket
     public void webSocketDidReceiveMessage(IWebSocket webSocket, Object message) {
         if (message == null) { return; }
 
-        IMixExecutor executor = mBridge.executor();
+        IMixExecutor executor = mBridge.getExecutor();
         executor.invokeMethod(message);
     }
 

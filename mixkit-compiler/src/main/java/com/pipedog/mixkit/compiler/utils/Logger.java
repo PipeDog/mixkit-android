@@ -3,6 +3,10 @@ package com.pipedog.mixkit.compiler.utils;
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
 
+/**
+ * 日志打印工具包装
+ * @author liang
+ */
 public class Logger {
 
     private Messager mMessager;
