@@ -1,7 +1,7 @@
 package com.pipedog.mixkit.plugin.config
 
 /**
- * 内置配置项
+ * 内置配置项（支持 mixkit 功能）
  * @author liang
  * @time 2021/12/07
  */

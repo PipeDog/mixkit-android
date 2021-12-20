@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 消息执行器实现（webView 接收到的消息会被传递至这里，并最终执行）
+ * @author liang
+ */
 public class WebViewExecutor implements IMixExecutor {
 
     private class WebResultCallback implements MixResultCallback {
@@ -54,14 +58,14 @@ public class WebViewExecutor implements IMixExecutor {
 
     @Override
     public boolean invokeMethod(Object metaData) {
-        MixMessageParserManager parserManager = mBridge.messageParserManager();
+        MixMessageParserManager parserManager = mBridge.getMessageParserManager();
 
         IMixMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) { return false; }
 
         IMixMessageParser.IMixMessageBody body = parser.messageBody();
-        String moduleName = body.moduleName();
-        String methodName = body.methodName();
+        String moduleName = body.getModuleName();
+        String methodName = body.getMethodName();
 
         MixModuleManager moduleManager = MixModuleManager.defaultManager();
         MixMethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
@@ -73,7 +77,7 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         String className = invoker.getClassName();
-        Object bridgeModule = mBridge.moduleCreator().getModule(className);
+        Object bridgeModule = mBridge.getModuleCreator().getModule(className);
 
         if (bridgeModule == null) {
             MixLogger.error("Get bridge module object failed, module : %s, method : %s.",
@@ -81,7 +85,7 @@ public class WebViewExecutor implements IMixExecutor {
             return false;
         }
 
-        List<Object> arguments = body.arguments();
+        List<Object> arguments = body.getArguments();
         if (arguments == null) {
             arguments = new ArrayList<Object>();
         }
@@ -118,7 +122,7 @@ public class WebViewExecutor implements IMixExecutor {
         }
         jsArgs.add(arguments);
 
-        IScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
+        IScriptEngine scriptEngine = mBridge.bridgeDelegate().getScriptEngine();
         scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {

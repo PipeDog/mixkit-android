@@ -1,5 +1,9 @@
 package com.pipedog.mixkit.plugin.config
 
+/**
+ * 配置项信息抽象实例
+ * @author liang
+ */
 class ConfigItem {
 
     /**

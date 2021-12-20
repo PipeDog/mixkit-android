@@ -1,5 +1,9 @@
 package com.pipedog.mixkit.path;
 
+/**
+ * 文件路径定义
+ * @author liang
+ */
 public class Path {
 
     // For annotation @MixModule()

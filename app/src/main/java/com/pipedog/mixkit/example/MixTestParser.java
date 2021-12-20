@@ -23,17 +23,17 @@ public class MixTestParser implements IMixMessageParser {
         }
 
         @Override
-        public String moduleName() {
+        public String getModuleName() {
             return moduleName;
         }
 
         @Override
-        public String methodName() {
+        public String getMethodName() {
             return methodName;
         }
 
         @Override
-        public List<Object> arguments() {
+        public List<Object> getArguments() {
             if (arguments == null || arguments.isEmpty()) {
                 return new ArrayList<Object>();
             }

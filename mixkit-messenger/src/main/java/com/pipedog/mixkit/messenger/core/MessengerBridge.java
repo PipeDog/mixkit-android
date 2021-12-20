@@ -26,18 +26,21 @@ public class MessengerBridge implements IMixBridge {
         return mDelegate;
     }
 
+
+    // OVERRIDE METHODS
+
     @Override
-    public IMixExecutor executor() {
+    public IMixExecutor getExecutor() {
         return mExecutor;
     }
 
     @Override
-    public MixModuleCreator moduleCreator() {
+    public MixModuleCreator getModuleCreator() {
         return mModuleCreator;
     }
 
     @Override
-    public MixMessageParserManager messageParserManager() {
+    public MixMessageParserManager getMessageParserManager() {
         return mMessageParserManager;
     }
 

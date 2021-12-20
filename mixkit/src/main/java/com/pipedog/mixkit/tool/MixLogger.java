@@ -3,6 +3,10 @@ package com.pipedog.mixkit.tool;
 import java.util.Formatter;
 import java.util.logging.Logger;
 
+/**
+ * 日志工具包装
+ * @author liang
+ */
 public class MixLogger {
 
     private static final Logger sLogger = Logger.getLogger("MixLogger");

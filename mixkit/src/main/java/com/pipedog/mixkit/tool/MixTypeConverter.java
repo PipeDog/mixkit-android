@@ -4,6 +4,10 @@ import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.tool.NumberUtils;
 import com.pipedog.mixkit.tool.StringUtils;
 
+/**
+ * 数据类型转换工具
+ * @author liang
+ */
 public class MixTypeConverter {
 
     public static byte toByte(Object arg) {

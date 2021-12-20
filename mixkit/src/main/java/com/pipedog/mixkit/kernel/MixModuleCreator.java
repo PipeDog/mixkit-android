@@ -7,6 +7,10 @@ import java.util.HashMap;
 
 import com.pipedog.mixkit.tool.MixLogger;
 
+/**
+ * module 构造器，所有的自定义 module 实例最终都由此类进行创建
+ * @author liang
+ */
 public class MixModuleCreator {
 
     private IMixBridge mBridge;

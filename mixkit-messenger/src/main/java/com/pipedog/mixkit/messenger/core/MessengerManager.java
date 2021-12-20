@@ -103,7 +103,7 @@ public class MessengerManager implements
         ThreadUtils.runInMainThread(new Runnable() {
             @Override
             public void run() {
-                boolean result = mBridge.executor().invokeMethod(metaData);
+                boolean result = mBridge.getExecutor().invokeMethod(metaData);
                 if (!result) {
                     mClient.sendError2Server(new ErrorMessage(
                             requestMessage.getTraceId(), ErrorCode.ERR_INVOKE_METHOD_FAILED,

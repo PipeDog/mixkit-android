@@ -3,6 +3,10 @@ package com.pipedog.mixkit.plugin.config
 import com.pipedog.mixkit.plugin.constants.VarNames
 import com.pipedog.mixkit.plugin.utils.Logger
 
+/**
+ * 配置管理器（主要负责配置信息的收集与合并）
+ * @author liang
+ */
 class ConfigManager {
 
     public ArrayList<Map<String, Object>> registerItems = []
