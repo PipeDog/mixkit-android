@@ -96,7 +96,6 @@ public class MixModuleProcessor {
 
             if (moduleData == null) {
                 moduleData = new MixModuleBean();
-                moduleData.className = className;
                 moduleDataMap.put(moduleName, moduleData);
             }
 
