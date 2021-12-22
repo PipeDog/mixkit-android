@@ -12,4 +12,14 @@ public class MergeModule1 {
         MixLogger.error("log something here");
     }
 
+    @MixMethod(name = "test1")
+    public void test1() {
+
+    }
+
+    @MixMethod(name = "test2")
+    public void test2() {
+
+    }
+
 }
