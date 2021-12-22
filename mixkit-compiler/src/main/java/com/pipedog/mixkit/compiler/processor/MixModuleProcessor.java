@@ -70,7 +70,7 @@ public class MixModuleProcessor {
     private void processModules(Set<? extends Element> moduleElements,
                                 Set<? extends Element> methodElements) {
         // 遍历 @MixModule 注解，生成 module 名称 map
-        HashMap<String, String> moduleNameMap = new HashMap<String, String>();
+        Map<String, String> moduleNameMap = new HashMap<String, String>();
         for (Element moduleElement : moduleElements) {
             MixModule moduleAnnotation = moduleElement.getAnnotation(MixModule.class);
             String moduleName = moduleAnnotation.name();
@@ -79,7 +79,7 @@ public class MixModuleProcessor {
         }
 
         // 遍历 @MixMethod 注解，生成注解导出信息 map
-        HashMap<String, MixModuleBean> moduleDataMap = new HashMap<String, MixModuleBean>();
+        Map<String, MixModuleBean> moduleDataMap = new HashMap<String, MixModuleBean>();
         for (Element methodElement : methodElements) {
             if (methodElement instanceof ExecutableElement) { } else {
                 mLogger.info("[Error] annotation failed in class named " +
@@ -96,7 +96,12 @@ public class MixModuleProcessor {
 
             if (moduleData == null) {
                 moduleData = new MixModuleBean();
+                moduleData.classes = new ArrayList<String>();
                 moduleDataMap.put(moduleName, moduleData);
+            }
+
+            if (!moduleData.classes.contains(className)) {
+                moduleData.classes.add(className);
             }
 
             Map<String, MixMethodBean> methods = moduleData.methods;

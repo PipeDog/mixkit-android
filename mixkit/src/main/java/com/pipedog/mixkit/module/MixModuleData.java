@@ -1,6 +1,7 @@
 package com.pipedog.mixkit.module;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,6 +9,11 @@ import java.util.Map;
  * @author liang
  */
 public class MixModuleData implements Serializable {
+
+    /**
+     * 类名列表（所有被导出为这个 module 名称的 class 都会出现在这个列表内）
+     */
+    public List<String> classes;
 
     /**
      * 方法信息表，key 为导出函数名，value 为对应方法描述信息
@@ -20,7 +26,8 @@ public class MixModuleData implements Serializable {
     @Override
     public String toString() {
         return "MixModuleData{" +
-                "methods=" + methods +
+                "classes=" + classes +
+                ", methods=" + methods +
                 '}';
     }
 
