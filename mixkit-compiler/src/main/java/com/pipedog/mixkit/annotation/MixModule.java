@@ -6,7 +6,7 @@ import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 
 /**
- * 注解导出 module 信息
+ * 注解导出 module 信息（允许 class 不同但 module 名相同）
  * @author liang
  */
 @Retention(RetentionPolicy.CLASS)

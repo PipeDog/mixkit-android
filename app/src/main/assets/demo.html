@@ -49,6 +49,14 @@
             }, m, arr, 10101);
         }
 
+        function log() {
+            NativeModules.TestMergeModule.log1();
+        }
+
+        function print() {
+            NativeModules.TestMergeModule.print();
+        }
+
     </script>
 
 </head>
@@ -57,6 +65,10 @@
 </br>
 
 <button class="button" type="button" onclick="testAndroidMethod()">testAndroidMethod</button>
+</br>
+<button class="button" type="button" onclick="log()">log</button>
+</br>
+<button class="button" type="button" onclick="print()">print</button>
 </br>
 
 </body>
