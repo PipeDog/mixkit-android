@@ -113,9 +113,8 @@ public class MixModuleProcessor {
             MixMethod methodAnnotation = methodElement.getAnnotation(MixMethod.class);
             String exportMethodName = methodAnnotation.name();
             if (methods.containsKey(exportMethodName)) {
-                mLogger.info("[Error] Duplicate method annotation named `" +
+                throw new RuntimeException("Duplicate method annotation named `" +
                         exportMethodName + "` in a module, rename it!");
-                continue;
             }
 
             MixMethodBean methodBean = new MixMethodBean();

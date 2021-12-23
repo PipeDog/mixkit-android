@@ -12,7 +12,7 @@ public class MergeModule2 {
         MixLogger.error("print something here");
     }
 
-    @MixMethod(name = "test1")
+//    @MixMethod(name = "test1")
     public void test1000() {
 
     }
