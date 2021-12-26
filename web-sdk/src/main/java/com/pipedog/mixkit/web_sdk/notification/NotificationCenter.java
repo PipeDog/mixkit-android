@@ -39,7 +39,7 @@ public class NotificationCenter {
     private void registerDefaultNotifications() {
         registerNotification(
                 UniversalNotification.Name.PAGE_VISIBLE,
-                UniversalNotification.JSFunction.ON_PAGE_INVISIBLE);
+                UniversalNotification.JSFunction.ON_PAGE_VISIBLE);
         registerNotification(
                 UniversalNotification.Name.PAGE_INVISIBLE,
                 UniversalNotification.JSFunction.ON_PAGE_INVISIBLE);
