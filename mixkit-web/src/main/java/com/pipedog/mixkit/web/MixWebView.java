@@ -391,7 +391,9 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         for (int i = 0; i < numberOfArguments; i++) {
             Object obj = arguments[i];
 
-            if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
+            if (obj == null) {
+                sb.append("null");
+            } else if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
                 String argument = mGson.toJson(obj);
                 sb.append(argument);
             } else if (obj instanceof String) {
@@ -449,6 +451,9 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         evaluateJavascript(formatScript, new ValueCallback<String>() {
             @Override
             public void onReceiveValue(String value) {
+                if (resultCallback == null) {
+                    return;
+                }
                 resultCallback.onReceiveValue(value);
             }
         });

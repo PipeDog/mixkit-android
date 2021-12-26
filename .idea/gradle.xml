@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/mixkit-plugin" />
             <option value="$PROJECT_DIR$/mixkit-socket" />
             <option value="$PROJECT_DIR$/mixkit-web" />
+            <option value="$PROJECT_DIR$/web-sdk" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
