@@ -78,15 +78,24 @@ public class NotificationCenter {
      * 发出通知，并传递相关参数
      * @param notification 通知名
      * @param userInfo 通知参数
+     * @param toWebView 目标 web 视图，如果不为 null 则只有该视图执行关联的 js
+     *                  函数，如果为 null 则所有 web 视图都执行关联的 js 函数
      */
-    public void postNotification(String notification, Object[] arguments) {
+    public void postNotification(String notification, Object[] arguments, MixWebView toWebView) {
         String jsFunc = mRegisterTable.get(notification);
         if (jsFunc == null || jsFunc.isEmpty()) {
             return;
         }
 
-        for (MixWebView observer : mObservers) {
-            observer.invokeMethod(jsFunc, arguments, null);
+        if (toWebView == null) {
+            for (MixWebView observer : mObservers) {
+                observer.invokeMethod(jsFunc, arguments, null);
+            }
+            return;
+        }
+
+        if (mObservers.contains(toWebView)) {
+            toWebView.invokeMethod(jsFunc, arguments, null);
         }
     }
 

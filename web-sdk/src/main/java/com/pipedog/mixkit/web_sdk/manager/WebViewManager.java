@@ -45,7 +45,7 @@ public class WebViewManager {
      * 添加 webView 到管理器中
      */
     public void addWebView(MixWebView webView) {
-        if (webView == null) {
+        if (webView != null) {
             mWebViews.add(webView);
         }
     }
@@ -54,7 +54,7 @@ public class WebViewManager {
      * 从管理器中删除指定 webView
      */
     public void removeWebView(MixWebView webView) {
-        if (webView == null) {
+        if (webView != null) {
             mWebViews.remove(webView);
         }
     }
