@@ -7,6 +7,8 @@ import com.pipedog.mixkit.annotation.*;
 
 import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.annotation.MixModule;
+import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.web.WebViewBridge;
 
 @MixModule(name = "LogManager")
 public class MixLogManager implements IMixBridgeModule {
@@ -18,7 +20,8 @@ public class MixLogManager implements IMixBridgeModule {
 
     @Override
     public void setBridge(IMixBridge bridge) {
-
+        WebViewBridge webViewBridge = (WebViewBridge)bridge;
+        MixWebView webView = (MixWebView)webViewBridge.bridgeDelegate();
     }
 
     @Override
