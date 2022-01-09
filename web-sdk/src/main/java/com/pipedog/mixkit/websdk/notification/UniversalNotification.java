@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk.notification;
+package com.pipedog.mixkit.websdk.notification;
 
 /**
  * 通用内置通知定义

@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk.manager;
+package com.pipedog.mixkit.websdk.manager;
 
 import com.pipedog.mixkit.web.MixWebView;
 

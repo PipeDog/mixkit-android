@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk.notification;
+package com.pipedog.mixkit.websdk.notification;
 
 import com.pipedog.mixkit.web.MixWebView;
 

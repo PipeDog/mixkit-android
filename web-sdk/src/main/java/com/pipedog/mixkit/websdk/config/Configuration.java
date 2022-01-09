@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk.config;
+package com.pipedog.mixkit.websdk.config;
 
 /**
  * WebSDK 配置入口，如：cookie、user-agent 等
@@ -12,7 +12,7 @@ public class Configuration implements IConfiguration {
     private IBridgeValidation mBridgeValidation;
     private static volatile Configuration sGlobalConfiguration;
 
-    public IConfiguration getInstance() {
+    public static IConfiguration getInstance() {
         if (sGlobalConfiguration == null) {
             synchronized (Configuration.class) {
                 if (sGlobalConfiguration == null) {

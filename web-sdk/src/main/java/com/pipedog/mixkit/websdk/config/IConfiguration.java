@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk.config;
+package com.pipedog.mixkit.websdk.config;
 
 import java.net.HttpCookie;
 import java.util.List;

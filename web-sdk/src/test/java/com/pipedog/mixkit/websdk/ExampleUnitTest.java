@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web_sdk;
+package com.pipedog.mixkit.websdk;
 
 import org.junit.Test;
 

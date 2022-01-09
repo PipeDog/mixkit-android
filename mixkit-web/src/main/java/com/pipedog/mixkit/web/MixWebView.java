@@ -378,6 +378,10 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
             return;
         }
 
+        if (arguments == null) {
+            arguments = new Object[]{};
+        }
+
         StringBuilder sb = new StringBuilder();
         if (module != null && !module.isEmpty()) {
             sb.append(module);
