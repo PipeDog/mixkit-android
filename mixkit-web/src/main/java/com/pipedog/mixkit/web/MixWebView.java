@@ -261,17 +261,12 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
             return;
         }
 
-        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
-            eval(script, resultCallback);
-        } else {
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    eval(script, resultCallback);
-                }
-            });
-        }
+        ThreadUtils.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                eval(script, resultCallback);
+            }
+        });
     }
 
     @Override
