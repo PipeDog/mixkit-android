@@ -2,6 +2,9 @@ plugins {
     id 'java-library'
 }
 
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.PipeDog'
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
@@ -9,12 +12,6 @@ java {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-
-    implementation project(path: ':mixkit-annotation')
-    annotationProcessor project(path: ':mixkit-annotation')
-
-    implementation project(path: ':mixkit-path')
-    annotationProcessor project(path: ':mixkit-path')
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup:javapoet:1.12.1'

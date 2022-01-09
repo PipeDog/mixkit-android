@@ -1,43 +1,40 @@
 package com.pipedog.mixkit.module;
 
-import android.content.Context;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.lang.Class;
 import java.lang.reflect.*;
-import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.path.Path;
-import com.pipedog.mixkit.launch.Mix;
-import com.pipedog.mixkit.launch.MixOptions;
 import com.pipedog.mixkit.tool.MixLogger;
-import com.pipedog.mixkit.tool.ClassUtils;
-import com.pipedog.mixkit.tool.MixProviderClassLoader;
+import com.pipedog.mixkit.compiler.provider.IMixModuleProvider;
 
+/**
+ * 自定义 module 管理器（通过注解导出的信息最终会在这里被收集并整理）
+ * @author liang
+ */
 public class MixModuleManager {
 
     private Gson mGson;
     private String mModuleDataJson;
     private Map<String, MixModuleData> mModuleDataMap;
     private Map<String, MixMethodInvoker> mInvokerMap;
-    private volatile static MixModuleManager defaultManager;
+
+    private volatile static MixModuleManager sDefaultManager;
 
     public static MixModuleManager defaultManager() {
-        if (defaultManager == null) {
+        if (sDefaultManager == null) {
             synchronized (MixModuleManager.class) {
-                if (defaultManager == null) {
-                    defaultManager = new MixModuleManager();
+                if (sDefaultManager == null) {
+                    sDefaultManager = new MixModuleManager();
                 }
             }
         }
-        return defaultManager;
+        return sDefaultManager;
     }
 
     private MixModuleManager() {
@@ -45,26 +42,25 @@ public class MixModuleManager {
         mModuleDataMap = new HashMap<String, MixModuleData>();
         mInvokerMap = new HashMap<String, MixMethodInvoker>();
 
-        String packageName = Path.MIX_MODULE_PROVIDER_PACKAGE;
-        List<Class<?>> providerClasses =
-                MixProviderClassLoader.getClassesWithPackageName(packageName);
-
-        // Load all class names
-        for (Class<?> aClass : providerClasses) {
-            try {
-                Object provider = aClass.getConstructor().newInstance();
-                Method method = aClass.getMethod(Path.MIX_MODULE_PROVIDER_METHOD);
-                String json = (String)method.invoke(provider);
-
-                Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
-                Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
-                mModuleDataMap.putAll(map);
-            } catch (Exception e) {
-                MixLogger.error("Load parse failed, e : " + e.toString());
-            }
-        }
-
+        autoCallRegisterModuleProvider();
         mModuleDataJson = mGson.toJson(mModuleDataMap);
+    }
+
+    private void autoCallRegisterModuleProvider() {
+        // Call this function in constructor
+        // The code will be inserted automatically during compilation
+        // The insert code will call function `registerModuleProvider` here
+    }
+
+    private void registerModuleProvider(IMixModuleProvider provider) {
+        try {
+            String json = provider.getRegisteredModulesJson();
+            Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
+            Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
+            mModuleDataMap.putAll(map);
+        } catch (Exception e) {
+            MixLogger.error("Load parse failed, e : " + e.toString());
+        }
     }
 
     public String getModuleDataJson() {

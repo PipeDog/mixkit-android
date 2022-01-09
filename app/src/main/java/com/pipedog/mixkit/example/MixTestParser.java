@@ -2,7 +2,6 @@ package com.pipedog.mixkit.example;
 
 import com.pipedog.mixkit.annotation.MixMessageParser;
 import com.pipedog.mixkit.parser.IMixMessageParser;
-import com.pipedog.mixkit.parser.MixBuiltinMessageParser;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -24,17 +23,17 @@ public class MixTestParser implements IMixMessageParser {
         }
 
         @Override
-        public String moduleName() {
+        public String getModuleName() {
             return moduleName;
         }
 
         @Override
-        public String methodName() {
+        public String getMethodName() {
             return methodName;
         }
 
         @Override
-        public List<Object> arguments() {
+        public List<Object> getArguments() {
             if (arguments == null || arguments.isEmpty()) {
                 return new ArrayList<Object>();
             }

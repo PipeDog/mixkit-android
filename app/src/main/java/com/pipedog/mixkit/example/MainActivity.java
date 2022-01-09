@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.logging.Logger;
+import android.util.Log;
+import android.webkit.WebSettings;
 
-import com.pipedog.mixkit.parser.*;
-import com.pipedog.mixkit.module.MixModuleManager;
+import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.web.IWebViewBridgeListener;
+import com.pipedog.mixkit.web.MixWebView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,22 +18,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("testModuleName", "MKTestModule");
-        map.put("testMethodName", "testExportMethod");
+        MixWebView webView = findViewById(R.id.testWebView);
+        webView.setWebContentsDebuggingEnabled(true);
 
-        try {
-            IMixMessageParser parser = MixMessageParserManager.defaultManager().detectParser(map);
-            if (parser == null) { return; }
+        WebSettings settings = webView.getSettings();
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
 
-            Logger.getGlobal().info("parser class name : " + parser.getClass().getName());
-            Logger.getGlobal().info("parser modulename = " + parser.messageBody().moduleName() + ", " +
-                    "methodName = " + parser.messageBody().methodName());
-        } catch (Exception e) {
-            Logger.getGlobal().info("Mix-Android" + e.toString());
-        }
+        webView.loadUrl("file:///android_asset/demo.html");
 
-        MixModuleManager.defaultManager();
+        Log.e("Mix-app", ">>>>> application launch finished!!!");
+        MixLogger.info(">>>>> application launch finished!!!");
 
+        webView.setWebViewBridgeListener(new IWebViewBridgeListener() {
+            @Override
+            public boolean onReceiveScriptMessage(MixWebView webView, String fromUrl, String message) {
+                MixLogger.error("fromUrl = %s", fromUrl);
+                return false;
+            }
+
+            @Override
+            public void onParseMessageFailed(MixWebView webView, String fromUrl, String message) {
+
+            }
+        });
     }
 }

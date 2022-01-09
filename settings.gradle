@@ -1,7 +1,11 @@
 rootProject.name = "mixkit-android"
 include ':app'
-include ':mixkit-annotation'
 include ':mixkit-compiler'
 include ':mixkit'
-include ':mixkit-path'
 include ':mixkit-web'
+include ':mixkit-socket'
+include ':mixkit-messenger'
+include ':clientdemo'
+include ':executorclient'
+include ':mixkit-plugin'
+include ':web-sdk'

@@ -1,19 +1,22 @@
 package com.pipedog.mixkit.web;
 
 import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixBridgeModule;
 import com.pipedog.mixkit.kernel.IMixExecutor;
 import com.pipedog.mixkit.kernel.MixResultCallback;
 import com.pipedog.mixkit.module.MixMethodInvoker;
 import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.module.MixModuleMethod;
 import com.pipedog.mixkit.parser.MixMessageParserManager;
 import com.pipedog.mixkit.parser.IMixMessageParser;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 消息执行器实现（webView 接收到的消息会被传递至这里，并最终执行）
+ * @author liang
+ */
 public class WebViewExecutor implements IMixExecutor {
 
     private class WebResultCallback implements MixResultCallback {
@@ -25,8 +28,9 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         @Override
-        public void invoke(List<Object> arguments) {
-            invokeCallback(arguments, mCallbackId);
+        public void invoke(Object[] response) {
+            List<Object> args = Arrays.asList(response);
+            invokeCallback(args, mCallbackId);
         }
 
     }
@@ -34,7 +38,7 @@ public class WebViewExecutor implements IMixExecutor {
     private static String sBridgeName;
     private static String sFunctionName;
 
-    private MixWebViewBridge mBridge;
+    private WebViewBridge mBridge;
 
     public WebViewExecutor() {
         if (sBridgeName == null) {
@@ -48,22 +52,24 @@ public class WebViewExecutor implements IMixExecutor {
     }
 
     @Override
-    public void bindBridge(IMixBridge bridge) {
-        mBridge = (MixWebViewBridge)bridge;
+    public void setBridge(IMixBridge bridge) {
+        mBridge = (WebViewBridge)bridge;
     }
 
     @Override
     public boolean invokeMethod(Object metaData) {
-        MixMessageParserManager parserManager = mBridge.messageParserManager();
+        MixMessageParserManager parserManager = mBridge.getMessageParserManager();
+
         IMixMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) { return false; }
 
         IMixMessageParser.IMixMessageBody body = parser.messageBody();
-        String moduleName = body.moduleName();
-        String methodName = body.methodName();
+        String moduleName = body.getModuleName();
+        String methodName = body.getMethodName();
 
         MixModuleManager moduleManager = MixModuleManager.defaultManager();
         MixMethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
+
         if (invoker == null) {
             MixLogger.error("Get invoker failed, module : %s, method : %s.",
                     moduleName, methodName);
@@ -71,15 +77,20 @@ public class WebViewExecutor implements IMixExecutor {
         }
 
         String className = invoker.getClassName();
-        IMixBridgeModule bridgeModule = mBridge.moduleCreator().getModule(className);
+        Object bridgeModule = mBridge.getModuleCreator().getModule(className);
+
         if (bridgeModule == null) {
             MixLogger.error("Get bridge module object failed, module : %s, method : %s.",
                     moduleName, methodName);
             return false;
         }
 
-        List<Object> arguments = body.arguments();
-        List<Object> nativeArgs = new ArrayList<>();
+        List<Object> arguments = body.getArguments();
+        if (arguments == null) {
+            arguments = new ArrayList<Object>();
+        }
+
+        List<Object> nativeArgs = new ArrayList<Object>();
 
         for (Object arg : arguments) {
             Object nativeArg = arg;
@@ -103,9 +114,7 @@ public class WebViewExecutor implements IMixExecutor {
             return;
         }
 
-        IMixScriptEngine scriptEngine = mBridge.bridgeDelegate().scriptEngine();
-
-        List jsArgs = new ArrayList<>();
+        List<Object> jsArgs = new ArrayList<Object>();
         jsArgs.add(callbackID);
 
         if (arguments == null || arguments.isEmpty()) {
@@ -113,15 +122,16 @@ public class WebViewExecutor implements IMixExecutor {
         }
         jsArgs.add(arguments);
 
-        scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs, new ScriptCallback() {
+        IScriptEngine scriptEngine = mBridge.bridgeDelegate().getScriptEngine();
+        scriptEngine.invokeMethod(sBridgeName, sFunctionName, jsArgs.toArray(), new ScriptCallback() {
             @Override
             public void onReceiveValue(String value) {
-                MixLogger.info("[mix|web] js return value : %s", value);
+                MixLogger.info("js return value : %s", value);
             }
 
             @Override
             public void onReceiveError(String error) {
-                MixLogger.error("[mix|web] invoke js failed : %s", error);
+                MixLogger.error("invoke js failed : %s", error);
             }
         });
     }

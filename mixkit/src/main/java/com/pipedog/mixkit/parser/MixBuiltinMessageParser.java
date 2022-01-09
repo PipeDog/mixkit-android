@@ -6,37 +6,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+ * 内置默认数据解析器
+ * @author liang
+ */
 @MixMessageParser(name = "BuiltinMessageParser")
 public class MixBuiltinMessageParser implements IMixMessageParser {
 
     public class MixMessageBuiltinBody implements IMixMessageParser.IMixMessageBody {
 
-        private String moduleName;
-        private String methodName;
-        private List<Object> arguments;
+        private String mModuleName;
+        private String mMethodName;
+        private List<Object> mArguments;
 
         public MixMessageBuiltinBody(String moduleName, String methodName, List arguments) {
-            this.moduleName = moduleName;
-            this.methodName = methodName;
-            this.arguments = arguments;
+            mModuleName = moduleName;
+            mMethodName = methodName;
+            mArguments = arguments;
         }
 
         @Override
-        public String moduleName() {
-            return moduleName;
+        public String getModuleName() {
+            if (mModuleName == null) {
+                return "";
+            }
+            return mModuleName;
         }
 
         @Override
-        public String methodName() {
-            return methodName;
+        public String getMethodName() {
+            if (mMethodName == null) {
+                return "";
+            }
+            return mMethodName;
         }
 
         @Override
-        public List<Object> arguments() {
-            if (arguments == null || arguments.isEmpty()) {
+        public List<Object> getArguments() {
+            if (mArguments == null || mArguments.isEmpty()) {
                 return new ArrayList<Object>();
             }
-            return arguments;
+            return mArguments;
         }
 
     }

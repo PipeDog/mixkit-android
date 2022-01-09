@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="mix.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
+    <meta name="viewport"
+          content="width=device-width,
+          initial-scale=1.0, minimum-scale=1.0,
+          maximum-scale=1.0, user-scalable=no"/>
+
+    <title>title</title>
+    <style>
+        * {
+            font-size: 20px;
+        }
+
+        .button {
+            height: 50px;
+            width: 90%;
+            background-color: #716600;
+            border: solid 1px #bde700;
+            border-radius: 5px;
+            font-size: 1em;
+            color: white
+        }
+    </style>
+
+    <script>
+
+
+        function testAndroidMethod() {
+            // var vConsole = new VConsole();
+            var MKTestModule = NativeModules.MKTestModule;
+            var MKLogManager = NativeModules.LogManager;
+            var MKTestLibModule = NativeModules.TestLibModule;
+
+            var m = {
+                key1: 'lalalal',
+                key2: 'uuuu',
+            };
+
+            var arr = ['aaa', 'bbb', 'ccc', 100];
+
+            MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
+                console.log('receive native callback, response is ' + msg);
+                MKLogManager.log(msg);
+            }, m, arr, 10101);
+        }
+
+        function log() {
+            NativeModules.TestMergeModule.log1();
+        }
+
+        function print() {
+            NativeModules.TestMergeModule.print();
+        }
+
+    </script>
+
+</head>
+
+<body>
+</br>
+
+<button class="button" type="button" onclick="testAndroidMethod()">testAndroidMethod</button>
+</br>
+<button class="button" type="button" onclick="log()">log</button>
+</br>
+<button class="button" type="button" onclick="print()">print</button>
+</br>
+
+</body>
+
+</html>

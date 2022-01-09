@@ -1,0 +1,61 @@
+
+apply plugin: 'com.android.application'
+apply plugin: 'mixkit-plugin'
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation project(path: ':mixkit-compiler')
+    annotationProcessor project(path: ':mixkit-compiler')
+
+    implementation project(path: ':mixkit')
+    annotationProcessor project(path: ':mixkit')
+
+    implementation project(path: ':mixkit-messenger')
+
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+}
+
+// 自定义插件配置
+
+/*
+project.ext.registerConfig = [
+        [
+                'interfaceName' : '',
+                'generateToClassName' : '',
+                'generateToMethodName' : '',
+                'registerMethodName' : '',
+                'scanPackageNames' : [
+                    ''
+                ]
+        ]
+]
+
+mixPluginConfig {
+    registerItems = registerConfig
+}
+ */

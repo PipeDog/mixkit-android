@@ -7,22 +7,26 @@ import java.util.HashMap;
 
 import com.pipedog.mixkit.tool.MixLogger;
 
+/**
+ * module 构造器，所有的自定义 module 实例最终都由此类进行创建
+ * @author liang
+ */
 public class MixModuleCreator {
 
     private IMixBridge mBridge;
-    private Map<String, IMixBridgeModule> mModuleMap;
+    private Map<String, Object> mModuleMap;
 
     public MixModuleCreator(IMixBridge bridge) {
         mBridge = bridge;
-        mModuleMap = new HashMap<String, IMixBridgeModule>();
+        mModuleMap = new HashMap<String, Object>();
     }
 
-    public IMixBridgeModule getModule(String className) {
+    public Object getModule(String className) {
         if (className == null || className.isEmpty()) {
             return null;
         }
 
-        IMixBridgeModule module = mModuleMap.get(className);
+        Object module = mModuleMap.get(className);
         if (module != null) {
             return module;
         }
@@ -36,14 +40,17 @@ public class MixModuleCreator {
         }
 
         try {
-            module = (IMixBridgeModule)cls.getConstructor().newInstance();
+            Constructor constructor = cls.getConstructor();
+            module = constructor.newInstance();
         } catch (Exception e) {
-            MixLogger.error("Create module failed, class named : `%s`.", className);
+            MixLogger.error("Create module failed, class named : `%s`, exception : %s!",
+                    className, e.toString());
             return null;
         }
 
         if (module instanceof IMixBridgeModule) {
             IMixBridgeModule iModule = (IMixBridgeModule)module;
+            iModule.setBridge(mBridge);
             iModule.load();
         }
 
@@ -60,4 +67,5 @@ public class MixModuleCreator {
             iModule.unload();
         });
     }
+
 }
