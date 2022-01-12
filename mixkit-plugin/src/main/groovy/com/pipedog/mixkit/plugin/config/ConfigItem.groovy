@@ -17,10 +17,12 @@ class ConfigItem {
     ArrayList<String> classList = new ArrayList<>()
 
     private String interfaceName
+    private ArrayList<String> superClasses
     private String generateToClassName
     private String generateToMethodName
     private String registerMethodName
     private ArrayList<String> scanPackageNames
+    private boolean containsSuperClasses
 
     /**
      * 初始化配置信息
@@ -33,35 +35,47 @@ class ConfigItem {
      */
     ConfigItem(
             String interfaceName,
+            ArrayList<String> superClasses,
             String generateToClassName,
             String generateToMethodName,
             String registerMethodName,
-            ArrayList<String> scanPackageNames) {
+            ArrayList<String> scanPackageNames,
+            boolean containsSuperClasses) {
         this.interfaceName = interfaceName
+        this.superClasses = superClasses ?: new ArrayList<>()
         this.generateToClassName = generateToClassName
         this.generateToMethodName = generateToMethodName
         this.registerMethodName = registerMethodName
         this.scanPackageNames = scanPackageNames ?: new ArrayList<>()
+        this.containsSuperClasses = containsSuperClasses
 
         convertIfNeeded()
     }
 
     private void convertIfNeeded() {
         interfaceName = convertDotToSlash(interfaceName)
+        superClasses = convertedList(superClasses)
         generateToClassName = convertDotToSlash(generateToClassName)
         generateToMethodName = convertDotToSlash(generateToMethodName)
         registerMethodName = convertDotToSlash(registerMethodName)
-
-        ArrayList<String> convertedScanPackageNames = new ArrayList<>()
-        for (int i = 0; i < scanPackageNames.size(); i++) {
-            String packageName = convertDotToSlash(scanPackageNames.get(i))
-            convertedScanPackageNames.add(packageName)
-        }
-        scanPackageNames = convertedScanPackageNames
+        scanPackageNames = convertedList(scanPackageNames)
     }
 
     private String convertDotToSlash(String str) {
         return str ? str.replaceAll('\\.', '/').intern() : str
+    }
+
+    private ArrayList<String> convertedList(ArrayList<String> sourceList) {
+        if (sourceList == null) {
+            return new ArrayList<String>()
+        }
+
+        ArrayList<String> convertedList = new ArrayList<>()
+        for (int i = 0; i < sourceList.size(); i++) {
+            String convertedArg = convertDotToSlash(sourceList.get(i))
+            convertedList.add(convertedArg)
+        }
+        return convertedList
     }
 
 
@@ -72,6 +86,13 @@ class ConfigItem {
      */
     String getInterfaceName() {
         return interfaceName
+    }
+
+    /**
+     * 扫描继承自以下父类的 java 类
+     */
+    ArrayList<String> getSuperClasses() {
+        return superClasses
     }
 
     /**
@@ -100,6 +121,13 @@ class ConfigItem {
      */
     ArrayList<String> getScanPackageNames() {
         return scanPackageNames
+    }
+
+    /**
+     * 最终命中的类是否包含所指定的父类
+     */
+    boolean getContainsSuperClasses() {
+        return containsSuperClasses
     }
 
 

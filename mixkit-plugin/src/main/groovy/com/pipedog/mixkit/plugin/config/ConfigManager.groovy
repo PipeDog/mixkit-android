@@ -28,10 +28,12 @@ class ConfigManager {
         registerItems.each { Map<String, Object> it ->
             ConfigItem configItem = new ConfigItem(
                     it.get(VarNames.VAR_INTERFACE_NAME),
+                    it.get(VarNames.VAR_SUPERCLASSES_NAMES),
                     it.get(VarNames.VAR_GENERATE_TO_CLASS_NAME),
                     it.get(VarNames.VAR_GENERATE_TO_METHOD_NAME),
                     it.get(VarNames.VAR_REGISTER_METHOD_NAME),
-                    it.get(VarNames.VAR_SCAN_PACKAGE_NAMES)
+                    it.get(VarNames.VAR_SCAN_PACKAGE_NAMES),
+                    it.get(VarNames.VAR_CONTAINS_SUPERCLASSES)
             )
 
             configItems.add(configItem)

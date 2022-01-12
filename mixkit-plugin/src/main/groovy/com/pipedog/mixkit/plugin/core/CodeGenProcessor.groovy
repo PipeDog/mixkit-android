@@ -188,7 +188,9 @@ class CodeGenProcessor {
                 return
             }
 
-            // 遍历实现指定接口的类（接口名可通过 configItem.getInterfaceName() 获取）
+            // 遍历实现指定接口或继承自指定指定 superClass 的类
+            //      接口名可通过 configItem.getInterfaceName() 获取
+            //      父类名可通过 configItem.getSuperClasses() 获取
             configItem.classList.each { classname ->
                 insertAutoRegisterCode(classname)
             }
