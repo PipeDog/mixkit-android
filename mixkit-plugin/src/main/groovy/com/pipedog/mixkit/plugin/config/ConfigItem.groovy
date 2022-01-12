@@ -137,10 +137,12 @@ class ConfigItem {
     String toString() {
         return "ConfigItem{\n" +
                 "\tinterfaceName = " + interfaceName + ',\n' +
+                "\tsuperClasses = " + superClasses.toString() + ',\n' +
                 "\tgenerateToClassName = " + generateToClassName + ',\n' +
                 "\tgenerateToMethodName = " + generateToMethodName + ',\n' +
                 "\tregisterMethodName = " + registerMethodName + ',\n' +
                 "\tscanPackageNames = " + scanPackageNames.toString() + ',\n' +
+                "\tcontainsSuperClasses = " + containsSuperClasses.toString() + ',\n' +
                 '}';
     }
 

@@ -38,6 +38,8 @@ class ConfigManager {
 
             configItems.add(configItem)
         }
+
+        Logger.e(configItems.toString())
     }
 
     ArrayList<ConfigItem> getConfigItems() {
