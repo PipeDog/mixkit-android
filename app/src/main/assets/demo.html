@@ -39,10 +39,12 @@
             var m = {
                 key1: 'lalalal',
                 key2: 'uuuu',
-                key3: 111
+                key3: 111.9,
+                key4: 222,
+                key5: 888.0
             };
 
-            var arr = ['aaa', 'bbb', 'ccc', 100];
+            var arr = ['aaa', 'bbb', 'ccc', 100, 99.9, 777.0];
 
             MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
                 console.log('receive native callback, response is ' + msg);

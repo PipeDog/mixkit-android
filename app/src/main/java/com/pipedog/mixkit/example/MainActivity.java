@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebSettings;
 
+import com.pipedog.mixkit.example.testplugin.ServiceManager;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.web.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.MixWebView;
@@ -42,5 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        ServiceManager.getInstance().printAllServices();
     }
 }
