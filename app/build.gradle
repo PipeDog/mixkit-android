@@ -50,7 +50,24 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 }
 
+// 测试实例方法
+//project.ext.registerConfig = [
+//        [
+//                'interfaceName' : 'com.pipedog.mixkit.example.testplugin.IService',
+//                'superClasses' : [
+//                        'com.pipedog.mixkit.example.testplugin.BaseService'
+//                ],
+//                'generateToClassName' : 'com.pipedog.mixkit.example.testplugin.ServiceManager',
+//                'generateToMethodName' : 'autoCallRegisterService',
+//                'registerMethodName' : 'registerService',
+//                'scanPackageNames' : [
+//                    'com.pipedog.mixkit.example.testplugin'
+//                ],
+//                'containsSuperClasses': true
+//        ]
+//]
 
+// 测试静态方法
 project.ext.registerConfig = [
         [
                 'interfaceName' : 'com.pipedog.mixkit.example.testplugin.IService',
@@ -58,10 +75,10 @@ project.ext.registerConfig = [
                         'com.pipedog.mixkit.example.testplugin.BaseService'
                 ],
                 'generateToClassName' : 'com.pipedog.mixkit.example.testplugin.ServiceManager',
-                'generateToMethodName' : 'autoCallRegisterService',
-                'registerMethodName' : 'registerService',
+                'generateToMethodName' : '',
+                'registerMethodName' : 'staticRegister',
                 'scanPackageNames' : [
-                    'com.pipedog.mixkit.example.testplugin'
+                        'com.pipedog.mixkit.example.testplugin'
                 ],
                 'containsSuperClasses': true
         ]

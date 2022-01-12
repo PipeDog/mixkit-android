@@ -32,6 +32,7 @@ class ConfigItem {
      * @param generateToMethodName 注册代码将会被生成到这个方法中
      * @param registerMethodName 在 {@link #generateToClassName} 类中的注册方法名
      * @param scanPackageNames 指定要扫描的包
+     * @param containsSuperClasses 最终命中的类是否包含所指定的父类
      */
     ConfigItem(
             String interfaceName,
@@ -44,7 +45,13 @@ class ConfigItem {
         this.interfaceName = interfaceName
         this.superClasses = superClasses ?: new ArrayList<>()
         this.generateToClassName = generateToClassName
+
+        // 如果不配置，则默认插入到 static 块中
         this.generateToMethodName = generateToMethodName
+        if (this.generateToMethodName == null || this.generateToMethodName.length() == 0) {
+            this.generateToMethodName = "<clinit>"
+        }
+
         this.registerMethodName = registerMethodName
         this.scanPackageNames = scanPackageNames ?: new ArrayList<>()
         this.containsSuperClasses = containsSuperClasses

@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ServiceManager.getInstance().printAllServices();
+//        ServiceManager.getInstance().printAllServices();
+        ServiceManager.printAllStaticServices();
     }
 }
