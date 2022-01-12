@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.reflect.TypeToken;
+import com.pipedog.mixkit.tool.JsonUtils;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
@@ -75,7 +77,7 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
     // PRIVATE METHODS
 
     private void setupInitializeConfiguration() {
-        mGson = new Gson();
+        mGson = JsonUtils.getMapGson();
         mWebViewBridge = new WebViewBridge(this);
 
         // Enable js bridge
@@ -136,7 +138,8 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
     @JavascriptInterface
     public void postMessage(String message) {
         try {
-            Map map = mGson.fromJson(message, Map.class);
+            Map<String, Object> map = mGson.fromJson(
+                    message, new TypeToken<Map<String, Object>>(){}.getType());
 
             ThreadUtils.runInMainThread(new Runnable() {
                 @Override
