@@ -1,21 +1,14 @@
 package com.pipedog.mixkit.example;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ContentFrameLayout;
 
-import android.content.Context;
 import android.os.Bundle;
-
-import java.util.Map;
-import java.util.HashMap;
-import java.util.logging.Logger;
 
 import android.util.Log;
 import android.webkit.WebSettings;
 
-import com.pipedog.mixkit.parser.*;
-import com.pipedog.mixkit.module.MixModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.web.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.MixWebView;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,5 +29,18 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("Mix-app", ">>>>> application launch finished!!!");
         MixLogger.info(">>>>> application launch finished!!!");
+
+        webView.setWebViewBridgeListener(new IWebViewBridgeListener() {
+            @Override
+            public boolean onReceiveScriptMessage(MixWebView webView, String fromUrl, String message) {
+                MixLogger.error("fromUrl = %s", fromUrl);
+                return false;
+            }
+
+            @Override
+            public void onParseMessageFailed(MixWebView webView, String fromUrl, String message) {
+
+            }
+        });
     }
 }
