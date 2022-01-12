@@ -63,7 +63,7 @@ project.ext.registerConfig = [
                 'scanPackageNames' : [
                     'com.pipedog.mixkit.example.testplugin'
                 ],
-                'containsSuperClasses': false
+                'containsSuperClasses': true
         ]
 ]
 
