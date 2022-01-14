@@ -242,9 +242,16 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
                     obj instanceof char[]) {
                 sb.append(obj);
             } else {
-                sb.append("null");
-                MixLogger.error("Detected invalid argument when append js script, arg : %s",
-                        obj.toString());
+                try {
+                    String argument = mGson.toJson(obj);
+                    sb.append(argument == null ? "null" : argument);
+                } catch (Exception e) {
+                    sb.append("null");
+
+                    e.printStackTrace();
+                    MixLogger.error("Detected invalid argument when append js script, arg : %s",
+                            obj.toString());
+                }
             }
 
             if (i != numberOfArguments - 1) {
