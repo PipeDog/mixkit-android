@@ -17,10 +17,12 @@ class ConfigItem {
     ArrayList<String> classList = new ArrayList<>()
 
     private String interfaceName
+    private ArrayList<String> superClasses
     private String generateToClassName
     private String generateToMethodName
     private String registerMethodName
     private ArrayList<String> scanPackageNames
+    private boolean containsSuperClasses
 
     /**
      * 初始化配置信息
@@ -30,38 +32,57 @@ class ConfigItem {
      * @param generateToMethodName 注册代码将会被生成到这个方法中
      * @param registerMethodName 在 {@link #generateToClassName} 类中的注册方法名
      * @param scanPackageNames 指定要扫描的包
+     * @param containsSuperClasses 最终命中的类是否包含所指定的父类
      */
     ConfigItem(
             String interfaceName,
+            ArrayList<String> superClasses,
             String generateToClassName,
             String generateToMethodName,
             String registerMethodName,
-            ArrayList<String> scanPackageNames) {
+            ArrayList<String> scanPackageNames,
+            boolean containsSuperClasses) {
         this.interfaceName = interfaceName
+        this.superClasses = superClasses ?: new ArrayList<>()
         this.generateToClassName = generateToClassName
+
+        // 如果不配置，则默认插入到 static 块中
         this.generateToMethodName = generateToMethodName
+        if (this.generateToMethodName == null || this.generateToMethodName.length() == 0) {
+            this.generateToMethodName = "<clinit>"
+        }
+
         this.registerMethodName = registerMethodName
         this.scanPackageNames = scanPackageNames ?: new ArrayList<>()
+        this.containsSuperClasses = containsSuperClasses
 
         convertIfNeeded()
     }
 
     private void convertIfNeeded() {
         interfaceName = convertDotToSlash(interfaceName)
+        superClasses = convertedList(superClasses)
         generateToClassName = convertDotToSlash(generateToClassName)
         generateToMethodName = convertDotToSlash(generateToMethodName)
         registerMethodName = convertDotToSlash(registerMethodName)
-
-        ArrayList<String> convertedScanPackageNames = new ArrayList<>()
-        for (int i = 0; i < scanPackageNames.size(); i++) {
-            String packageName = convertDotToSlash(scanPackageNames.get(i))
-            convertedScanPackageNames.add(packageName)
-        }
-        scanPackageNames = convertedScanPackageNames
+        scanPackageNames = convertedList(scanPackageNames)
     }
 
     private String convertDotToSlash(String str) {
         return str ? str.replaceAll('\\.', '/').intern() : str
+    }
+
+    private ArrayList<String> convertedList(ArrayList<String> sourceList) {
+        if (sourceList == null) {
+            return new ArrayList<String>()
+        }
+
+        ArrayList<String> convertedList = new ArrayList<>()
+        for (int i = 0; i < sourceList.size(); i++) {
+            String convertedArg = convertDotToSlash(sourceList.get(i))
+            convertedList.add(convertedArg)
+        }
+        return convertedList
     }
 
 
@@ -72,6 +93,13 @@ class ConfigItem {
      */
     String getInterfaceName() {
         return interfaceName
+    }
+
+    /**
+     * 扫描继承自以下父类的 java 类
+     */
+    ArrayList<String> getSuperClasses() {
+        return superClasses
     }
 
     /**
@@ -102,6 +130,13 @@ class ConfigItem {
         return scanPackageNames
     }
 
+    /**
+     * 最终命中的类是否包含所指定的父类
+     */
+    boolean getContainsSuperClasses() {
+        return containsSuperClasses
+    }
+
 
     // OVERRIDE METHODS
 
@@ -109,10 +144,12 @@ class ConfigItem {
     String toString() {
         return "ConfigItem{\n" +
                 "\tinterfaceName = " + interfaceName + ',\n' +
+                "\tsuperClasses = " + superClasses.toString() + ',\n' +
                 "\tgenerateToClassName = " + generateToClassName + ',\n' +
                 "\tgenerateToMethodName = " + generateToMethodName + ',\n' +
                 "\tregisterMethodName = " + registerMethodName + ',\n' +
                 "\tscanPackageNames = " + scanPackageNames.toString() + ',\n' +
+                "\tcontainsSuperClasses = " + containsSuperClasses.toString() + ',\n' +
                 '}';
     }
 

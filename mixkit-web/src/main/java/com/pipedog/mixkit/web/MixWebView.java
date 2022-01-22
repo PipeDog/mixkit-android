@@ -217,6 +217,12 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         }
 
         sb.append(method);
+
+        // Avoid calling undefined JS methods
+        String methodName = sb.toString();
+        String prefix = String.format("if (%1$s && (typeof %2$s == 'function')) {", methodName, methodName);
+        String suffix = "}";
+
         sb.append("(");
 
         int numberOfArguments = arguments.length;
@@ -242,9 +248,16 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
                     obj instanceof char[]) {
                 sb.append(obj);
             } else {
-                sb.append("null");
-                MixLogger.error("Detected invalid argument when append js script, arg : %s",
-                        obj.toString());
+                try {
+                    String argument = mGson.toJson(obj);
+                    sb.append(argument == null ? "null" : argument);
+                } catch (Exception e) {
+                    sb.append("null");
+
+                    e.printStackTrace();
+                    MixLogger.error("Detected invalid argument when append js script, arg : %s",
+                            obj.toString());
+                }
             }
 
             if (i != numberOfArguments - 1) {
@@ -253,7 +266,9 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         }
 
         sb.append(");");
-        evaluate(sb.toString(), resultCallback);
+
+        String script = prefix + sb.toString() + suffix;
+        evaluate(script, resultCallback);
     }
 
     @Override

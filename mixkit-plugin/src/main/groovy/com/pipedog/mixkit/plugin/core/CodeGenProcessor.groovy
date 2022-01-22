@@ -166,9 +166,10 @@ class CodeGenProcessor {
                                   String signature, String[] exceptions) {
             MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions)
 
-            // 注入代码到指定方法中（仅支持非静态方法）
-            if (name == configItem.getGenerateToMethodName() && (Opcodes.ACC_STATIC & access) == 0) {
-                mv = new MixMethodVisitor(Opcodes.ASM6, mv)
+            // 注入代码到指定方法中（支持静态方法）
+            if (name == configItem.getGenerateToMethodName()) {
+                boolean isStaticMethod = (Opcodes.ACC_STATIC & access) > 0
+                mv = new MixMethodVisitor(Opcodes.ASM6, mv, isStaticMethod)
             }
 
             return mv
@@ -178,8 +179,11 @@ class CodeGenProcessor {
 
     class MixMethodVisitor extends MethodVisitor {
 
-        MixMethodVisitor(int api, MethodVisitor methodVisitor) {
+        boolean isStaticMethod;
+
+        MixMethodVisitor(int api, MethodVisitor methodVisitor, boolean isStaticMethod) {
             super(api, methodVisitor)
+            this.isStaticMethod = isStaticMethod
         }
 
         @Override
@@ -188,7 +192,9 @@ class CodeGenProcessor {
                 return
             }
 
-            // 遍历实现指定接口的类（接口名可通过 configItem.getInterfaceName() 获取）
+            // 遍历实现指定接口或继承自指定指定 superClass 的类
+            //      接口名可通过 configItem.getInterfaceName() 获取
+            //      父类名可通过 configItem.getSuperClasses() 获取
             configItem.classList.each { classname ->
                 insertAutoRegisterCode(classname)
             }
@@ -205,8 +211,10 @@ class CodeGenProcessor {
         // PRIVATE METHODS
 
         private void insertAutoRegisterCode(String classname) {
-            // 加载 this
-            mv.visitVarInsn(Opcodes.ALOAD, 0)
+            if (!isStaticMethod) {
+                // 加载 this
+                mv.visitVarInsn(Opcodes.ALOAD, 0)
+            }
 
             // 用无参构造方法创建一个实例（这里指实现了指定接口的类的实例）
             mv.visitTypeInsn(Opcodes.NEW, classname)
@@ -215,12 +223,19 @@ class CodeGenProcessor {
                     "<init>", "()V", false)
 
             // 调用注册方法将新创建的实例注册到指定类中
-            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
-                    configItem.getGenerateToClassName(),
-                    configItem.getRegisterMethodName(),
-                    "(L${configItem.getInterfaceName()};)V",
-                    false
-            )
+            if (isStaticMethod) {
+                mv.visitMethodInsn(Opcodes.INVOKESTATIC,
+                        configItem.getGenerateToClassName(),
+                        configItem.getRegisterMethodName(),
+                        "(L${configItem.getInterfaceName()};)V"
+                        , false)
+            } else {
+                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+                        configItem.getGenerateToClassName(),
+                        configItem.getRegisterMethodName(),
+                        "(L${configItem.getInterfaceName()};)V"
+                        , false)
+            }
         }
 
     }

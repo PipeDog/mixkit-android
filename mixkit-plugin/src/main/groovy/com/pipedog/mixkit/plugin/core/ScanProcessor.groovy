@@ -208,14 +208,31 @@ class ScanProcessor {
                     return
                 }
 
+                // 如果要求扫描结果不包含指定父类，则过滤
+                if (!configItem.getContainsSuperClasses() && configItem.getSuperClasses().contains(name)) {
+                    return
+                }
+
+                // 扫描并收集实现了指定 interface 的类
                 if (configItem.getInterfaceName() && interfaces != null) {
                     interfaces.each {itName ->
                         if (itName != configItem.getInterfaceName()) {
                             return
                         }
 
-                        // 收集实现了指定 interface 的类
                         configItem.classList.add(name)
+                        found = true
+                    }
+                }
+
+                // 扫描并收集继承自指定 superClass 的类
+                if (superName != 'java/lang/Object' && !configItem.getSuperClasses().isEmpty()) {
+                    for (int i = 0; i < configItem.getSuperClasses().size(); i++) {
+                        if (superName != configItem.getSuperClasses().get(i)) {
+                            return
+                        }
+
+                        configItem.classList.add(name);
                         found = true
                     }
                 }

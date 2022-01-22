@@ -46,6 +46,7 @@ dependencies {
 project.ext.registerConfig = [
         [
                 'interfaceName' : '',
+                'superClasses' : [],
                 'generateToClassName' : '',
                 'generateToMethodName' : '',
                 'registerMethodName' : '',

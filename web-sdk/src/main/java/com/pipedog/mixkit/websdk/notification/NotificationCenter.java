@@ -1,6 +1,7 @@
 package com.pipedog.mixkit.websdk.notification;
 
 import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.websdk.constants.NotificationConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,14 +39,14 @@ public class NotificationCenter {
 
     private void registerDefaultNotifications() {
         registerNotification(
-                UniversalNotification.Name.PAGE_VISIBLE,
-                UniversalNotification.JSFunction.ON_PAGE_VISIBLE);
+                NotificationConstants.Name.PAGE_VISIBLE,
+                NotificationConstants.JSFunction.ON_PAGE_VISIBLE);
         registerNotification(
-                UniversalNotification.Name.PAGE_INVISIBLE,
-                UniversalNotification.JSFunction.ON_PAGE_INVISIBLE);
+                NotificationConstants.Name.PAGE_INVISIBLE,
+                NotificationConstants.JSFunction.ON_PAGE_INVISIBLE);
         registerNotification(
-                UniversalNotification.Name.PAGE_DESTROY,
-                UniversalNotification.JSFunction.ON_PAGE_DESTROY);
+                NotificationConstants.Name.PAGE_DESTROY,
+                NotificationConstants.JSFunction.ON_PAGE_DESTROY);
     }
 
 
