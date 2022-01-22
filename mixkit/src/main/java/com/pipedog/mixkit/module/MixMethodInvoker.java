@@ -43,6 +43,7 @@ public class MixMethodInvoker {
             MixLogger.error("Invoke method failed, class : `%s`, method : `%s`, parameters : %s " +
                             "execption : %s!", mModuleMethod.className, mModuleMethod.methodName,
                             parameters.toString(), e.toString());
+            e.printStackTrace();
             return false;
         }
 
@@ -77,6 +78,7 @@ public class MixMethodInvoker {
         } catch (Exception e) {
             MixLogger.error("Found method failed, class : `%s`, method : `%s`, exception : %s!",
                     mModuleMethod.className, mModuleMethod.methodName, e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -216,6 +218,7 @@ public class MixMethodInvoker {
             } catch (Exception e) {
                 MixLogger.error("Invoker: get class failed, class name is `%s`, exception : %s!",
                         className, e.toString());
+                e.printStackTrace();
                 return null;
             }
         }
