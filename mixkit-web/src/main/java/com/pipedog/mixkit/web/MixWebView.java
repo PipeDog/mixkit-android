@@ -38,7 +38,8 @@ import com.google.gson.Gson;
 
 /**
  * 支持 native-js 交互的 web 视图，使用时将系统的 WebView 替换成当前类即可
- * Chrome 调试地址：chrome://inspect/#devices
+ * Chrome 调试地址如下（需要注意，当使用该地址调试时需要翻墙）：
+ *  chrome://inspect/#devices
  *
  * 注意：
  *      MixWebView 仅提供了 bridge 交互的基础能力，其他诸如 User-Agent、Cookie 等

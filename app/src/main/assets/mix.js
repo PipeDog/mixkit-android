@@ -1,4 +1,13 @@
-class NativeModules {
+//
+// 注意：
+// js 侧业务层使用时，需要把 NativeModules 对象挂载到 window 下，确保客户端能够找到 NativeModules 对象，eg：
+//  ```
+//  import NativeModules from '@/utils/mix'
+//  window.NativeModules = NativeModules;
+//  ```
+//
+
+class MixMetaClass {
 
     constructor() {
         this._callbacksMap = {};
@@ -121,4 +130,4 @@ class NativeModules {
 
 }
 
-NativeModules = new NativeModules();
+NativeModules = new MixMetaClass();

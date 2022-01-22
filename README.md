@@ -18,6 +18,10 @@ dependencies {
 
     // 需要自定义 module 的工程添加
     implementation project(path: ':mixkit-compiler')
+    // 注意：如果使用了 kotlin，并且配置了 `kotlin-kapt` 插件，则需要将下面代码替换为 
+    // ```
+    //  kapt project(path: ':mixkit-compiler')
+    // ```
     annotationProcessor project(path: ':mixkit-compiler')
 }
 ```
