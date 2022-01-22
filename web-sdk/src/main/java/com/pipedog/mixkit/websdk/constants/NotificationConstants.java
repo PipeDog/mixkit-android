@@ -1,11 +1,11 @@
-package com.pipedog.mixkit.websdk.notification;
+package com.pipedog.mixkit.websdk.constants;
 
 /**
  * 通用内置通知定义
  * @author liang
- * @time 2021/12/26
+ * @time 2022/01/17
  */
-public interface UniversalNotification {
+public interface NotificationConstants {
 
     /**
      * 通知名称定义

@@ -11,6 +11,7 @@ import com.pipedog.mixkit.example.testplugin.ServiceManager;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.web.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.web.ScriptCallback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +44,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        webView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                webView.invokeMethod("window.testInvokeLogic", new Object[]{}, new ScriptCallback() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        MixLogger.info(value);
+                    }
+
+                    @Override
+                    public void onReceiveError(String error) {
+                        MixLogger.error(error);
+                    }
+                });
+            }
+        }, 3000);
 
 //        ServiceManager.getInstance().printAllServices();
         ServiceManager.printAllStaticServices();

@@ -217,6 +217,12 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         }
 
         sb.append(method);
+
+        // Avoid calling undefined JS methods
+        String methodName = sb.toString();
+        String prefix = String.format("if (%1$s && (typeof %2$s == 'function')) {", methodName, methodName);
+        String suffix = "}";
+
         sb.append("(");
 
         int numberOfArguments = arguments.length;
@@ -260,7 +266,9 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
         }
 
         sb.append(");");
-        evaluate(sb.toString(), resultCallback);
+
+        String script = prefix + sb.toString() + suffix;
+        evaluate(script, resultCallback);
     }
 
     @Override
