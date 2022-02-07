@@ -2,7 +2,7 @@ package com.pipedog.messenger.executorclient;
 
 import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.annotation.MixModule;
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class DemoModule {
 
     @MixMethod(name = "testMethod")
-    public void testMethod(String str, Integer i, int bi, MixResultCallback callback, Map<String, Object> m, List<Object> list) {
+    public void testMethod(String str, Integer i, int bi, ResultCallback callback, Map<String, Object> m, List<Object> list) {
         MixLogger.info(">>>>> str = " + str);
         MixLogger.info(">>>>> i = " + i);
         MixLogger.info(">>>>> bi = " + bi);

@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.websdk.manager;
 
-import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.web.MixWKWebView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +17,10 @@ public class WebViewManager {
      */
     @FunctionalInterface
     public interface IWebViewEnumerator {
-        void visit(MixWebView webView);
+        void visit(MixWKWebView webView);
     }
 
-    private List<MixWebView> mWebViews = new ArrayList<>();
+    private List<MixWKWebView> mWebViews = new ArrayList<>();
     private static volatile WebViewManager sDefaultManager;
 
     public static WebViewManager getInstance() {
@@ -44,7 +44,7 @@ public class WebViewManager {
     /**
      * 添加 webView 到管理器中
      */
-    public void addWebView(MixWebView webView) {
+    public void addWebView(MixWKWebView webView) {
         if (webView != null) {
             mWebViews.add(webView);
         }
@@ -53,7 +53,7 @@ public class WebViewManager {
     /**
      * 从管理器中删除指定 webView
      */
-    public void removeWebView(MixWebView webView) {
+    public void removeWebView(MixWKWebView webView) {
         if (webView != null) {
             mWebViews.remove(webView);
         }
@@ -62,7 +62,7 @@ public class WebViewManager {
     /**
      * 获取管理器中所有 webView
      */
-    public List<MixWebView> getWebViews() {
+    public List<MixWKWebView> getWebViews() {
         return mWebViews;
     }
 
@@ -70,7 +70,7 @@ public class WebViewManager {
      * 枚举管理器中所有 webView
      */
     public void forEach(IWebViewEnumerator enumerator) {
-        for (MixWebView webView : mWebViews) {
+        for (MixWKWebView webView : mWebViews) {
             enumerator.visit(webView);
         }
     }

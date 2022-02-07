@@ -1,16 +1,16 @@
 package com.pipedog.mixkit.messenger.core;
 
-import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixExecutor;
-import com.pipedog.mixkit.kernel.MixModuleCreator;
-import com.pipedog.mixkit.parser.MixMessageParserManager;
+import com.pipedog.mixkit.kernel.IBridge;
+import com.pipedog.mixkit.kernel.IExecutor;
+import com.pipedog.mixkit.kernel.ModuleCreator;
+import com.pipedog.mixkit.parser.MessageParserManager;
 
-public class MessengerBridge implements IMixBridge {
+public class MessengerBridge implements IBridge {
 
     private IMessengerBridgeDelegate mDelegate;
     private MessengerExecutor mExecutor;
-    private MixModuleCreator mModuleCreator;
-    private MixMessageParserManager mMessageParserManager;
+    private ModuleCreator mModuleCreator;
+    private MessageParserManager mMessageParserManager;
 
     public MessengerBridge(IMessengerBridgeDelegate delegate) {
         mDelegate = delegate;
@@ -18,8 +18,8 @@ public class MessengerBridge implements IMixBridge {
         mExecutor = new MessengerExecutor();
         mExecutor.setBridge(this);
 
-        mModuleCreator = new MixModuleCreator(this);
-        mMessageParserManager = MixMessageParserManager.defaultManager();
+        mModuleCreator = new ModuleCreator(this);
+        mMessageParserManager = MessageParserManager.defaultManager();
     }
 
     public IMessengerBridgeDelegate bridgeDelegate() {
@@ -30,17 +30,17 @@ public class MessengerBridge implements IMixBridge {
     // OVERRIDE METHODS
 
     @Override
-    public IMixExecutor getExecutor() {
+    public IExecutor getExecutor() {
         return mExecutor;
     }
 
     @Override
-    public MixModuleCreator getModuleCreator() {
+    public ModuleCreator getModuleCreator() {
         return mModuleCreator;
     }
 
     @Override
-    public MixMessageParserManager getMessageParserManager() {
+    public MessageParserManager getMessageParserManager() {
         return mMessageParserManager;
     }
 

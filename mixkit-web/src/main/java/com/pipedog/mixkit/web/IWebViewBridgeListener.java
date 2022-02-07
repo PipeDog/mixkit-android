@@ -14,7 +14,7 @@ public interface IWebViewBridgeListener {
      * @param message 接收到的消息内容
      * @return 如果返回 true 则表示外部处理该消息，如果返回 false 则执行内部默认逻辑
      */
-    boolean onReceiveScriptMessage(MixWebView webView, String fromUrl, String message);
+    boolean onReceiveScriptMessage(MixWKWebView webView, String fromUrl, String message);
 
     /**
      * 内部解析脚本消息异常
@@ -22,6 +22,6 @@ public interface IWebViewBridgeListener {
      * @param fromUrl 消息来源 url
      * @param message 接收到的消息内容
      */
-    void onParseMessageFailed(MixWebView webView, String fromUrl, String message);
+    void onParseMessageFailed(MixWKWebView webView, String fromUrl, String message);
 
 }

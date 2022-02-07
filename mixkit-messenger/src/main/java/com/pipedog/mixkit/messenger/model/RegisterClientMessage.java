@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.messenger.model;
 
-import com.pipedog.mixkit.module.MixModuleData;
+import com.pipedog.mixkit.module.ModuleData;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -13,10 +13,10 @@ import java.util.Map;
 public class RegisterClientMessage implements Serializable {
 
     private String sourceClientId;
-    private Map<String, MixModuleData> moduleDataMap;
+    private Map<String, ModuleData> moduleDataMap;
 
     public RegisterClientMessage(String sourceClientId,
-                                 Map<String, MixModuleData> moduleDataMap) {
+                                 Map<String, ModuleData> moduleDataMap) {
         this.sourceClientId = sourceClientId;
         this.moduleDataMap = moduleDataMap;
     }
@@ -32,11 +32,11 @@ public class RegisterClientMessage implements Serializable {
         this.sourceClientId = sourceClientId;
     }
 
-    public Map<String, MixModuleData> getModuleDataMap() {
+    public Map<String, ModuleData> getModuleDataMap() {
         return moduleDataMap;
     }
 
-    public void setModuleDataMap(Map<String, MixModuleData> moduleDataMap) {
+    public void setModuleDataMap(Map<String, ModuleData> moduleDataMap) {
         this.moduleDataMap = moduleDataMap;
     }
 

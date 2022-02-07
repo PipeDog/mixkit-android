@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 函数参数信息描述
  * @author liang
  */
-public class MixMethodParameter implements Serializable {
+public class MethodParameter implements Serializable {
 
     /**
      * 参数（形参）名称
@@ -20,7 +20,7 @@ public class MixMethodParameter implements Serializable {
 
     @Override
     public String toString() {
-        return "MixMethodParameter{" +
+        return "MethodParameter{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 '}';

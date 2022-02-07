@@ -1,20 +1,20 @@
 package com.pipedog.mixkit.web;
 
-import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixExecutor;
-import com.pipedog.mixkit.kernel.MixModuleCreator;
-import com.pipedog.mixkit.parser.MixMessageParserManager;
+import com.pipedog.mixkit.kernel.IBridge;
+import com.pipedog.mixkit.kernel.IExecutor;
+import com.pipedog.mixkit.kernel.ModuleCreator;
+import com.pipedog.mixkit.parser.MessageParserManager;
 
 /**
  * native-js 交互 bridge 实现
  * @author liang
  */
-public class WebViewBridge implements IMixBridge {
+public class WebViewBridge implements IBridge {
 
     private IWebViewBridgeDelegate mDelegate;
     private WebViewExecutor mExecutor;
-    private MixModuleCreator mModuleCreator;
-    private MixMessageParserManager mMessageParserManager;
+    private ModuleCreator mModuleCreator;
+    private MessageParserManager mMessageParserManager;
 
     public WebViewBridge(IWebViewBridgeDelegate delegate) {
         mDelegate = delegate;
@@ -22,8 +22,8 @@ public class WebViewBridge implements IMixBridge {
         mExecutor = new WebViewExecutor();
         mExecutor.setBridge(this);
 
-        mModuleCreator = new MixModuleCreator(this);
-        mMessageParserManager = MixMessageParserManager.defaultManager();
+        mModuleCreator = new ModuleCreator(this);
+        mMessageParserManager = MessageParserManager.defaultManager();
     }
 
     public IWebViewBridgeDelegate bridgeDelegate() {
@@ -34,17 +34,17 @@ public class WebViewBridge implements IMixBridge {
     // OVERRIDE METHODS
 
     @Override
-    public IMixExecutor getExecutor() {
+    public IExecutor getExecutor() {
         return mExecutor;
     }
 
     @Override
-    public MixModuleCreator getModuleCreator() {
+    public ModuleCreator getModuleCreator() {
         return mModuleCreator;
     }
 
     @Override
-    public MixMessageParserManager getMessageParserManager() {
+    public MessageParserManager getMessageParserManager() {
         return mMessageParserManager;
     }
 

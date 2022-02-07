@@ -31,17 +31,17 @@ import javax.lang.model.element.TypeElement;
         Path.MIX_ANNOTATION_MIX_MESSAGE_PARSER_PATH,
 })
 
-public class MixExportProcessor extends AbstractProcessor {
+public class ExportProcessor extends AbstractProcessor {
 
-    private MixModuleProcessor mModuleProcessor;
-    private MixMessageParserProcessor mMessageParserProcessor;
+    private ModuleProcessor mModuleProcessor;
+    private MessageParserProcessor mMessageParserProcessor;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
 
-        mModuleProcessor = new MixModuleProcessor(processingEnv);
-        mMessageParserProcessor = new MixMessageParserProcessor(processingEnv);
+        mModuleProcessor = new ModuleProcessor(processingEnv);
+        mMessageParserProcessor = new MessageParserProcessor(processingEnv);
     }
 
     @Override

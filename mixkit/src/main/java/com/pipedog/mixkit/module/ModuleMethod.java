@@ -7,7 +7,7 @@ import java.util.List;
  * 自定义 module 方法信息描述
  * @author liang
  */
-public class MixModuleMethod implements Serializable {
+public class ModuleMethod implements Serializable {
 
     /**
      * 完整类名
@@ -22,11 +22,11 @@ public class MixModuleMethod implements Serializable {
     /**
      * 方法参数信息列表
      */
-    public List<MixMethodParameter> parameters;
+    public List<MethodParameter> parameters;
 
     @Override
     public String toString() {
-        return "MixModuleMethod{" +
+        return "ModuleMethod{" +
                 "className='" + className + '\'' +
                 ", methodName='" + methodName + '\'' +
                 ", parameters=" + parameters +

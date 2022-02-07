@@ -1,16 +1,16 @@
 package com.pipedog.mixkit.example;
 
 import com.pipedog.mixkit.annotation.MixMessageParser;
-import com.pipedog.mixkit.parser.IMixMessageParser;
+import com.pipedog.mixkit.parser.IMessageParser;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
 @MixMessageParser(name = "MKTestParser")
-public class MixTestParser implements IMixMessageParser {
+public class MixTestParser implements IMessageParser {
 
-    public class TestMixMessageBuiltinBody implements IMixMessageParser.IMixMessageBody {
+    public class TestMixMessageBuiltinBody implements IMessageBody {
 
         private String moduleName;
         private String methodName;
@@ -42,7 +42,7 @@ public class MixTestParser implements IMixMessageParser {
 
     }
 
-    private IMixMessageBody mMessageBody;
+    private IMessageBody mMessageBody;
 
     public static boolean canParse(Object metaData) {
         if (metaData instanceof Map) { } else {
@@ -54,7 +54,7 @@ public class MixTestParser implements IMixMessageParser {
         return ret;
     }
 
-    public static IMixMessageParser newParser(Object metaData) {
+    public static IMessageParser newParser(Object metaData) {
         return new MixTestParser(metaData);
     }
 
@@ -66,7 +66,7 @@ public class MixTestParser implements IMixMessageParser {
         mMessageBody = new MixTestParser.TestMixMessageBuiltinBody(moduleName, methodName, arguments);
     }
 
-    public IMixMessageBody messageBody() {
+    public IMessageBody getMessageBody() {
         return mMessageBody;
     }
 

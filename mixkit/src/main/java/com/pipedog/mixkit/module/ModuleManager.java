@@ -1,46 +1,43 @@
 package com.pipedog.mixkit.module;
 
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
-import java.lang.Class;
 import java.lang.reflect.*;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import com.pipedog.mixkit.path.Path;
 import com.pipedog.mixkit.tool.MixLogger;
-import com.pipedog.mixkit.compiler.provider.IMixModuleProvider;
+import com.pipedog.mixkit.compiler.provider.IModuleProvider;
 
 /**
  * 自定义 module 管理器（通过注解导出的信息最终会在这里被收集并整理）
  * @author liang
  */
-public class MixModuleManager {
+public class ModuleManager {
 
     private Gson mGson;
     private String mModuleDataJson;
-    private Map<String, MixModuleData> mModuleDataMap;
-    private Map<String, MixMethodInvoker> mInvokerMap;
+    private Map<String, ModuleData> mModuleDataMap;
+    private Map<String, MethodInvoker> mInvokerMap;
 
-    private volatile static MixModuleManager sDefaultManager;
+    private volatile static ModuleManager sDefaultManager;
 
-    public static MixModuleManager defaultManager() {
+    public static ModuleManager defaultManager() {
         if (sDefaultManager == null) {
-            synchronized (MixModuleManager.class) {
+            synchronized (ModuleManager.class) {
                 if (sDefaultManager == null) {
-                    sDefaultManager = new MixModuleManager();
+                    sDefaultManager = new ModuleManager();
                 }
             }
         }
         return sDefaultManager;
     }
 
-    private MixModuleManager() {
+    private ModuleManager() {
         mGson = new Gson();
-        mModuleDataMap = new HashMap<String, MixModuleData>();
-        mInvokerMap = new HashMap<String, MixMethodInvoker>();
+        mModuleDataMap = new HashMap<String, ModuleData>();
+        mInvokerMap = new HashMap<String, MethodInvoker>();
 
         autoCallRegisterModuleProvider();
         mModuleDataJson = mGson.toJson(mModuleDataMap);
@@ -52,11 +49,11 @@ public class MixModuleManager {
         // The insert code will call function `registerModuleProvider` here
     }
 
-    private void registerModuleProvider(IMixModuleProvider provider) {
+    private void registerModuleProvider(IModuleProvider provider) {
         try {
             String json = provider.getRegisteredModulesJson();
-            Type mapType = new TypeToken<Map<String, MixModuleData>>(){}.getType();
-            Map<String, MixModuleData> map = mGson.fromJson(json, mapType);
+            Type mapType = new TypeToken<Map<String, ModuleData>>(){}.getType();
+            Map<String, ModuleData> map = mGson.fromJson(json, mapType);
             mModuleDataMap.putAll(map);
         } catch (Exception e) {
             MixLogger.error("Load parse failed, e : " + e.toString());
@@ -67,27 +64,27 @@ public class MixModuleManager {
         return mModuleDataJson;
     }
 
-    public Map<String, MixModuleData> getModuleDataMap() {
+    public Map<String, ModuleData> getModuleDataMap() {
         return mModuleDataMap;
     }
 
-    public MixModuleMethod getMethod(String moduleName, String methodName) {
-        MixModuleData moduleData = mModuleDataMap.get(moduleName);
+    public ModuleMethod getMethod(String moduleName, String methodName) {
+        ModuleData moduleData = mModuleDataMap.get(moduleName);
         if (moduleData == null) { return null; }
 
-        MixModuleMethod method = moduleData.methods.get(methodName);
+        ModuleMethod method = moduleData.methods.get(methodName);
         return method;
     }
 
-    public MixMethodInvoker getInvoker(String moduleName, String methodName) {
+    public MethodInvoker getInvoker(String moduleName, String methodName) {
         String invokerId = formatInvokerId(moduleName, methodName);
-        MixMethodInvoker invoker = mInvokerMap.get(invokerId);
+        MethodInvoker invoker = mInvokerMap.get(invokerId);
         if (invoker != null) { return invoker; }
 
-        MixModuleMethod method = getMethod(moduleName, methodName);
+        ModuleMethod method = getMethod(moduleName, methodName);
         if (method == null) { return null; }
 
-        invoker = new MixMethodInvoker(method);
+        invoker = new MethodInvoker(method);
         mInvokerMap.put(invokerId, invoker);
         return invoker;
     }

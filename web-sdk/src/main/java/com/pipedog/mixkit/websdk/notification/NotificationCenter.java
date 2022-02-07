@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.websdk.notification;
 
-import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.web.MixWKWebView;
 import com.pipedog.mixkit.websdk.constants.NotificationConstants;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class NotificationCenter {
 
     private Map<String, String> mRegisterTable = new HashMap<>();
-    private List<MixWebView> mObservers = new ArrayList<>();
+    private List<MixWKWebView> mObservers = new ArrayList<>();
     private volatile static NotificationCenter sNotificationCenter;
 
     public static NotificationCenter getInstance() {
@@ -82,14 +82,14 @@ public class NotificationCenter {
      * @param toWebView 目标 web 视图，如果不为 null 则只有该视图执行关联的 js
      *                  函数，如果为 null 则所有 web 视图都执行关联的 js 函数
      */
-    public void postNotification(String notification, Object[] arguments, MixWebView toWebView) {
+    public void postNotification(String notification, Object[] arguments, MixWKWebView toWebView) {
         String jsFunc = mRegisterTable.get(notification);
         if (jsFunc == null || jsFunc.isEmpty()) {
             return;
         }
 
         if (toWebView == null) {
-            for (MixWebView observer : mObservers) {
+            for (MixWKWebView observer : mObservers) {
                 observer.invokeMethod(jsFunc, arguments, null);
             }
             return;
@@ -105,7 +105,7 @@ public class NotificationCenter {
      * @param webView web 视图，当调用 `postNotification` 方法进行
      *        通知时将会根据通知名，通过 webView 执行关联的 js 函数
      */
-    public void addObserver(MixWebView webView) {
+    public void addObserver(MixWKWebView webView) {
         if (webView == null || mObservers.contains(webView)) {
             return;
         }
@@ -116,7 +116,7 @@ public class NotificationCenter {
      * 移除 webView 监听者
      * @param webView web 视图
      */
-    public void removeObserver(MixWebView webView) {
+    public void removeObserver(MixWKWebView webView) {
         if (webView == null || !mObservers.contains(webView)) {
             return;
         }

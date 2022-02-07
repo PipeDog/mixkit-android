@@ -4,7 +4,7 @@ package com.pipedog.mixkit.compiler.bean;
  * 函数参数信息描述
  * @author liang
  */
-public class MixParameterBean {
+public class ParameterBean {
 
     /**
      * 参数（形参）名称

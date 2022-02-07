@@ -6,7 +6,7 @@ import java.util.List;
  * 方法信息描述
  * @author liang
  */
-public class MixMethodBean {
+public class MethodBean {
 
     /**
      * 完整类名
@@ -21,6 +21,6 @@ public class MixMethodBean {
     /**
      * 方法参数信息列表
      */
-    public List<MixParameterBean> parameters;
+    public List<ParameterBean> parameters;
 
 }

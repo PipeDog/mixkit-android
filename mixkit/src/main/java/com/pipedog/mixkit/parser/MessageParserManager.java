@@ -1,10 +1,8 @@
 package com.pipedog.mixkit.parser;
 
-import com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider;
+import com.pipedog.mixkit.compiler.provider.IMessageParserProvider;
 import com.pipedog.mixkit.tool.*;
-import com.pipedog.mixkit.path.Path;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
@@ -17,26 +15,26 @@ import java.lang.Boolean;
  * 消息解析管理器（负责根据消息体原始数据匹配生成相应解析器实例）
  * @author liang
  */
-public class MixMessageParserManager {
+public class MessageParserManager {
 
     private Gson mGson;
     private List<String> mParserClassNames;
     private Set<Class<?>> mParserClasses;
 
-    private volatile static MixMessageParserManager sDefaultManager;
+    private volatile static MessageParserManager sDefaultManager;
 
-    public static MixMessageParserManager defaultManager() {
+    public static MessageParserManager defaultManager() {
         if (sDefaultManager == null) {
-            synchronized (MixMessageParserManager.class) {
+            synchronized (MessageParserManager.class) {
                 if (sDefaultManager == null) {
-                    sDefaultManager = new MixMessageParserManager();
+                    sDefaultManager = new MessageParserManager();
                 }
             }
         }
         return sDefaultManager;
     }
 
-    private MixMessageParserManager() {
+    private MessageParserManager() {
         mGson = new Gson();
         mParserClassNames = new ArrayList<String>();
         mParserClasses = new HashSet<Class<?>>();
@@ -45,7 +43,7 @@ public class MixMessageParserManager {
         loadAllParserClasses();
     }
 
-    public IMixMessageParser detectParser(Object metaData) {
+    public IMessageParser detectParser(Object metaData) {
         if (metaData == null || mParserClasses == null || mParserClasses.isEmpty()) {
             return null;
         }
@@ -57,7 +55,7 @@ public class MixMessageParserManager {
                 if (Boolean.FALSE.equals(ret)) { continue; }
 
                 Method newParserMethod = aClass.getMethod("newParser", Object.class);
-                IMixMessageParser parser = (IMixMessageParser)newParserMethod.invoke(aClass, metaData);
+                IMessageParser parser = (IMessageParser)newParserMethod.invoke(aClass, metaData);
                 return parser;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -74,7 +72,7 @@ public class MixMessageParserManager {
         // The insert code will call function `registerParserProvider` here
     }
 
-    private void registerParserProvider(IMixMessageParserProvider provider) {
+    private void registerParserProvider(IMessageParserProvider provider) {
         // Load all parser class names in current provider
         try {
             String parserNames = provider.getRegisteredMessageParsersJson();
@@ -100,9 +98,9 @@ public class MixMessageParserManager {
                 return;
             }
 
-            if (IMixMessageParser.class.isAssignableFrom(aClass) == false) {
+            if (IMessageParser.class.isAssignableFrom(aClass) == false) {
                 MixLogger.error(String.format("Class %s does not comply with the interface %s",
-                        parserClassName, IMixMessageParser.class));
+                        parserClassName, IMessageParser.class));
                 return;
             }
 

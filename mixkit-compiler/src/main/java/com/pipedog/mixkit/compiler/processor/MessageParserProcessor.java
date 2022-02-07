@@ -2,7 +2,7 @@ package com.pipedog.mixkit.compiler.processor;
 
 import com.google.gson.Gson;
 import com.pipedog.mixkit.compiler.utils.Logger;
-import com.pipedog.mixkit.compiler.utils.MixUUID;
+import com.pipedog.mixkit.compiler.utils.UUIDCreator;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -27,7 +27,7 @@ import com.pipedog.mixkit.path.Path;
  * 消息解析器注解处理（相关信息会被写入到编译期生成的 java 文件中，该文件以 MixMessageParserProvider 开头）
  * @author liang
  */
-public class MixMessageParserProcessor {
+public class MessageParserProcessor {
 
     private final Logger mLogger;
     private final Filer mFiler;
@@ -35,7 +35,7 @@ public class MixMessageParserProcessor {
     private final List<String> mParserClasses;
     private final TypeElement mProviderTypeElement;
 
-    public MixMessageParserProcessor(ProcessingEnvironment processingEnv) {
+    public MessageParserProcessor(ProcessingEnvironment processingEnv) {
         mLogger = new Logger(processingEnv.getMessager());
         mFiler = processingEnv.getFiler();
         mGson = new Gson();
@@ -75,7 +75,7 @@ public class MixMessageParserProcessor {
 
         try {
             TypeSpec typeSpec =
-                    TypeSpec.classBuilder(Path.MIX_PARSER_PROVIDER_NAME + "_$_" + MixUUID.UUID())
+                    TypeSpec.classBuilder(Path.MIX_PARSER_PROVIDER_NAME + "_$_" + UUIDCreator.UUID())
                             .addSuperinterface(ClassName.get(mProviderTypeElement))
                             .addModifiers(Modifier.PUBLIC)
                             .addMethod(method)
@@ -86,7 +86,7 @@ public class MixMessageParserProcessor {
                             typeSpec).build();
             javaFile.writeTo(mFiler);
         } catch (Exception e) {
-            mLogger.info("MixMessageParserProcessor catch exception " + e.toString());
+            mLogger.info("MessageParserProcessor catch exception " + e.toString());
         }
     }
 

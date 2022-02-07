@@ -1,10 +1,8 @@
 package com.pipedog.mixkit.web;
 
 import com.google.gson.Gson;
-import com.pipedog.mixkit.module.MixModuleData;
-import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.module.MixModuleMethod;
-import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.module.ModuleData;
+import com.pipedog.mixkit.module.ModuleManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,11 +24,11 @@ public class WebInjector {
         }
 
         Map<String, Map> injectionMap = new HashMap<>();
-        Map<String, MixModuleData> map = MixModuleManager.defaultManager().getModuleDataMap();
+        Map<String, ModuleData> map = ModuleManager.defaultManager().getModuleDataMap();
 
-        for (Map.Entry<String, MixModuleData> entry : map.entrySet()) {
+        for (Map.Entry<String, ModuleData> entry : map.entrySet()) {
             String moduleName = entry.getKey();
-            MixModuleData moduleData = entry.getValue();
+            ModuleData moduleData = entry.getValue();
 
             Map moduleMap = new HashMap<>();
             injectionMap.put(moduleName, moduleMap);

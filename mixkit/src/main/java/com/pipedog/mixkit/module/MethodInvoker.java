@@ -1,7 +1,7 @@
 package com.pipedog.mixkit.module;
 
 import com.pipedog.mixkit.tool.MixLogger;
-import com.pipedog.mixkit.tool.MixTypeConverter;
+import com.pipedog.mixkit.tool.TypeConverter;
 
 import java.lang.Class;
 import java.lang.reflect.Method;
@@ -13,15 +13,15 @@ import java.util.HashMap;
  * 方法调用功能抽象（自定义 module 中的函数最终在这里被调用）
  * @author liang
  */
-public class MixMethodInvoker {
+public class MethodInvoker {
 
     private static final int NOT_FOUND = -1;
 
     private static Map<String, Class<?>> sClassMap;
-    private MixModuleMethod mModuleMethod;
+    private ModuleMethod mModuleMethod;
     private Method mMethod;
 
-    public MixMethodInvoker(MixModuleMethod method) {
+    public MethodInvoker(ModuleMethod method) {
         mModuleMethod = method;
     }
 
@@ -67,7 +67,7 @@ public class MixMethodInvoker {
             int size = mModuleMethod.parameters.size();
             Class<?>[] parameterTypes = new Class<?>[size];
             for (int i = 0; i < size; i++) {
-                MixMethodParameter parameter = mModuleMethod.parameters.get(i);
+                MethodParameter parameter = mModuleMethod.parameters.get(i);
                 Class parameterClass = getClass(parameter.type);
                 parameterTypes[i] = parameterClass;
             }
@@ -89,75 +89,75 @@ public class MixMethodInvoker {
 
         Object[] parameterArray = new Object[parameters.size()];
         for (int i = 0; i < parameters.size(); i++) {
-            MixMethodParameter parameter = mModuleMethod.parameters.get(i);
+            MethodParameter parameter = mModuleMethod.parameters.get(i);
             String declaredType = parameter.type;
             Object from = parameters.get(i);
 
             // Basic data types
             if (declaredType.equals("byte")) {
-                byte to = MixTypeConverter.toByte(from);
+                byte to = TypeConverter.toByte(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("short")) {
-                short to = MixTypeConverter.toShort(from);
+                short to = TypeConverter.toShort(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("int")) {
-                int to = MixTypeConverter.toInt(from);
+                int to = TypeConverter.toInt(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("long")) {
-                long to = MixTypeConverter.toLong(from);
+                long to = TypeConverter.toLong(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("float")) {
-                float to = MixTypeConverter.toFloat(from);
+                float to = TypeConverter.toFloat(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("double")) {
-                double to = MixTypeConverter.toDouble(from);
+                double to = TypeConverter.toDouble(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("boolean")) {
-                boolean to = MixTypeConverter.toBoolean(from);
+                boolean to = TypeConverter.toBoolean(from);
                 parameterArray[i] = to;
             } else if (declaredType.equals("char")) {
-                char to = MixTypeConverter.toChar(from);
+                char to = TypeConverter.toChar(from);
                 parameterArray[i] = to;
             }
 
             // Basic data types wrapper classes
             else if (declaredType.equals("java.lang.Byte")) {
-                byte b = MixTypeConverter.toByte(from);
+                byte b = TypeConverter.toByte(from);
                 Byte to = new Byte(b);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Short")) {
-                short s = MixTypeConverter.toShort(from);
+                short s = TypeConverter.toShort(from);
                 Short to = new Short(s);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Integer")) {
-                int bi = MixTypeConverter.toInt(from);
+                int bi = TypeConverter.toInt(from);
                 Integer to = new Integer(bi);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Long")) {
-                long l = MixTypeConverter.toLong(from);
+                long l = TypeConverter.toLong(from);
                 Long to = new Long(l);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Float")) {
-                float f = MixTypeConverter.toFloat(from);
+                float f = TypeConverter.toFloat(from);
                 Float to = new Float(f);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Double")) {
-                double d = MixTypeConverter.toDouble(from);
+                double d = TypeConverter.toDouble(from);
                 Double to = new Double(d);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Boolean")) {
-                boolean b = MixTypeConverter.toBoolean(from);
+                boolean b = TypeConverter.toBoolean(from);
                 Boolean to = new Boolean(b);
                 parameterArray[i] = to;
             } else if (declaredType.equals("java.lang.Character")) {
-                char c = MixTypeConverter.toChar(from);
+                char c = TypeConverter.toChar(from);
                 Character to = new Character(c);
                 parameterArray[i] = to;
             }
 
             // Other types
             else if (declaredType.equals("java.lang.String")) {
-                String to = MixTypeConverter.toString(from);
+                String to = TypeConverter.toString(from);
                 parameterArray[i] = to;
             } else {
                 parameterArray[i] = from;

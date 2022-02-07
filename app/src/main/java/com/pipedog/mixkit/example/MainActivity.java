@@ -10,7 +10,7 @@ import android.webkit.WebSettings;
 import com.pipedog.mixkit.example.testplugin.ServiceManager;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.web.IWebViewBridgeListener;
-import com.pipedog.mixkit.web.MixWebView;
+import com.pipedog.mixkit.web.MixWKWebView;
 import com.pipedog.mixkit.web.ScriptCallback;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MixWebView webView = findViewById(R.id.testWebView);
+        MixWKWebView webView = findViewById(R.id.testWebView);
         webView.setWebContentsDebuggingEnabled(true);
 
         WebSettings settings = webView.getSettings();
@@ -34,33 +34,33 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewBridgeListener(new IWebViewBridgeListener() {
             @Override
-            public boolean onReceiveScriptMessage(MixWebView webView, String fromUrl, String message) {
+            public boolean onReceiveScriptMessage(MixWKWebView webView, String fromUrl, String message) {
                 MixLogger.error("fromUrl = %s", fromUrl);
                 return false;
             }
 
             @Override
-            public void onParseMessageFailed(MixWebView webView, String fromUrl, String message) {
+            public void onParseMessageFailed(MixWKWebView webView, String fromUrl, String message) {
 
             }
         });
 
-        webView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                webView.invokeMethod("window.testInvokeLogic", new Object[]{}, new ScriptCallback() {
-                    @Override
-                    public void onReceiveValue(String value) {
-                        MixLogger.info(value);
-                    }
-
-                    @Override
-                    public void onReceiveError(String error) {
-                        MixLogger.error(error);
-                    }
-                });
-            }
-        }, 3000);
+//        webView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                webView.invokeMethod("window.testInvokeLogic", new Object[]{}, new ScriptCallback() {
+//                    @Override
+//                    public void onReceiveValue(String value) {
+//                        MixLogger.info(value);
+//                    }
+//
+//                    @Override
+//                    public void onReceiveError(String error) {
+//                        MixLogger.error(error);
+//                    }
+//                });
+//            }
+//        }, 3000);
 
 //        ServiceManager.getInstance().printAllServices();
         ServiceManager.printAllStaticServices();

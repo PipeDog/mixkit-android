@@ -1,8 +1,6 @@
 package com.pipedog.mixkit.web;
 
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.content.Context;
 import android.net.http.SslError;
@@ -37,17 +35,19 @@ import com.pipedog.mixkit.tool.MixLogger;
 import com.google.gson.Gson;
 
 /**
- * 支持 native-js 交互的 web 视图，使用时将系统的 WebView 替换成当前类即可
+ * 支持 native-js 交互的 web 视图，使用时将系统的 WebView 替换成当
+ * 前类即可，命名中的 WK~ 作用为标识此类使用了系统的 webkit 内核
+ *
  * Chrome 调试地址如下（需要注意，当使用该地址调试时需要翻墙）：
  *  chrome://inspect/#devices
  *
  * 注意：
- *      MixWebView 仅提供了 bridge 交互的基础能力，其他诸如 User-Agent、Cookie 等
+ *      MixWKWebView 仅提供了 bridge 交互的基础能力，其他诸如 User-Agent、Cookie 等
  *      信息的管理，以及 UI 定制等内容业务层应该统一抽象出一个 WebSDK 去进行处理，不建
  *      议在 mixkit-web 中直接进行二次开发，应该尽量避免功能上的耦合
  * @author liang
  */
-public class MixWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
+public class MixWKWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
 
     private static final String MIX_KIT_NAME = "MixKit";
     private static final int MIX_ANDROID_TYPE = 2;
@@ -59,17 +59,15 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
 
     // CONSTRUCTORS
 
-    public MixWebView(Context context) {
-        super(context);
-        setupInitializeConfiguration();
+    public MixWKWebView(Context context) {
+        this(context, null);
     }
 
-    public MixWebView(Context context, AttributeSet att) {
-        super(context, att);
-        setupInitializeConfiguration();
+    public MixWKWebView(Context context, AttributeSet att) {
+        this(context, att, 0);
     }
 
-    public MixWebView(Context context, AttributeSet attrs, int defStyle) {
+    public MixWKWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setupInitializeConfiguration();
     }
@@ -150,7 +148,7 @@ public class MixWebView extends WebView implements IScriptEngine, IWebViewBridge
                         return;
                     }
 
-                    MixWebView webViewThis = MixWebView.this;
+                    MixWKWebView webViewThis = MixWKWebView.this;
                     String fromUrl = webViewThis.getUrl();
 
                     boolean shouldNotContinue = mWebViewBridgeListener.

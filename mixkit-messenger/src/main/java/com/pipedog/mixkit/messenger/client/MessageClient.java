@@ -26,7 +26,7 @@ import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.manager.MessageVerifierManager;
-import com.pipedog.mixkit.module.MixModuleManager;
+import com.pipedog.mixkit.module.ModuleManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 /**
@@ -210,7 +210,7 @@ public class MessageClient implements IMessage2Server {
     private void registerClient() {
         String sourceClientId = getEngine().getClientId();
         RegisterClientMessage registerClientMessage = new RegisterClientMessage(
-                sourceClientId, MixModuleManager.defaultManager().getModuleDataMap());
+                sourceClientId, ModuleManager.defaultManager().getModuleDataMap());
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(MessageKeyword.KEY_REGISTER_CLIENT, registerClientMessage);

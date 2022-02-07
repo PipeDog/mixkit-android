@@ -2,10 +2,9 @@ package com.pipedog.mixkit.example;
 
 import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.annotation.MixModule;
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.tool.MixLogger;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.Map;
 public class MessengerTestModule {
 
     @MixMethod(name = "testMethod")
-    public void testMethod(String str, Integer i, int bi, MixResultCallback callback, Map<String, Object> m, List<Object> list) {
+    public void testMethod(String str, Integer i, int bi, ResultCallback callback, Map<String, Object> m, List<Object> list) {
         MixLogger.info(">>>>> str = " + str);
         MixLogger.info(">>>>> i = " + i);
         MixLogger.info(">>>>> bi = " + bi);

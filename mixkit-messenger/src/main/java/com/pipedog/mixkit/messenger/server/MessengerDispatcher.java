@@ -17,7 +17,7 @@ import com.pipedog.mixkit.messenger.model.RegisterClientMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.manager.MessageVerifierManager;
-import com.pipedog.mixkit.module.MixModuleData;
+import com.pipedog.mixkit.module.ModuleData;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class MessengerDispatcher implements IMessage2Client {
     private ServerListenerManager mServerListenerManager = new ServerListenerManager();
     private Messenger mServerMessenger = new Messenger(new ServerHandler());
     private Map<String, Messenger> mClientMessengers = new HashMap<String, Messenger>();
-    private Map<String, Map<String, MixModuleData>> mModuleDataTable = new HashMap<>();
+    private Map<String, Map<String, ModuleData>> mModuleDataTable = new HashMap<>();
     private MessageVerifierManager mMessageVerifierManager = new MessageVerifierManager(MessageVerifierManager.MANAGER_TYPE_SERVER);
 
     public MessengerDispatcher() {

@@ -2,10 +2,10 @@ package com.pipedog.mixkit.compiler.processor;
 
 import com.google.gson.Gson;
 import com.pipedog.mixkit.compiler.utils.Logger;
-import com.pipedog.mixkit.compiler.utils.MixUUID;
-import com.pipedog.mixkit.compiler.bean.MixMethodBean;
-import com.pipedog.mixkit.compiler.bean.MixModuleBean;
-import com.pipedog.mixkit.compiler.bean.MixParameterBean;
+import com.pipedog.mixkit.compiler.utils.UUIDCreator;
+import com.pipedog.mixkit.compiler.bean.MethodBean;
+import com.pipedog.mixkit.compiler.bean.ModuleBean;
+import com.pipedog.mixkit.compiler.bean.ParameterBean;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -37,15 +37,15 @@ import com.pipedog.mixkit.path.Path;
  * 自定义 module 注解处理（相关信息会被写入到编译期生成的 java 文件中，该文件以 MixModuleProvider 开头）
  * @author liang
  */
-public class MixModuleProcessor {
+public class ModuleProcessor {
 
     private final Logger mLogger;
     private final Filer mFiler;
     private final Gson mGson;
-    private Map<String, MixModuleBean> mModuleDataMap;
+    private Map<String, ModuleBean> mModuleDataMap;
     private final TypeElement mProviderTypeElement;
 
-    public MixModuleProcessor(ProcessingEnvironment processingEnv) {
+    public ModuleProcessor(ProcessingEnvironment processingEnv) {
         mLogger = new Logger(processingEnv.getMessager());
         mFiler = processingEnv.getFiler();
         mGson = new Gson();
@@ -79,7 +79,7 @@ public class MixModuleProcessor {
         }
 
         // 遍历 @MixMethod 注解，生成注解导出信息 map
-        Map<String, MixModuleBean> moduleDataMap = new HashMap<String, MixModuleBean>();
+        Map<String, ModuleBean> moduleDataMap = new HashMap<String, ModuleBean>();
         for (Element methodElement : methodElements) {
             if (methodElement instanceof ExecutableElement) { } else {
                 mLogger.info("[Error] annotation failed in class named " +
@@ -92,10 +92,10 @@ public class MixModuleProcessor {
             if (!moduleNameMap.containsKey(className)) { continue; }
 
             String moduleName = moduleNameMap.get(className);
-            MixModuleBean moduleData = moduleDataMap.get(moduleName);
+            ModuleBean moduleData = moduleDataMap.get(moduleName);
 
             if (moduleData == null) {
-                moduleData = new MixModuleBean();
+                moduleData = new ModuleBean();
                 moduleData.classes = new ArrayList<String>();
                 moduleDataMap.put(moduleName, moduleData);
             }
@@ -104,9 +104,9 @@ public class MixModuleProcessor {
                 moduleData.classes.add(className);
             }
 
-            Map<String, MixMethodBean> methods = moduleData.methods;
+            Map<String, MethodBean> methods = moduleData.methods;
             if (methods == null) {
-                methods = new HashMap<String, MixMethodBean>();
+                methods = new HashMap<String, MethodBean>();
                 moduleData.methods = methods;
             }
 
@@ -117,12 +117,12 @@ public class MixModuleProcessor {
                         exportMethodName + "` in a module, rename it!");
             }
 
-            MixMethodBean methodBean = new MixMethodBean();
+            MethodBean methodBean = new MethodBean();
             methods.put(exportMethodName, methodBean);
 
             methodBean.className = className;
             methodBean.methodName = methodElement.getSimpleName().toString();
-            List<MixParameterBean> parameters = new ArrayList<MixParameterBean>();
+            List<ParameterBean> parameters = new ArrayList<ParameterBean>();
             methodBean.parameters = parameters;
 
             // Generate parameters
@@ -135,14 +135,14 @@ public class MixModuleProcessor {
                     methodParameterType = typeVariable.getUpperBound();
                 }
 
-                MixParameterBean parameterBean = new MixParameterBean();
+                ParameterBean parameterBean = new ParameterBean();
                 parameterBean.name = variableElement.getSimpleName().toString();
                 parameterBean.type = methodParameterType.toString();
                 parameters.add(parameterBean);
             }
         }
 
-        mModuleDataMap = new HashMap<String, MixModuleBean>(moduleDataMap);
+        mModuleDataMap = new HashMap<String, ModuleBean>(moduleDataMap);
         createMixModuleProviderClass();
     }
 
@@ -158,7 +158,7 @@ public class MixModuleProcessor {
 
         try {
             TypeSpec typeSpec =
-                    TypeSpec.classBuilder(Path.MIX_MODULE_PROVIDER_NAME + "_$_" + MixUUID.UUID())
+                    TypeSpec.classBuilder(Path.MIX_MODULE_PROVIDER_NAME + "_$_" + UUIDCreator.UUID())
                             .addSuperinterface(ClassName.get(mProviderTypeElement))
                             .addModifiers(Modifier.PUBLIC)
                             .addMethod(method)
@@ -168,7 +168,7 @@ public class MixModuleProcessor {
                     JavaFile.builder(Path.MIX_MODULE_PROVIDER_PACKAGE, typeSpec).build();
             javaFile.writeTo(mFiler);
         } catch (Exception e) {
-            mLogger.info("MixModuleProcessor catch exception " + e.toString());
+            mLogger.info("ModuleProcessor catch exception " + e.toString());
         }
     }
 

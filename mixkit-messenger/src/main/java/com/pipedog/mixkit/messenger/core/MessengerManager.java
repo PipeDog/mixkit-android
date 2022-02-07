@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.messenger.core;
 
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.messenger.interfaces.IMessageClientDelegate;
@@ -28,7 +28,7 @@ public class MessengerManager implements
 
     private MessengerBridge mBridge;
     private MessageClient mClient;
-    private Map<String, Map<String, MixResultCallback>> mCallbackMap = new HashMap<>();
+    private Map<String, Map<String, ResultCallback>> mCallbackMap = new HashMap<>();
 
     public MessengerManager() {
         mBridge = new MessengerBridge(this);
@@ -54,16 +54,16 @@ public class MessengerManager implements
         List<Object> serverArgs = new ArrayList<>();
 
         String traceId = TraceIdGenerator.getTraceId();
-        Map<String, MixResultCallback> callbacks = new HashMap<>();
+        Map<String, ResultCallback> callbacks = new HashMap<>();
         mCallbackMap.put(traceId, callbacks);
 
         for (Object arg : arguments) {
             Object serverArg = arg;
-            boolean isCallback = arg instanceof MixResultCallback;
+            boolean isCallback = arg instanceof ResultCallback;
 
             if (isCallback) {
                 String callbackId = CallbackIdGenerator.getCallbackId();
-                callbacks.put(callbackId, (MixResultCallback) arg);
+                callbacks.put(callbackId, (ResultCallback) arg);
                 serverArg = callbackId;
             }
 
@@ -119,10 +119,10 @@ public class MessengerManager implements
         String traceId = responseMessage.getTraceId();
         String callbackId = responseMessage.getCallbackId();
 
-        Map<String, MixResultCallback> callbacks = mCallbackMap.get(traceId);
+        Map<String, ResultCallback> callbacks = mCallbackMap.get(traceId);
         mCallbackMap.remove(traceId);
 
-        MixResultCallback callback = callbacks.get(callbackId);
+        ResultCallback callback = callbacks.get(callbackId);
 
         ThreadUtils.runInMainThread(new Runnable() {
             @Override

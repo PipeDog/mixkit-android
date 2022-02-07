@@ -3,8 +3,7 @@ package com.pipedog.mixkit.socket;
 import androidx.annotation.Nullable;
 import com.google.gson.Gson;
 
-import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixExecutor;
+import com.pipedog.mixkit.kernel.IExecutor;
 
 public class SocketContext implements ISocketEngine, IWebSocketDelegate, ISocketBridgeDelegate {
 
@@ -51,7 +50,7 @@ public class SocketContext implements ISocketEngine, IWebSocketDelegate, ISocket
     public void webSocketDidReceiveMessage(IWebSocket webSocket, Object message) {
         if (message == null) { return; }
 
-        IMixExecutor executor = mBridge.getExecutor();
+        IExecutor executor = mBridge.getExecutor();
         executor.invokeMethod(message);
     }
 

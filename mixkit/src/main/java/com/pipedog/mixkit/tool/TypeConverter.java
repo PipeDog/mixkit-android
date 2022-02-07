@@ -8,7 +8,7 @@ import com.pipedog.mixkit.tool.StringUtils;
  * 数据类型转换工具
  * @author liang
  */
-public class MixTypeConverter {
+public class TypeConverter {
 
     public static byte toByte(Object arg) {
         String str = arg.toString();

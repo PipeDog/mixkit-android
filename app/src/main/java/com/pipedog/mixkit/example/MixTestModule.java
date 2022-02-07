@@ -7,13 +7,13 @@ import java.util.Map;
 
 import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.annotation.MixMethod;
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.ResultCallback;
 
 @MixModule(name = "MKTestModule")
 public class MixTestModule {
 
     @MixMethod(name = "testExportMethod")
-    public void testMethod(String arg1, int arg2, float arg3, MixResultCallback callback,
+    public void testMethod(String arg1, int arg2, float arg3, ResultCallback callback,
                            Map<String, String> arg5, List<Object> arg6, Integer testInteger) {
 
         Log.i("MixTest", ">>>>>> arg1 : " + arg1 + ", arg2 : " + arg2 + ", arg3 float : " + arg3);

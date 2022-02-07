@@ -4,12 +4,12 @@ package com.pipedog.mixkit.kernel;
  * 自定义 module 接口抽象
  * @author liang
  */
-public interface IMixBridgeModule {
+public interface IBridgeModule {
 
     /**
      * 绑定所属 bridge 实例
      */
-    void setBridge(IMixBridge bridge);
+    void setBridge(IBridge bridge);
 
     /**
      * 自定义 module 被初始构造时会被调用

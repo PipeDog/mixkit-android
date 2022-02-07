@@ -3,7 +3,7 @@ package com.pipedog.mixkit.compiler.utils;
 import java.lang.StringBuilder;
 import java.util.Random;
 
-public class MixUUID {
+public class UUIDCreator {
 
     public static String UUID() {
         return UUID(16);

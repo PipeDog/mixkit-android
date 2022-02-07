@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.messenger.IClientEngine;
 import com.pipedog.mixkit.messenger.ClientEngine;
 import com.pipedog.mixkit.messenger.manager.ClientListenerManager;
@@ -102,7 +102,7 @@ public class SendMsgClientActivity extends AppCompatActivity implements IClientL
         List<Object> list = Arrays.asList("ele1", "ele2", "ele3");
 
         ClientEngine.getInstance().sendMessage(clientId, moduleName, methodName,
-                Arrays.asList("testStr", 111, 222, new MixResultCallback() {
+                Arrays.asList("testStr", 111, 222, new ResultCallback() {
                     @Override
                     public void invoke(Object[] response) {
                         MixLogger.info(response.toString());

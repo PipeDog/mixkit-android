@@ -1,21 +1,21 @@
 package com.pipedog.mixkit.socket;
 
-import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixExecutor;
-import com.pipedog.mixkit.kernel.MixResultCallback;
-import com.pipedog.mixkit.module.MixMethodInvoker;
-import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.parser.IMixMessageParser;
-import com.pipedog.mixkit.parser.MixMessageParserManager;
+import com.pipedog.mixkit.kernel.IBridge;
+import com.pipedog.mixkit.kernel.IExecutor;
+import com.pipedog.mixkit.kernel.ResultCallback;
+import com.pipedog.mixkit.module.MethodInvoker;
+import com.pipedog.mixkit.module.ModuleManager;
+import com.pipedog.mixkit.parser.IMessageParser;
+import com.pipedog.mixkit.parser.MessageParserManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SocketExecutor implements IMixExecutor {
+public class SocketExecutor implements IExecutor {
 
-    private class SocketResultCallback implements MixResultCallback {
+    private class SocketResultCallback implements ResultCallback {
 
         public String mCallbackId;
 
@@ -38,22 +38,22 @@ public class SocketExecutor implements IMixExecutor {
     }
 
     @Override
-    public void setBridge(IMixBridge bridge) {
+    public void setBridge(IBridge bridge) {
         mBridge = (SocketBridge)bridge;
     }
 
     @Override
     public boolean invokeMethod(Object metaData) {
-        MixMessageParserManager parserManager = mBridge.getMessageParserManager();
-        IMixMessageParser parser = parserManager.detectParser(metaData);
+        MessageParserManager parserManager = mBridge.getMessageParserManager();
+        IMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) { return false; }
 
-        IMixMessageParser.IMixMessageBody body = parser.messageBody();
+        IMessageParser.IMessageBody body = parser.getMessageBody();
         String moduleName = body.getModuleName();
         String methodName = body.getMethodName();
 
-        MixModuleManager moduleManager = MixModuleManager.defaultManager();
-        MixMethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
+        ModuleManager moduleManager = ModuleManager.defaultManager();
+        MethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
 
         if (invoker == null) {
             MixLogger.error("Get invoker failed, module : %s, method : %s.",

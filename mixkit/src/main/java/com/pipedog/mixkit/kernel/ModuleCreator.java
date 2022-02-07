@@ -11,12 +11,12 @@ import com.pipedog.mixkit.tool.MixLogger;
  * module 构造器，所有的自定义 module 实例最终都由此类进行创建
  * @author liang
  */
-public class MixModuleCreator {
+public class ModuleCreator {
 
-    private IMixBridge mBridge;
+    private IBridge mBridge;
     private Map<String, Object> mModuleMap;
 
-    public MixModuleCreator(IMixBridge bridge) {
+    public ModuleCreator(IBridge bridge) {
         mBridge = bridge;
         mModuleMap = new HashMap<String, Object>();
     }
@@ -48,8 +48,8 @@ public class MixModuleCreator {
             return null;
         }
 
-        if (module instanceof IMixBridgeModule) {
-            IMixBridgeModule iModule = (IMixBridgeModule)module;
+        if (module instanceof IBridgeModule) {
+            IBridgeModule iModule = (IBridgeModule)module;
             iModule.setBridge(mBridge);
             iModule.load();
         }
@@ -63,7 +63,7 @@ public class MixModuleCreator {
         super.finalize();
 
         mModuleMap.forEach((key, value) -> {
-            IMixBridgeModule iModule = (IMixBridgeModule)value;
+            IBridgeModule iModule = (IBridgeModule)value;
             iModule.unload();
         });
     }

@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * @author liang
  */
 @MixMessageParser(name = "BuiltinMessageParser")
-public class MixBuiltinMessageParser implements IMixMessageParser {
+public class BuiltinMessageParser implements IMessageParser {
 
-    public class MixMessageBuiltinBody implements IMixMessageParser.IMixMessageBody {
+    public class MixMessageBuiltinBody implements IMessageBody {
 
         private String mModuleName;
         private String mMethodName;
@@ -51,7 +51,7 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
 
     }
 
-    private IMixMessageBody mMessageBody;
+    private IMessageBody mMessageBody;
 
     public static boolean canParse(Object metaData) {
         if (metaData instanceof Map) { } else {
@@ -63,11 +63,11 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
         return ret;
     }
 
-    public static IMixMessageParser newParser(Object metaData) {
-        return new MixBuiltinMessageParser(metaData);
+    public static IMessageParser newParser(Object metaData) {
+        return new BuiltinMessageParser(metaData);
     }
 
-    private MixBuiltinMessageParser(Object metaData) {
+    private BuiltinMessageParser(Object metaData) {
         Map map = (Map)metaData;
         String moduleName = (String)map.get("moduleName");
         String methodName = (String)map.get("methodName");
@@ -75,7 +75,7 @@ public class MixBuiltinMessageParser implements IMixMessageParser {
         mMessageBody = new MixMessageBuiltinBody(moduleName, methodName, arguments);
     }
 
-    public IMixMessageBody messageBody() {
+    public IMessageBody getMessageBody() {
         return mMessageBody;
     }
 

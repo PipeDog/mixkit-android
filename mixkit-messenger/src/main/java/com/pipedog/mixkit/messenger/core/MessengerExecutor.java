@@ -1,15 +1,15 @@
 package com.pipedog.mixkit.messenger.core;
 
-import com.pipedog.mixkit.kernel.IMixBridge;
-import com.pipedog.mixkit.kernel.IMixExecutor;
-import com.pipedog.mixkit.kernel.MixResultCallback;
+import com.pipedog.mixkit.kernel.IBridge;
+import com.pipedog.mixkit.kernel.IExecutor;
+import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.utils.ThreadUtils;
-import com.pipedog.mixkit.module.MixMethodInvoker;
-import com.pipedog.mixkit.module.MixModuleManager;
-import com.pipedog.mixkit.parser.IMixMessageParser;
-import com.pipedog.mixkit.parser.MixMessageParserManager;
+import com.pipedog.mixkit.module.MethodInvoker;
+import com.pipedog.mixkit.module.ModuleManager;
+import com.pipedog.mixkit.parser.IMessageParser;
+import com.pipedog.mixkit.parser.MessageParserManager;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MessengerExecutor implements IMixExecutor {
+public class MessengerExecutor implements IExecutor {
 
-    private class MessengerResultCallback implements MixResultCallback {
+    private class MessengerResultCallback implements ResultCallback {
 
         protected String mTraceId;
         protected String mSourceClientId;
@@ -51,24 +51,24 @@ public class MessengerExecutor implements IMixExecutor {
     }
 
     @Override
-    public void setBridge(IMixBridge bridge) {
+    public void setBridge(IBridge bridge) {
         mBridge = (MessengerBridge)bridge;
     }
 
     @Override
     public boolean invokeMethod(Object metaData) {
-        MixMessageParserManager parserManager = mBridge.getMessageParserManager();
-        IMixMessageParser parser = parserManager.detectParser(metaData);
+        MessageParserManager parserManager = mBridge.getMessageParserManager();
+        IMessageParser parser = parserManager.detectParser(metaData);
         if (parser == null) {
             return false;
         }
 
-        IMixMessageParser.IMixMessageBody body = parser.messageBody();
+        IMessageParser.IMessageBody body = parser.getMessageBody();
         String moduleName = body.getModuleName();
         String methodName = body.getMethodName();
 
-        MixModuleManager moduleManager = MixModuleManager.defaultManager();
-        MixMethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
+        ModuleManager moduleManager = ModuleManager.defaultManager();
+        MethodInvoker invoker = moduleManager.getInvoker(moduleName, methodName);
 
         if (invoker == null) {
             MixLogger.error("Get invoker failed, module : %s, method : %s.",

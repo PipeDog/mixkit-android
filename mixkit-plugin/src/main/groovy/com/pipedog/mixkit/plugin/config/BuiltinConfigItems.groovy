@@ -21,9 +21,9 @@ class BuiltinConfigItems {
 
     private static ConfigItem getModuleProviderConfigItem() {
         return new ConfigItem(
-                "com.pipedog.mixkit.compiler.provider.IMixModuleProvider",
+                "com.pipedog.mixkit.compiler.provider.IModuleProvider",
                 null,
-                "com.pipedog.mixkit.module.MixModuleManager",
+                "com.pipedog.mixkit.module.ModuleManager",
                 "autoCallRegisterModuleProvider",
                 "registerModuleProvider",
                 new ArrayList<String>() {{
@@ -35,9 +35,9 @@ class BuiltinConfigItems {
 
     private static ConfigItem getParserProviderConfigItem() {
         return new ConfigItem(
-                "com.pipedog.mixkit.compiler.provider.IMixMessageParserProvider",
+                "com.pipedog.mixkit.compiler.provider.IMessageParserProvider",
                 null,
-                "com.pipedog.mixkit.parser.MixMessageParserManager",
+                "com.pipedog.mixkit.parser.MessageParserManager",
                 "autoCallRegisterParserProvider",
                 "registerParserProvider",
                 new ArrayList<String>() {{
