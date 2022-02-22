@@ -14,7 +14,7 @@ import java.util.List;
  * @author liang
  * @time 2021/12/26
  */
-public interface IConfiguration {
+public interface IWebSDKConfiguration {
 
     // SET COOKIE、USER-AGENT...
 

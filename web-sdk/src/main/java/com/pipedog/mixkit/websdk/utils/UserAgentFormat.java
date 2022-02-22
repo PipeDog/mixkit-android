@@ -1,7 +1,6 @@
 package com.pipedog.mixkit.websdk.utils;
 
-import com.pipedog.mixkit.websdk.config.Configuration;
-import com.pipedog.mixkit.websdk.config.IConfiguration;
+import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
 import com.pipedog.mixkit.websdk.config.UserAgentNode;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class UserAgentFormat {
             defaultUserAgent = "";
         }
 
-        IConfiguration.IFetcher fetcher = Configuration.getInstance().getFetcher();
+        IWebSDKConfiguration.IFetcher fetcher = Configuration.getInstance().getFetcher();
         if (fetcher == null) {
             return defaultUserAgent;
         }

@@ -5,20 +5,20 @@ package com.pipedog.mixkit.websdk.config;
  * @author liang
  * @time 2021/12/26
  */
-public class Configuration implements IConfiguration {
+public class WebSDKConfiguration implements IWebSDKConfiguration {
 
-    private IConfiguration.IFetcher mFetcher;
-    private IConfiguration.ILoadURLAction mLoadURLAction;
-    private IConfiguration.IBridgeValidation mBridgeValidation;
+    private IWebSDKConfiguration.IFetcher mFetcher;
+    private IWebSDKConfiguration.ILoadURLAction mLoadURLAction;
+    private IWebSDKConfiguration.IBridgeValidation mBridgeValidation;
     private int mBrowserKernelType;
-    private IConfiguration.IWebSettingsConfiguration mWebSettingsConfiguration;
-    private static volatile Configuration sGlobalConfiguration;
+    private IWebSDKConfiguration.IWebSettingsConfiguration mWebSettingsConfiguration;
+    private static volatile WebSDKConfiguration sGlobalConfiguration;
 
-    public static IConfiguration getInstance() {
+    public static IWebSDKConfiguration getInstance() {
         if (sGlobalConfiguration == null) {
-            synchronized (Configuration.class) {
+            synchronized (WebSDKConfiguration.class) {
                 if (sGlobalConfiguration == null) {
-                    sGlobalConfiguration = new Configuration();
+                    sGlobalConfiguration = new WebSDKConfiguration();
                 }
             }
         }
@@ -28,40 +28,40 @@ public class Configuration implements IConfiguration {
     /**
      * 之所以开放这个方法，是为了处理为某些模块定制化 web 能力的 case，慎用
      */
-    public Configuration() {
-        mBrowserKernelType = IConfiguration.KERNEL_TYPE_WEBKIT;
+    public WebSDKConfiguration() {
+        mBrowserKernelType = IWebSDKConfiguration.KERNEL_TYPE_WEBKIT;
     }
 
 
     // METHODS FOR `IWebConfiguration`
 
     @Override
-    public void setFetcher(IConfiguration.IFetcher fetcher) {
+    public void setFetcher(IWebSDKConfiguration.IFetcher fetcher) {
         this.mFetcher = fetcher;
     }
 
     @Override
-    public IConfiguration.IFetcher getFetcher() {
+    public IWebSDKConfiguration.IFetcher getFetcher() {
         return mFetcher;
     }
 
     @Override
-    public void setLoadURLAction(IConfiguration.ILoadURLAction action) {
+    public void setLoadURLAction(IWebSDKConfiguration.ILoadURLAction action) {
         this.mLoadURLAction = action;
     }
 
     @Override
-    public IConfiguration.ILoadURLAction getLoadURLAction() {
+    public IWebSDKConfiguration.ILoadURLAction getLoadURLAction() {
         return mLoadURLAction;
     }
 
     @Override
-    public void setBridgeValidation(IConfiguration.IBridgeValidation bridgeValidation) {
+    public void setBridgeValidation(IWebSDKConfiguration.IBridgeValidation bridgeValidation) {
         this.mBridgeValidation = bridgeValidation;
     }
 
     @Override
-    public IConfiguration.IBridgeValidation getBridgeValidation() {
+    public IWebSDKConfiguration.IBridgeValidation getBridgeValidation() {
         return mBridgeValidation;
     }
 
