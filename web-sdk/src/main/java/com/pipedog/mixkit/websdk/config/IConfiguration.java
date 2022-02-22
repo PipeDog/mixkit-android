@@ -1,5 +1,11 @@
 package com.pipedog.mixkit.websdk.config;
 
+import android.webkit.WebSettings;
+
+import androidx.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpCookie;
 import java.util.List;
 
@@ -19,10 +25,11 @@ public interface IConfiguration {
         /**
          * 获取外部设置的 User-Agent 值
          */
-        String getUserAgent();
+        List<UserAgentNode> getUserAgentList();
 
         /**
-         * 获取外部设置的 Cookie 列表
+         * 获取外部设置的 Cookie 列表，可以使用 CookieUtils 中的 createCookieList() 方法进行快速创建
+         * 注意：Crosswalk 内核要求传递全域名，webkit 内核可以只传递根域名
          */
         List<HttpCookie> getCookies();
     }
@@ -87,5 +94,51 @@ public interface IConfiguration {
      * 获取 bridge 校验功能实现
      */
     IBridgeValidation getBridgeValidation();
+
+
+    // 设置支持的浏览器内核类型
+
+    @IntDef({
+            KERNEL_TYPE_WEBKIT,
+            KERNEL_TYPE_ALL,
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BrowserKernelType {}
+
+    /** 系统 webkit 内核 */
+    public static final int KERNEL_TYPE_WEBKIT = 1 << 0;
+    /** 所有内核 */
+    public static final int KERNEL_TYPE_ALL = KERNEL_TYPE_WEBKIT;
+
+    /**
+     * 设置支持的浏览器内核，优先级：webkit > crosswalk
+     */
+    void setBrowserKernelType(@BrowserKernelType int kernelType);
+
+    /**
+     * 获取支持的浏览器内核
+     */
+    @BrowserKernelType int getBrowserKernelType();
+
+
+    // 自定义 WebSettings 配置
+
+    /**
+     * 自定义 WebSettings 配置
+     */
+    interface IWebSettingsConfiguration {
+        /** webkit 内核配置 */
+        void setup(WebSettings settings);
+    }
+
+    /**
+     * 注册 WebSettings 配置
+     */
+    void setWebSettingsConfiguration(IWebSettingsConfiguration conf);
+
+    /**
+     * 获取 WebSettings 配置
+     */
+    IWebSettingsConfiguration getWebSettingsConfiguration();
 
 }

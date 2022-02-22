@@ -33,6 +33,7 @@ import com.pipedog.mixkit.tool.JsonUtils;
 import com.pipedog.mixkit.tool.MixLogger;
 
 import com.google.gson.Gson;
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.IScriptEngine;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeDelegate;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
@@ -55,7 +56,7 @@ import com.pipedog.mixkit.web.utils.WebInjector;
  *      议在 mixkit-web 中直接进行二次开发，应该尽量避免功能上的耦合
  * @author liang
  */
-public class MixWKWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
+public class MixWKWebView extends WebView implements IMixWebView {
 
     private static final String MIX_KIT_NAME = "MixKit";
     private static final int MIX_ANDROID_TYPE = 2;

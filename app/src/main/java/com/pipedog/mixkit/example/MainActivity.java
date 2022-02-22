@@ -9,6 +9,7 @@ import android.webkit.WebSettings;
 
 import com.pipedog.mixkit.example.testplugin.ServiceManager;
 import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.view.MixWKWebView;
 
@@ -34,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         webView.setWebViewBridgeListener(new IWebViewBridgeListener() {
             @Override
-            public boolean onReceiveScriptMessage(MixWKWebView webView, String fromUrl, String message) {
+            public boolean onReceiveScriptMessage(IMixWebView webView, String fromUrl, String message) {
                 MixLogger.error("fromUrl = %s", fromUrl);
                 return false;
             }
 
             @Override
-            public void onParseMessageFailed(MixWKWebView webView, String fromUrl, String message) {
+            public void onParseMessageFailed(IMixWebView webView, String fromUrl, String message) {
 
             }
         });

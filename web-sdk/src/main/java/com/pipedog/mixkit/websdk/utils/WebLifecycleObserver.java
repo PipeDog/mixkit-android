@@ -1,7 +1,8 @@
-package com.pipedog.mixkit.websdk.manager;
+package com.pipedog.mixkit.websdk.utils;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.view.View;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
@@ -9,17 +10,20 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.pipedog.mixkit.web.view.MixWKWebView;
-import com.pipedog.mixkit.websdk.constants.NotificationConstants;
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.websdk.notification.NotificationCenter;
+import com.pipedog.mixkit.websdk.notification.UniversalNotification;
 
+/**
+ * Web 生命周期管理
+ */
 public class WebLifecycleObserver {
 
-    private MixWKWebView mWebView;
+    private IMixWebView mWebView;
     private Lifecycle mLifecycle;
     private LifecycleEventObserver mLifecycleObserver;
 
-    public WebLifecycleObserver(MixWKWebView webView) {
+    public WebLifecycleObserver(IMixWebView webView) {
         mWebView = webView;
     }
 
@@ -34,7 +38,13 @@ public class WebLifecycleObserver {
      * 订阅上下文生命周期 前提 context 继承父类必须继承了 LifecycleOwner
      */
     public void observe() {
-        mLifecycle = getLifeCycle(mWebView.getContext());
+        if (mWebView == null || !(mWebView instanceof View)) {
+            return;
+        }
+
+        View webView = (View) mWebView;
+        mLifecycle = getLifeCycle(webView.getContext());
+
         if (mLifecycle == null) {
             throw new RuntimeException(
                     "未检测到继承 LifecycleOwner Context 暂不支持生命周期监听推荐使用 ComponentActivity");
@@ -52,6 +62,7 @@ public class WebLifecycleObserver {
      */
     public void cancel() {
         mLifecycle.removeObserver(mLifecycleObserver);
+        mWebView = null;
     }
 
 
@@ -82,15 +93,15 @@ public class WebLifecycleObserver {
             switch (event) {
                 case ON_RESUME: {
                     NotificationCenter.getInstance().postNotification(
-                            NotificationConstants.Name.PAGE_VISIBLE, new Object[]{}, mWebView);
+                            UniversalNotification.Name.PAGE_VISIBLE, new Object[]{}, mWebView);
                 } break;
                 case ON_PAUSE: {
                     NotificationCenter.getInstance().postNotification(
-                            NotificationConstants.Name.PAGE_INVISIBLE, new Object[]{}, mWebView);
+                            UniversalNotification.Name.PAGE_INVISIBLE, new Object[]{}, mWebView);
                 } break;
                 case ON_DESTROY: {
                     NotificationCenter.getInstance().postNotification(
-                            NotificationConstants.Name.PAGE_DESTROY, new Object[]{}, mWebView);
+                            UniversalNotification.Name.PAGE_DESTROY, new Object[]{}, mWebView);
                 } break;
                 default: break;
             }

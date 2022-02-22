@@ -7,9 +7,11 @@ package com.pipedog.mixkit.websdk.config;
  */
 public class Configuration implements IConfiguration {
 
-    private IFetcher mFetcher;
-    private ILoadURLAction mLoadURLAction;
-    private IBridgeValidation mBridgeValidation;
+    private IConfiguration.IFetcher mFetcher;
+    private IConfiguration.ILoadURLAction mLoadURLAction;
+    private IConfiguration.IBridgeValidation mBridgeValidation;
+    private int mBrowserKernelType;
+    private IConfiguration.IWebSettingsConfiguration mWebSettingsConfiguration;
     private static volatile Configuration sGlobalConfiguration;
 
     public static IConfiguration getInstance() {
@@ -27,40 +29,60 @@ public class Configuration implements IConfiguration {
      * 之所以开放这个方法，是为了处理为某些模块定制化 web 能力的 case，慎用
      */
     public Configuration() {
-
+        mBrowserKernelType = IConfiguration.KERNEL_TYPE_WEBKIT;
     }
 
 
     // METHODS FOR `IWebConfiguration`
 
     @Override
-    public void setFetcher(IFetcher fetcher) {
+    public void setFetcher(IConfiguration.IFetcher fetcher) {
         this.mFetcher = fetcher;
     }
 
     @Override
-    public IFetcher getFetcher() {
+    public IConfiguration.IFetcher getFetcher() {
         return mFetcher;
     }
 
     @Override
-    public void setLoadURLAction(ILoadURLAction action) {
+    public void setLoadURLAction(IConfiguration.ILoadURLAction action) {
         this.mLoadURLAction = action;
     }
 
     @Override
-    public ILoadURLAction getLoadURLAction() {
+    public IConfiguration.ILoadURLAction getLoadURLAction() {
         return mLoadURLAction;
     }
 
     @Override
-    public void setBridgeValidation(IBridgeValidation bridgeValidation) {
+    public void setBridgeValidation(IConfiguration.IBridgeValidation bridgeValidation) {
         this.mBridgeValidation = bridgeValidation;
     }
 
     @Override
-    public IBridgeValidation getBridgeValidation() {
+    public IConfiguration.IBridgeValidation getBridgeValidation() {
         return mBridgeValidation;
+    }
+
+    @Override
+    public void setBrowserKernelType(int kernelType) {
+        mBrowserKernelType = kernelType;
+    }
+
+    @Override
+    public int getBrowserKernelType() {
+        return mBrowserKernelType;
+    }
+
+    @Override
+    public void setWebSettingsConfiguration(IWebSettingsConfiguration conf) {
+        mWebSettingsConfiguration = conf;
+    }
+
+    @Override
+    public IWebSettingsConfiguration getWebSettingsConfiguration() {
+        return mWebSettingsConfiguration;
     }
 
 }

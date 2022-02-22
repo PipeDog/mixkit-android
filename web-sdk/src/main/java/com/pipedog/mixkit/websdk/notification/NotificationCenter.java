@@ -1,7 +1,6 @@
 package com.pipedog.mixkit.websdk.notification;
 
-import com.pipedog.mixkit.web.view.MixWKWebView;
-import com.pipedog.mixkit.websdk.constants.NotificationConstants;
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class NotificationCenter {
 
     private Map<String, String> mRegisterTable = new HashMap<>();
-    private List<MixWKWebView> mObservers = new ArrayList<>();
+    private List<IMixWebView> mObservers = new ArrayList<>();
     private volatile static NotificationCenter sNotificationCenter;
 
     public static NotificationCenter getInstance() {
@@ -39,14 +38,14 @@ public class NotificationCenter {
 
     private void registerDefaultNotifications() {
         registerNotification(
-                NotificationConstants.Name.PAGE_VISIBLE,
-                NotificationConstants.JSFunction.ON_PAGE_VISIBLE);
+                UniversalNotification.Name.PAGE_VISIBLE,
+                UniversalNotification.JSFunction.ON_PAGE_VISIBLE);
         registerNotification(
-                NotificationConstants.Name.PAGE_INVISIBLE,
-                NotificationConstants.JSFunction.ON_PAGE_INVISIBLE);
+                UniversalNotification.Name.PAGE_INVISIBLE,
+                UniversalNotification.JSFunction.ON_PAGE_INVISIBLE);
         registerNotification(
-                NotificationConstants.Name.PAGE_DESTROY,
-                NotificationConstants.JSFunction.ON_PAGE_DESTROY);
+                UniversalNotification.Name.PAGE_DESTROY,
+                UniversalNotification.JSFunction.ON_PAGE_DESTROY);
     }
 
 
@@ -82,14 +81,18 @@ public class NotificationCenter {
      * @param toWebView 目标 web 视图，如果不为 null 则只有该视图执行关联的 js
      *                  函数，如果为 null 则所有 web 视图都执行关联的 js 函数
      */
-    public void postNotification(String notification, Object[] arguments, MixWKWebView toWebView) {
+    public void postNotification(String notification, Object[] arguments, IMixWebView toWebView) {
         String jsFunc = mRegisterTable.get(notification);
         if (jsFunc == null || jsFunc.isEmpty()) {
             return;
         }
 
+        if (arguments == null) {
+            arguments = new Object[]{};
+        }
+
         if (toWebView == null) {
-            for (MixWKWebView observer : mObservers) {
+            for (IMixWebView observer : mObservers) {
                 observer.invokeMethod(jsFunc, arguments, null);
             }
             return;
@@ -105,7 +108,7 @@ public class NotificationCenter {
      * @param webView web 视图，当调用 `postNotification` 方法进行
      *        通知时将会根据通知名，通过 webView 执行关联的 js 函数
      */
-    public void addObserver(MixWKWebView webView) {
+    public void addObserver(IMixWebView webView) {
         if (webView == null || mObservers.contains(webView)) {
             return;
         }
@@ -116,7 +119,7 @@ public class NotificationCenter {
      * 移除 webView 监听者
      * @param webView web 视图
      */
-    public void removeObserver(MixWKWebView webView) {
+    public void removeObserver(IMixWebView webView) {
         if (webView == null || !mObservers.contains(webView)) {
             return;
         }
