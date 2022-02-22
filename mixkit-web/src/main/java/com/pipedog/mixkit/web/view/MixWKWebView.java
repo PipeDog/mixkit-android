@@ -38,6 +38,7 @@ import com.pipedog.mixkit.web.interfaces.IWebViewBridgeDelegate;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.web.kernel.WebViewBridge;
+import com.pipedog.mixkit.web.utils.JavaScriptFormat;
 import com.pipedog.mixkit.web.utils.ThreadUtils;
 import com.pipedog.mixkit.web.utils.WebInjector;
 
@@ -178,68 +179,7 @@ public class MixWKWebView extends WebView implements IScriptEngine, IWebViewBrid
             return;
         }
 
-        if (arguments == null) {
-            arguments = new Object[]{};
-        }
-
-        StringBuilder sb = new StringBuilder();
-        if (module != null && !module.isEmpty()) {
-            sb.append(module);
-            sb.append(".");
-        }
-
-        sb.append(method);
-
-        // Avoid calling undefined JS methods
-        String methodName = sb.toString();
-        String prefix = String.format("if (%1$s && (typeof %2$s == 'function')) {", methodName, methodName);
-        String suffix = "}";
-
-        sb.append("(");
-
-        int numberOfArguments = arguments.length;
-        for (int i = 0; i < numberOfArguments; i++) {
-            Object obj = arguments[i];
-
-            if (obj == null) {
-                sb.append("null");
-            } else if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
-                String argument = mGson.toJson(obj);
-                sb.append(argument);
-            } else if (obj instanceof String) {
-                String argument = String.format("'%s'", obj);
-                sb.append(argument);
-            } else if (obj instanceof Short ||
-                    obj instanceof Integer ||
-                    obj instanceof Long ||
-                    obj instanceof Float ||
-                    obj instanceof Double ||
-                    obj instanceof Boolean ||
-                    obj instanceof Character ||
-                    obj instanceof CharSequence ||
-                    obj instanceof char[]) {
-                sb.append(obj);
-            } else {
-                try {
-                    String argument = mGson.toJson(obj);
-                    sb.append(argument == null ? "null" : argument);
-                } catch (Exception e) {
-                    sb.append("null");
-
-                    e.printStackTrace();
-                    MixLogger.error("Detected invalid argument when append js script, arg : %s",
-                            obj.toString());
-                }
-            }
-
-            if (i != numberOfArguments - 1) {
-                sb.append(", ");
-            }
-        }
-
-        sb.append(");");
-
-        String script = prefix + sb.toString() + suffix;
+        String script = JavaScriptFormat.formatScript(module, method, arguments);
         evaluate(script, resultCallback);
     }
 
