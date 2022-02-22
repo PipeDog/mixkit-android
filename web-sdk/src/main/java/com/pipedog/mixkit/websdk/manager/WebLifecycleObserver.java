@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.pipedog.mixkit.web.MixWKWebView;
+import com.pipedog.mixkit.web.view.MixWKWebView;
 import com.pipedog.mixkit.websdk.constants.NotificationConstants;
 import com.pipedog.mixkit.websdk.notification.NotificationCenter;
 

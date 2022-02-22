@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.websdk.manager;
 
-import com.pipedog.mixkit.web.MixWKWebView;
+import com.pipedog.mixkit.web.view.MixWKWebView;
 
 import java.util.ArrayList;
 import java.util.List;

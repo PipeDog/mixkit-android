@@ -1,7 +1,4 @@
-package com.pipedog.mixkit.web;
-
-import android.webkit.WebView;
-import java.util.List;
+package com.pipedog.mixkit.web.interfaces;
 
 /**
  * js 脚本执行器

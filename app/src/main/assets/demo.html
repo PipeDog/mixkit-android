@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script type="text/javascript" src="mix.js"></script>
-    <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
     <meta name="viewport"
           content="width=device-width,
           initial-scale=1.0, minimum-scale=1.0,
@@ -29,6 +29,7 @@
 
     <script>
 
+        var vConsole = new window.VConsole();
 
         function testAndroidMethod() {
             // var vConsole = new VConsole();
@@ -49,6 +50,7 @@
             MKTestModule.testExportMethod('testString', 100.99, 99, function (msg) {
                 console.log('receive native callback, response is ' + msg);
                 MKLogManager.log(msg);
+                window.alert('native callback' + msg);
             }, m, arr, 10101);
         }
 

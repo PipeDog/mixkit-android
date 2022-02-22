@@ -9,9 +9,8 @@ import android.webkit.WebSettings;
 
 import com.pipedog.mixkit.example.testplugin.ServiceManager;
 import com.pipedog.mixkit.tool.MixLogger;
-import com.pipedog.mixkit.web.IWebViewBridgeListener;
-import com.pipedog.mixkit.web.MixWKWebView;
-import com.pipedog.mixkit.web.ScriptCallback;
+import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
+import com.pipedog.mixkit.web.view.MixWKWebView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         webView.loadUrl("file:///android_asset/demo.html");
 

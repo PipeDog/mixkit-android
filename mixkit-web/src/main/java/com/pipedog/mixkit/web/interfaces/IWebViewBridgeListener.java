@@ -1,4 +1,6 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.interfaces;
+
+import com.pipedog.mixkit.web.view.MixWKWebView;
 
 /**
  * bridge 通信监听，你可以在这里进行消息拦截，并进行诸如：通信白名单校验、通信日志打印等内容

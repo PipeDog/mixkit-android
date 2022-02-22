@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.kernel;
 
 import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.kernel.IExecutor;
@@ -8,6 +8,8 @@ import com.pipedog.mixkit.module.ModuleManager;
 import com.pipedog.mixkit.parser.MessageParserManager;
 import com.pipedog.mixkit.parser.IMessageParser;
 import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.web.interfaces.IScriptEngine;
+import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 
 import java.util.ArrayList;
 import java.util.Arrays;

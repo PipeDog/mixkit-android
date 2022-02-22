@@ -1,0 +1,267 @@
+package com.pipedog.mixkit.web.view;
+
+import android.graphics.Bitmap;
+import android.util.AttributeSet;
+import android.content.Context;
+import android.net.http.SslError;
+import android.os.Message;
+import android.view.KeyEvent;
+
+import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebSettings;
+import android.webkit.ClientCertRequest;
+import android.webkit.HttpAuthHandler;
+import android.webkit.RenderProcessGoneDetail;
+import android.webkit.SafeBrowsingResponse;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.reflect.TypeToken;
+import com.pipedog.mixkit.tool.JsonUtils;
+import com.pipedog.mixkit.tool.MixLogger;
+
+import com.google.gson.Gson;
+import com.pipedog.mixkit.web.interfaces.IScriptEngine;
+import com.pipedog.mixkit.web.interfaces.IWebViewBridgeDelegate;
+import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
+import com.pipedog.mixkit.web.interfaces.ScriptCallback;
+import com.pipedog.mixkit.web.kernel.WebViewBridge;
+import com.pipedog.mixkit.web.utils.ThreadUtils;
+import com.pipedog.mixkit.web.utils.WebInjector;
+
+/**
+ * 支持 native-js 交互的 web 视图，使用时将系统的 WebView 替换成当
+ * 前类即可，命名中的 WK~ 作用为标识此类使用了系统的 webkit 内核
+ *
+ * Chrome 调试地址如下（需要注意，当使用该地址调试时需要翻墙）：
+ *  chrome://inspect/#devices
+ *
+ * 注意：
+ *      MixWKWebView 仅提供了 bridge 交互的基础能力，其他诸如 User-Agent、Cookie 等
+ *      信息的管理，以及 UI 定制等内容业务层应该统一抽象出一个 WebSDK 去进行处理，不建
+ *      议在 mixkit-web 中直接进行二次开发，应该尽量避免功能上的耦合
+ * @author liang
+ */
+public class MixWKWebView extends WebView implements IScriptEngine, IWebViewBridgeDelegate {
+
+    private static final String MIX_KIT_NAME = "MixKit";
+    private static final int MIX_ANDROID_TYPE = 2;
+
+    private Gson mGson;
+    private WebViewBridge mWebViewBridge;
+    private IWebViewBridgeListener mWebViewBridgeListener;
+
+
+    // CONSTRUCTORS
+
+    public MixWKWebView(Context context) {
+        this(context, null);
+    }
+
+    public MixWKWebView(Context context, AttributeSet att) {
+        this(context, att, 0);
+    }
+
+    public MixWKWebView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        setupInitializeConfiguration();
+    }
+
+
+    // PRIVATE METHODS
+
+    private void setupInitializeConfiguration() {
+        mGson = JsonUtils.getMapGson();
+        mWebViewBridge = new WebViewBridge(this);
+
+        // Enable js bridge
+        WebSettings webSettings = getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        addJavascriptInterface(this, MIX_KIT_NAME);
+    }
+
+    private void eval(String script, ScriptCallback resultCallback) {
+        String formatScript = String.format("javascript:%s", script);
+
+        evaluateJavascript(formatScript, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                if (resultCallback == null) {
+                    return;
+                }
+                resultCallback.onReceiveValue(value);
+            }
+        });
+    }
+
+
+    // PUBLIC METHODS
+
+    public void setWebViewBridgeListener(IWebViewBridgeListener listener) {
+        mWebViewBridgeListener = listener;
+    }
+
+    @JavascriptInterface
+    public void postMessage(String message) {
+        try {
+            Map<String, Object> map = mGson.fromJson(
+                    message, new TypeToken<Map<String, Object>>(){}.getType());
+
+            ThreadUtils.runInMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mWebViewBridgeListener == null) {
+                        mWebViewBridge.getExecutor().invokeMethod(map);
+                        return;
+                    }
+
+                    MixWKWebView webViewThis = MixWKWebView.this;
+                    String fromUrl = webViewThis.getUrl();
+
+                    boolean shouldNotContinue = mWebViewBridgeListener.
+                            onReceiveScriptMessage(webViewThis, fromUrl, message);
+                    if (shouldNotContinue) {
+                        return;
+                    }
+
+                    boolean invokeResult = mWebViewBridge.getExecutor().invokeMethod(map);
+                    if (!invokeResult) {
+                        mWebViewBridgeListener.onParseMessageFailed(webViewThis, fromUrl, message);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            MixLogger.error("invoke native method failed, message : %s.", message);
+        }
+    }
+
+    @JavascriptInterface
+    public int getSystemType() {
+        return MIX_ANDROID_TYPE;
+    }
+
+    @JavascriptInterface
+    public String getNativeConfig() {
+        return WebInjector.getInjectionJson();
+    }
+
+
+    // OVERRIDE METHODS
+
+    @Override
+    public void invokeMethod(String method,
+                             Object[] arguments,
+                             ScriptCallback resultCallback) {
+        invokeMethod(null, method, arguments, resultCallback);
+    }
+
+    @Override
+    public void invokeMethod(String module,
+                             String method,
+                             Object[] arguments,
+                             ScriptCallback resultCallback) {
+        if (method == null || method.isEmpty()) {
+            resultCallback.onReceiveError("invoke method failed, " +
+                    "argument `method` can not be null, check it!");
+            return;
+        }
+
+        if (arguments == null) {
+            arguments = new Object[]{};
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (module != null && !module.isEmpty()) {
+            sb.append(module);
+            sb.append(".");
+        }
+
+        sb.append(method);
+
+        // Avoid calling undefined JS methods
+        String methodName = sb.toString();
+        String prefix = String.format("if (%1$s && (typeof %2$s == 'function')) {", methodName, methodName);
+        String suffix = "}";
+
+        sb.append("(");
+
+        int numberOfArguments = arguments.length;
+        for (int i = 0; i < numberOfArguments; i++) {
+            Object obj = arguments[i];
+
+            if (obj == null) {
+                sb.append("null");
+            } else if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
+                String argument = mGson.toJson(obj);
+                sb.append(argument);
+            } else if (obj instanceof String) {
+                String argument = String.format("'%s'", obj);
+                sb.append(argument);
+            } else if (obj instanceof Short ||
+                    obj instanceof Integer ||
+                    obj instanceof Long ||
+                    obj instanceof Float ||
+                    obj instanceof Double ||
+                    obj instanceof Boolean ||
+                    obj instanceof Character ||
+                    obj instanceof CharSequence ||
+                    obj instanceof char[]) {
+                sb.append(obj);
+            } else {
+                try {
+                    String argument = mGson.toJson(obj);
+                    sb.append(argument == null ? "null" : argument);
+                } catch (Exception e) {
+                    sb.append("null");
+
+                    e.printStackTrace();
+                    MixLogger.error("Detected invalid argument when append js script, arg : %s",
+                            obj.toString());
+                }
+            }
+
+            if (i != numberOfArguments - 1) {
+                sb.append(", ");
+            }
+        }
+
+        sb.append(");");
+
+        String script = prefix + sb.toString() + suffix;
+        evaluate(script, resultCallback);
+    }
+
+    @Override
+    public void evaluate(String script, ScriptCallback resultCallback) {
+        if (script == null || script.isEmpty()) {
+            resultCallback.onReceiveError("execute script failed, " +
+                    "argument script can not be null, check it!");
+            return;
+        }
+
+        ThreadUtils.runInMainThread(new Runnable() {
+            @Override
+            public void run() {
+                eval(script, resultCallback);
+            }
+        });
+    }
+
+    @Override
+    public IScriptEngine getScriptEngine() {
+        return (IScriptEngine)this;
+    }
+
+}

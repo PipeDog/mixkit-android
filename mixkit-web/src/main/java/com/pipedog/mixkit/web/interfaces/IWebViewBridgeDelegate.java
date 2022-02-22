@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.interfaces;
 
 /**
  * bridge 的代理接口

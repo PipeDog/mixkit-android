@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.utils;
 
 import android.os.Handler;
 import android.os.Looper;

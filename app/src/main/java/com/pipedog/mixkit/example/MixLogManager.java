@@ -6,8 +6,8 @@ import com.pipedog.mixkit.tool.MixLogger;
 
 import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.annotation.MixModule;
-import com.pipedog.mixkit.web.MixWKWebView;
-import com.pipedog.mixkit.web.WebViewBridge;
+import com.pipedog.mixkit.web.view.MixWKWebView;
+import com.pipedog.mixkit.web.kernel.WebViewBridge;
 
 @MixModule(name = "LogManager")
 public class MixLogManager implements IBridgeModule {

@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.websdk.notification;
 
-import com.pipedog.mixkit.web.MixWKWebView;
+import com.pipedog.mixkit.web.view.MixWKWebView;
 import com.pipedog.mixkit.websdk.constants.NotificationConstants;
 
 import java.util.ArrayList;

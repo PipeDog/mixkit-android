@@ -10,6 +10,7 @@
 class MixMetaClass {
 
     constructor() {
+        this._systemType = this._getSystemType();
         this._callbacksMap = {};
         this._registerModules(this._getNativeConfig());
     }
@@ -83,7 +84,7 @@ class MixMetaClass {
             arguments: nativeArguments
         };
 
-        switch (this._getSystemType()) {
+        switch (this._systemType) {
             case '1': { // iOS
                 window.webkit.messageHandlers.MixKit.postMessage(message);
             } break;

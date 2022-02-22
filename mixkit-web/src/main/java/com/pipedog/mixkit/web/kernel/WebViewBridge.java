@@ -1,9 +1,10 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.kernel;
 
 import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.kernel.IExecutor;
 import com.pipedog.mixkit.kernel.ModuleCreator;
 import com.pipedog.mixkit.parser.MessageParserManager;
+import com.pipedog.mixkit.web.interfaces.IWebViewBridgeDelegate;
 
 /**
  * native-js 交互 bridge 实现

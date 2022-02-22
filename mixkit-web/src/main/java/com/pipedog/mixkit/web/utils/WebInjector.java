@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.web;
+package com.pipedog.mixkit.web.utils;
 
 import com.google.gson.Gson;
 import com.pipedog.mixkit.module.ModuleData;
