@@ -3,6 +3,7 @@ package com.pipedog.mixkit.websdk.utils;
 import android.webkit.CookieManager;
 
 import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
+import com.pipedog.mixkit.websdk.config.WebSDKConfiguration;
 
 import java.net.HttpCookie;
 import java.util.List;
@@ -28,7 +29,7 @@ public class WebCookieManager {
      * 注册 cookie
      */
     public static void registerCookies() {
-        IWebSDKConfiguration.IFetcher fetcher = Configuration.getInstance().getFetcher();
+        IWebSDKConfiguration.IFetcher fetcher = WebSDKConfiguration.getInstance().getFetcher();
         if (fetcher == null) {
             return;
         }

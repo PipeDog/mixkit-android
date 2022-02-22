@@ -9,6 +9,7 @@ import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.websdk.interfaces.IOpenWebView;
 import com.pipedog.mixkit.web.kernel.WebViewBridge;
+import com.pipedog.mixkit.websdk.view.WebViewActivity;
 
 /**
  * webViewBridge 辅助工具
@@ -76,21 +77,16 @@ public class WebViewBridgeUtils {
     /**
      * 获取 bridge 对象绑定的 WebViewActivity
      */
-//    public static WebViewActivity getWebViewActivity(IBridge bridge) {
-//        Context context = getContext(bridge);
-//        if (context == null) {
-//            return null;
-//        }
-//
-//        while (context instanceof ContextWrapper) {
-//            if (context instanceof WebViewActivity) {
-//                return (WebViewActivity) context;
-//            }
-//            context = ((ContextWrapper) context).getBaseContext();
-//        }
-//
-//        return null;
-//    }
+    public static WebViewActivity getWebViewActivity(IBridge bridge) {
+        Activity activity = getActivity(bridge);
+        if (activity == null) {
+            return null;
+        }
+        if (!(activity instanceof WebViewActivity)) {
+            return null;
+        }
+        return (WebViewActivity) activity;
+    }
 
     /**
      * 获取 bridge 对象绑定的 Activity

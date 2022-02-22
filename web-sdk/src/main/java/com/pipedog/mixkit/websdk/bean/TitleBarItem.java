@@ -3,7 +3,7 @@ package com.pipedog.mixkit.websdk.bean;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.pipedog.mixkit.websdk.interfaces.ITitleBarItem;
+import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
 
 /**
  * 导航栏按钮实现

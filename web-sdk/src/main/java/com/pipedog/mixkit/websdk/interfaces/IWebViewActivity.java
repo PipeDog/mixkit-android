@@ -1,5 +1,7 @@
 package com.pipedog.mixkit.websdk.interfaces;
 
+import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
+
 /**
  * web 控制器接口
  */
