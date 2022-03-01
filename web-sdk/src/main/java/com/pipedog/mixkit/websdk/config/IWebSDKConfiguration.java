@@ -4,6 +4,10 @@ import android.webkit.WebSettings;
 
 import androidx.annotation.IntDef;
 
+import com.pipedog.mixkit.websdk.interfaces.widget.IErrorView;
+import com.pipedog.mixkit.websdk.interfaces.widget.ILoadingView;
+import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.HttpCookie;
@@ -140,5 +144,27 @@ public interface IWebSDKConfiguration {
      * 获取 WebSettings 配置
      */
     IWebSettingsConfiguration getWebSettingsConfiguration();
+
+
+    // 自定义 UI 组件
+
+    /**
+     * UI 组件构造器（返回组件实例必须继承自 View 或 ViewGroup）
+     */
+    interface IWidgetCreator {
+        IErrorView getErrorView();
+        ILoadingView getLoadingView();
+        ITitleBar getTitleBar();
+    }
+
+    /**
+     * 设置 UI 组件构造方式（在这里返回自定义的 UI 组件）
+     */
+    void setWidgetCreator(IWidgetCreator creator);
+
+    /**
+     * 获取 UI 组件构造器
+     */
+    IWidgetCreator getWidgetCreator();
 
 }

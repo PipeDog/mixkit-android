@@ -16,4 +16,5 @@ public class TitleBar extends FrameLayout {
     public TitleBar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
+
 }

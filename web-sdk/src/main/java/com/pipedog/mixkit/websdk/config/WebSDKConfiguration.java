@@ -7,11 +7,16 @@ package com.pipedog.mixkit.websdk.config;
  */
 public class WebSDKConfiguration implements IWebSDKConfiguration {
 
-    private IWebSDKConfiguration.IFetcher mFetcher;
-    private IWebSDKConfiguration.ILoadURLAction mLoadURLAction;
-    private IWebSDKConfiguration.IBridgeValidation mBridgeValidation;
+    private IFetcher mFetcher;
+    private ILoadURLAction mLoadURLAction;
+    private IBridgeValidation mBridgeValidation;
     private int mBrowserKernelType;
-    private IWebSDKConfiguration.IWebSettingsConfiguration mWebSettingsConfiguration;
+    private IWebSettingsConfiguration mWebSettingsConfiguration;
+    private IWidgetCreator mWidgetCreator;
+
+
+    // CONSTRUCTORS
+
     private static volatile WebSDKConfiguration sGlobalConfiguration;
 
     public static IWebSDKConfiguration getInstance() {
@@ -83,6 +88,16 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     @Override
     public IWebSettingsConfiguration getWebSettingsConfiguration() {
         return mWebSettingsConfiguration;
+    }
+
+    @Override
+    public void setWidgetCreator(IWidgetCreator creator) {
+        mWidgetCreator = creator;
+    }
+
+    @Override
+    public IWidgetCreator getWidgetCreator() {
+        return mWidgetCreator;
     }
 
 }
