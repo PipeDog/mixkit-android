@@ -1,6 +1,5 @@
 package com.pipedog.mixkit.websdk.view;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -62,9 +61,10 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         }
 
         mUrl = bundle.getString(RouteDef.KEY_URL);
-        mTheme = bundle.getInt(RouteDef.KEY_THEME);
-        mShowProgress = bundle.getInt(RouteDef.KEY_SHOW_PROGRESS);
-        mObserveLifecycle = bundle.getInt(RouteDef.KEY_OBSERVE_LIFECYCLE);
+        mTheme = bundle.containsKey(RouteDef.KEY_THEME) ?
+                bundle.getInt(RouteDef.KEY_THEME) : WebStyle.WEB_THEME_LIGHT;
+        mShowProgress = bundle.getInt(RouteDef.KEY_SHOW_PROGRESS) == 0 ? true : false;
+        mObserveLifecycle = bundle.getInt(RouteDef.KEY_OBSERVE_LIFECYCLE) == 0 ? true : false;
     }
 
     private void setupViews() {
@@ -87,30 +87,30 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
             throw new RuntimeException("titleBar must inherit from 'View'!");
         }
 
+        titleBar.setGoBackButtonListener(new GoBackListener());
+        titleBar.setCloseButtonListener(new CloseListener());
+
         mTitleBar = (View) titleBar;
+        mRootView.addView(mTitleBar);
+
         mTitleBar.setLayoutParams(new FrameLayout.LayoutParams(
                 mTitleBar.getWidth(), mTitleBar.getHeight()
         ));
-
-        titleBar.setGoBackButtonListener(new GoBackListener());
-        titleBar.setCloseButtonListener(new CloseListener());
-        mRootView.addView(mTitleBar);
     }
 
     private void createOpenWebView() {
         OpenWebView webView = new OpenWebView(this);
         webView.setListener(new PageLoadListener());
-        webView.setThemeStyle(mTheme);
+        webView.setTheme(mTheme);
         webView.setShowProgress(mShowProgress);
         webView.setObserveLifecycle(mObserveLifecycle);
+        mRootView.addView(webView);
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         );
-
         lp.setMargins(0, ((ITitleBar) mTitleBar).getHeight(), 0, 0);
         webView.setLayoutParams(lp);
-        mRootView.addView(webView);
     }
 
 
@@ -202,8 +202,8 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
     }
 
     @Override
-    public void setThemeStyle(int theme) {
-        mWebView.setThemeStyle(theme);
+    public void setTheme(int theme) {
+        mWebView.setTheme(theme);
     }
 
     @Override

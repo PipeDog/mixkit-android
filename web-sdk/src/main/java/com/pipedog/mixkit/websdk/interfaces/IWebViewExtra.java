@@ -12,7 +12,7 @@ public interface IWebViewExtra {
     /**
      * 设置 UI 主题
      */
-    void setThemeStyle(@WebStyle.WebTheme int theme);
+    void setTheme(@WebStyle.WebTheme int theme);
 
     /**
      * 设置是否需要进度条
