@@ -1,9 +1,11 @@
 package com.pipedog.mixkit.websdk.config;
 
+import android.content.Context;
 import android.webkit.WebSettings;
 
 import androidx.annotation.IntDef;
 
+import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.widget.IErrorView;
 import com.pipedog.mixkit.websdk.interfaces.widget.ILoadingView;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
@@ -152,9 +154,9 @@ public interface IWebSDKConfiguration {
      * UI 组件构造器（返回组件实例必须继承自 View 或 ViewGroup）
      */
     interface IWidgetCreator {
-        IErrorView getErrorView();
-        ILoadingView getLoadingView();
-        ITitleBar getTitleBar();
+        IErrorView getErrorView(Context context, @WebStyle.WebTheme int theme);
+        ILoadingView getLoadingView(Context context, @WebStyle.WebTheme int theme);
+        ITitleBar getTitleBar(Context context, @WebStyle.WebTheme int theme);
     }
 
     /**

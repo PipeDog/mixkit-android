@@ -11,14 +11,11 @@ public interface RouteDef {
 
     /** Web 加载的 URL 地址 */
     public static final String KEY_URL = "url";
-    /** Web 主题风格（可选值为 "light|dark"，默认值为 "light"） */
+    /** Web 主题风格（可选值参考 WebStyle 中常量定义） */
     public static final String KEY_THEME = "theme";
-
-
-    // VALUE CONSTANTS
-    // VALUES FOR KEY `KEY_THEME`
-
-    public static final String VALUE_THEME_LIGHT = "light";
-    public static final String VALUE_THEME_DARK = "dark";
+    /** 是否展示进度条（loading 页）（0 展示，1 隐藏） */
+    public static final String KEY_SHOW_PROGRESS = "show_progress";
+    /** 是否监听页面声明周期并通知 web 侧（0 监听，1 不监听） */
+    public static final String KEY_OBSERVE_LIFECYCLE = "observe_lifecycle";
 
 }
