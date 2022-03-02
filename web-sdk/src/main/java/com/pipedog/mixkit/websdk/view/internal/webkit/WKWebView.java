@@ -378,77 +378,105 @@ public class WKWebView extends FrameLayout implements IWebView {
 
     @Override
     public void loadUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            if (mListeners != null) {
+                mListener.onReceivedError(this, WebViewClient.ERROR_BAD_URL, "Invalid argument `url`!");
+            }
+            showErrorView();
+            return;
+        }
 
+        if (!url.startsWith("http") && !url.startsWith("file")) {
+            showErrorView();
+            return;
+        }
+
+        showLoadingView();
+        mWebView.loadUrl(url);
     }
 
     @Override
     public void loadData(String data, String mimeType, String encoding) {
-
+        showLoadingView();
+        mWebView.loadData(data, mimeType, encoding);
     }
 
     @Override
     public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding, String failUrl) {
-
+        showLoadingView();
+        mWebView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, failUrl);
     }
 
     @Override
     public void stopLoading() {
-
+        mWebView.stopLoading();
     }
 
     @Override
     public void reload() {
+        if (mWebView.getUrl() == null || mWebView.getUrl().isEmpty()) {
+            showErrorView();
+            return;
+        }
 
+        // about:blank 的 case，暂时使用 goback 的方式处理，如果有问题，这里统一改为走 loadUrl 处理
+        if (mWebView.getUrl().equals(ERR_ABOUT_BLANK)) {
+            mWebView.goBack();
+            return;
+        }
+
+        mWebView.reload();
     }
 
     @Override
     public boolean canGoBack() {
-        return false;
+        return mWebView.canGoBack();
     }
 
     @Override
     public void goBack() {
-
+        mWebView.goBack();
     }
 
     @Override
     public boolean canGoForward() {
-        return false;
+        return mWebView.canGoForward();
     }
 
     @Override
     public void goForward() {
-
+        mWebView.goForward();
     }
 
     @Override
     public void invokeMethod(String method, Object[] arguments, ScriptCallback resultCallback) {
-
+        mWebView.invokeMethod(method, arguments, resultCallback);
     }
 
     @Override
     public void invokeMethod(String module, String method, Object[] arguments, ScriptCallback resultCallback) {
-
+        mWebView.invokeMethod(module, method, arguments, resultCallback);
     }
 
     @Override
     public void evaluate(String script, ScriptCallback resultCallback) {
-
+        mWebView.evaluate(script, resultCallback);
     }
 
     @Override
     public void setTheme(int theme) {
-
+        mLoadingView.setTheme(theme);
+        mErrorView.setTheme(theme);
     }
 
     @Override
     public void setShowLoading(boolean show) {
-
+        mShowLoading = show;
     }
 
     @Override
     public void setObserveLifecycle(boolean observe) {
-
+        mObserveLifecycle = observe;
     }
 
 
