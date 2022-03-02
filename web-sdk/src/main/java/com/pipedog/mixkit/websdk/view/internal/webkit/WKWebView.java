@@ -325,7 +325,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
             MixLogger.error("[new] onReceivedError, url : %s, code : %d, message : %s",
-                    failingUrl, ErrorCode, description);
+                    failingUrl, errorCode, description);
             super.onReceivedError(view, errorCode, description, failingUrl);
             handleWebError(failingUrl, errorCode, description);
         }
@@ -379,7 +379,7 @@ public class WKWebView extends FrameLayout implements IWebView {
     @Override
     public void loadUrl(String url) {
         if (url == null || url.isEmpty()) {
-            if (mListeners != null) {
+            if (mListener != null) {
                 mListener.onReceivedError(this, WebViewClient.ERROR_BAD_URL, "Invalid argument `url`!");
             }
             showErrorView();
