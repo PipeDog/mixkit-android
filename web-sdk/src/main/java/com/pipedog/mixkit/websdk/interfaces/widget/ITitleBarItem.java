@@ -3,8 +3,6 @@ package com.pipedog.mixkit.websdk.interfaces.widget;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.pipedog.mixkit.websdk.interfaces.layout.ILayoutParams;
-
 /**
  * 导航栏按钮配置定义
  */

@@ -1,31 +1,13 @@
 package com.pipedog.mixkit.web.view;
 
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.content.Context;
-import android.net.http.SslError;
-import android.os.Message;
-import android.view.KeyEvent;
 
 import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.webkit.ClientCertRequest;
-import android.webkit.HttpAuthHandler;
-import android.webkit.RenderProcessGoneDetail;
-import android.webkit.SafeBrowsingResponse;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
@@ -35,7 +17,6 @@ import com.pipedog.mixkit.tool.MixLogger;
 import com.google.gson.Gson;
 import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.IScriptEngine;
-import com.pipedog.mixkit.web.interfaces.IWebViewBridgeDelegate;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.web.kernel.WebViewBridge;
@@ -63,7 +44,7 @@ public class MixWKWebView extends WebView implements IMixWebView {
 
     private Gson mGson;
     private WebViewBridge mWebViewBridge;
-    private IWebViewBridgeListener mWebViewBridgeListener;
+    private IWebViewBridgeListener mBridgeListener;
 
 
     // CONSTRUCTORS
@@ -111,10 +92,6 @@ public class MixWKWebView extends WebView implements IMixWebView {
 
     // PUBLIC METHODS
 
-    public void setWebViewBridgeListener(IWebViewBridgeListener listener) {
-        mWebViewBridgeListener = listener;
-    }
-
     @JavascriptInterface
     public void postMessage(String message) {
         try {
@@ -124,7 +101,8 @@ public class MixWKWebView extends WebView implements IMixWebView {
             ThreadUtils.runInMainThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mWebViewBridgeListener == null) {
+                    IWebViewBridgeListener bridgeListener = getBridgeListener();
+                    if (bridgeListener == null) {
                         mWebViewBridge.getExecutor().invokeMethod(map);
                         return;
                     }
@@ -132,7 +110,7 @@ public class MixWKWebView extends WebView implements IMixWebView {
                     MixWKWebView webViewThis = MixWKWebView.this;
                     String fromUrl = webViewThis.getUrl();
 
-                    boolean shouldNotContinue = mWebViewBridgeListener.
+                    boolean shouldNotContinue = bridgeListener.
                             onReceiveScriptMessage(webViewThis, fromUrl, message);
                     if (shouldNotContinue) {
                         return;
@@ -140,7 +118,7 @@ public class MixWKWebView extends WebView implements IMixWebView {
 
                     boolean invokeResult = mWebViewBridge.getExecutor().invokeMethod(map);
                     if (!invokeResult) {
-                        mWebViewBridgeListener.onParseMessageFailed(webViewThis, fromUrl, message);
+                        bridgeListener.onParseMessageFailed(webViewThis, fromUrl, message);
                     }
                 }
             });
@@ -203,6 +181,16 @@ public class MixWKWebView extends WebView implements IMixWebView {
     @Override
     public IScriptEngine getScriptEngine() {
         return (IScriptEngine)this;
+    }
+
+    @Override
+    public void setBridgeListener(IWebViewBridgeListener listener) {
+        mBridgeListener = listener;
+    }
+
+    @Override
+    public IWebViewBridgeListener getBridgeListener() {
+        return mBridgeListener;
     }
 
 }

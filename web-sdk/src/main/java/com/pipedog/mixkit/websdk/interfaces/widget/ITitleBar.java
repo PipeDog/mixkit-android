@@ -3,14 +3,12 @@ package com.pipedog.mixkit.websdk.interfaces.widget;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.pipedog.mixkit.websdk.interfaces.layout.ILayoutParams;
-
 import java.util.List;
 
 /**
  * 导航栏接口定义
  */
-public interface ITitleBar extends ILayoutParams {
+public interface ITitleBar extends IWidget {
 
     /**
      * 设置标题

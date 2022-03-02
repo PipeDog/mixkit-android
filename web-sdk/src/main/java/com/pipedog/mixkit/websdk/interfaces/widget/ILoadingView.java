@@ -1,11 +1,9 @@
 package com.pipedog.mixkit.websdk.interfaces.widget;
 
-import com.pipedog.mixkit.websdk.interfaces.layout.ILayoutParams;
-
 /**
  * web 加载状态视图接口定义
  */
-public interface ILoadingView extends ILayoutParams {
+public interface ILoadingView extends IWidget {
 
     /**
      * 开始加载
@@ -18,7 +16,7 @@ public interface ILoadingView extends ILayoutParams {
     void stopLoading();
 
     /**
-     * 设置当前进度
+     * 设置当前进度（取值范围：0~100）
      */
     default void setProgress(int progress) {
 

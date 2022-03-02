@@ -154,9 +154,9 @@ public interface IWebSDKConfiguration {
      * UI 组件构造器（返回组件实例必须继承自 View 或 ViewGroup）
      */
     interface IWidgetCreator {
-        IErrorView getErrorView(Context context, @WebStyle.WebTheme int theme);
-        ILoadingView getLoadingView(Context context, @WebStyle.WebTheme int theme);
-        ITitleBar getTitleBar(Context context, @WebStyle.WebTheme int theme);
+        IErrorView getErrorView(Context context);
+        ILoadingView getLoadingView(Context context);
+        ITitleBar getTitleBar(Context context);
     }
 
     /**

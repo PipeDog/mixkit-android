@@ -53,7 +53,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
         int browserKernelType = WebSDKConfiguration.getInstance().getBrowserKernelType();
 
         // If you need to take control of the browser kernel, do the logic here.
-        if (browserKernelType & KERNEL_TYPE_WEBKIT == KERNEL_TYPE_WEBKIT) {
+        if ((browserKernelType & WebSDKConfiguration.KERNEL_TYPE_WEBKIT) != 0) {
             setupWKWebView();
             return;
         }

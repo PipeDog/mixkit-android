@@ -24,7 +24,7 @@ import java.util.Map;
 public class WebViewActivity extends AppCompatActivity implements IWebViewActivity {
 
     private FrameLayout mRootView;
-    private View mTitleBar;
+    private ITitleBar mTitleBar;
     private OpenWebView mWebView;
     private IWebViewListener mListener;
     private int mTheme = WebStyle.WEB_THEME_LIGHT;
@@ -82,39 +82,43 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
             throw new RuntimeException("Call method `void setWidgetCreator(IWidgetCreator);` first!");
         }
 
-        ITitleBar titleBar = creator.getTitleBar(this, mTheme);
-        if (titleBar != null && !(titleBar instanceof View)) {
+        mTitleBar = creator.getTitleBar(this);
+        if (mTitleBar != null && !(mTitleBar instanceof View)) {
             throw new RuntimeException("titleBar must inherit from 'View'!");
         }
 
-        titleBar.setGoBackButtonListener(new GoBackListener());
-        titleBar.setCloseButtonListener(new CloseListener());
+        mTitleBar.setTheme(mTheme);
+        mTitleBar.setGoBackButtonListener(new GoBackListener());
+        mTitleBar.setCloseButtonListener(new CloseListener());
+        mRootView.addView((View) mTitleBar);
 
-        mTitleBar = (View) titleBar;
-        mRootView.addView(mTitleBar);
-
-        mTitleBar.setLayoutParams(new FrameLayout.LayoutParams(
+        ((View) mTitleBar).setLayoutParams(new FrameLayout.LayoutParams(
                 mTitleBar.getWidth(), mTitleBar.getHeight()
         ));
     }
 
     private void createOpenWebView() {
-        OpenWebView webView = new OpenWebView(this);
-        webView.setListener(new PageLoadListener());
-        webView.setTheme(mTheme);
-        webView.setShowLoading(mShowLoading);
-        webView.setObserveLifecycle(mObserveLifecycle);
-        mRootView.addView(webView);
+        mWebView = new OpenWebView(this);
+        mWebView.setListener(new PageLoadListener());
+        mWebView.setTheme(mTheme);
+        mWebView.setShowLoading(mShowLoading);
+        mWebView.setObserveLifecycle(mObserveLifecycle);
+        mRootView.addView(mWebView);
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         );
-        lp.setMargins(0, ((ITitleBar) mTitleBar).getHeight(), 0, 0);
-        webView.setLayoutParams(lp);
+        lp.setMargins(0, mTitleBar.getHeight(), 0, 0);
+        mWebView.setLayoutParams(lp);
     }
 
 
     // OVERRIDE METHODS
+
+    @Override
+    public ITitleBar getTitleBar() {
+        return mTitleBar;
+    }
 
     @Override
     public IOpenWebView getWebView() {
