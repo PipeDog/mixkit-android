@@ -14,7 +14,7 @@ public interface RouteDef {
     /** Web 主题风格（可选值参考 WebStyle 中常量定义） */
     public static final String KEY_THEME = "theme";
     /** 是否展示进度条（loading 页）（0 展示，1 隐藏） */
-    public static final String KEY_SHOW_PROGRESS = "show_progress";
+    public static final String KEY_SHOW_LOADING = "show_loading";
     /** 是否监听页面声明周期并通知 web 侧（0 监听，1 不监听） */
     public static final String KEY_OBSERVE_LIFECYCLE = "observe_lifecycle";
 

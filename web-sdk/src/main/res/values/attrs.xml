@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="MixWebView">
         <attr name="mix_observe_lifecycle" format="boolean" />
-        <attr name="mix_show_progress" format="boolean" />
+        <attr name="mix_show_loading" format="boolean" />
         <attr name="mix_theme" format="enum">
             <enum name="light" value="0" />
             <enum name="dark" value="1" />

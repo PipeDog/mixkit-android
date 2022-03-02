@@ -15,9 +15,9 @@ public interface IWebViewExtra {
     void setTheme(@WebStyle.WebTheme int theme);
 
     /**
-     * 设置是否需要进度条
+     * 设置是否需要 loading 视图
      */
-    void setShowProgress(boolean show);
+    void setShowLoading(boolean show);
 
     /**
      * 设置是否监听生命周期（如果监听，则 js 侧会收到相应生命周期的通知）

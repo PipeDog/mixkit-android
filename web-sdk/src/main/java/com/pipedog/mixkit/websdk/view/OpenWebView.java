@@ -24,7 +24,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
     private Map<String, Object> mExtraData;
     private int mTheme = WebStyle.WEB_THEME_LIGHT;
-    private boolean mShowProgress = true;
+    private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private WKWebView mWKWebView;
 
@@ -32,7 +32,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     // CONSTRUCTORS
 
     public OpenWebView(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public OpenWebView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -40,7 +40,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MixWebView);
         mTheme = typedArray.getInt(R.styleable.MixWebView_mix_theme, WebStyle.WEB_THEME_LIGHT);
-        mShowProgress = typedArray.getBoolean(R.styleable.MixWebView_mix_show_progress, true);
+        mShowLoading = typedArray.getBoolean(R.styleable.MixWebView_mix_show_loading, true);
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
         setupViews();
@@ -64,7 +64,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     private void setupWKWebView() {
         mWKWebView = new WKWebView(getContext());
         mWKWebView.setTheme(mTheme);
-        mWKWebView.setShowProgress(mShowProgress);
+        mWKWebView.setShowLoading(mShowLoading);
         mWKWebView.setObserveLifecycle(mObserveLifecycle);
         addView(mWKWebView);
 
@@ -184,9 +184,9 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     @Override
-    public void setShowProgress(boolean show) {
+    public void setShowLoading(boolean show) {
         if (getWebView() == null) { return; }
-        getWebView().setShowProgress(show);
+        getWebView().setShowLoading(show);
     }
 
     @Override

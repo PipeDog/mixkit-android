@@ -28,7 +28,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
     private OpenWebView mWebView;
     private IWebViewListener mListener;
     private int mTheme = WebStyle.WEB_THEME_LIGHT;
-    private boolean mShowProgress = true;
+    private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private String mUrl;
 
@@ -63,7 +63,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         mUrl = bundle.getString(RouteDef.KEY_URL);
         mTheme = bundle.containsKey(RouteDef.KEY_THEME) ?
                 bundle.getInt(RouteDef.KEY_THEME) : WebStyle.WEB_THEME_LIGHT;
-        mShowProgress = bundle.getInt(RouteDef.KEY_SHOW_PROGRESS) == 0 ? true : false;
+        mShowLoading = bundle.getInt(RouteDef.KEY_SHOW_LOADING) == 0 ? true : false;
         mObserveLifecycle = bundle.getInt(RouteDef.KEY_OBSERVE_LIFECYCLE) == 0 ? true : false;
     }
 
@@ -102,7 +102,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         OpenWebView webView = new OpenWebView(this);
         webView.setListener(new PageLoadListener());
         webView.setTheme(mTheme);
-        webView.setShowProgress(mShowProgress);
+        webView.setShowLoading(mShowLoading);
         webView.setObserveLifecycle(mObserveLifecycle);
         mRootView.addView(webView);
 
@@ -207,8 +207,8 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
     }
 
     @Override
-    public void setShowProgress(boolean show) {
-        mWebView.setShowProgress(show);
+    public void setShowLoading(boolean show) {
+        mWebView.setShowLoading(show);
     }
 
     @Override
