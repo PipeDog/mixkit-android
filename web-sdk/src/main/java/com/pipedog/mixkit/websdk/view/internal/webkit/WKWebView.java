@@ -214,6 +214,8 @@ public class WKWebView extends FrameLayout implements IWebView {
         ((View) loadingView).setLayoutParams(new FrameLayout.LayoutParams(
                 loadingView.getWidgetWidth(), loadingView.getWidgetHeight()
         ));
+
+        loadingView.setVisibility(false);
         return loadingView;
     }
 

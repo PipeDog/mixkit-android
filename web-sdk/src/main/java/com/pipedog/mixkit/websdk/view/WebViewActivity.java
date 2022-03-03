@@ -88,6 +88,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         }
 
         mTitleBar.setTheme(mTheme);
+        mTitleBar.setCloseButtonVisibility(false);
         mTitleBar.setGoBackButtonListener(new GoBackListener());
         mTitleBar.setCloseButtonListener(new CloseListener());
         mRootView.addView((View) mTitleBar);
@@ -266,6 +267,8 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
 
         @Override
         public void onPageFinished(IWebView view, String url) {
+            mTitleBar.setCloseButtonVisibility(canGoBack() ? true : false);
+
             if (mListener == null) { return; }
             mListener.onPageFinished(view, url);
         }
