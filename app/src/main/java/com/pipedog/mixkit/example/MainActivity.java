@@ -12,6 +12,7 @@ import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.view.MixWKWebView;
+import com.pipedog.mixkit.websdk.view.OpenWebView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,31 +21,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MixWKWebView webView = findViewById(R.id.testWebView);
-        webView.setWebContentsDebuggingEnabled(true);
-
-        WebSettings settings = webView.getSettings();
-        settings.setUseWideViewPort(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        OpenWebView webView = findViewById(R.id.testWebView);
 
         webView.loadUrl("file:///android_asset/demo.html");
 
         Log.e("Mix-app", ">>>>> application launch finished!!!");
         MixLogger.info(">>>>> application launch finished!!!");
 
-        webView.setWebViewBridgeListener(new IWebViewBridgeListener() {
-            @Override
-            public boolean onReceiveScriptMessage(IMixWebView webView, String fromUrl, String message) {
-                MixLogger.error("fromUrl = %s", fromUrl);
-                return false;
-            }
-
-            @Override
-            public void onParseMessageFailed(IMixWebView webView, String fromUrl, String message) {
-
-            }
-        });
+//
+//        webView.setBridgeListener(new IWebViewBridgeListener() {
+//            @Override
+//            public boolean onReceiveScriptMessage(IMixWebView webView, String fromUrl, String message) {
+//                MixLogger.error("fromUrl = %s", fromUrl);
+//                return false;
+//            }
+//
+//            @Override
+//            public void onParseMessageFailed(IMixWebView webView, String fromUrl, String message) {
+//
+//            }
+//        });
 
 //        webView.postDelayed(new Runnable() {
 //            @Override
@@ -64,6 +60,6 @@ public class MainActivity extends AppCompatActivity {
 //        }, 3000);
 
 //        ServiceManager.getInstance().printAllServices();
-        ServiceManager.printAllStaticServices();
+//        ServiceManager.printAllStaticServices();
     }
 }

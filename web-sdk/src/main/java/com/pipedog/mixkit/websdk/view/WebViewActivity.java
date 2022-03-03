@@ -37,7 +37,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        onDestroy();
+        onDestruct();
     }
 
     @Override
@@ -93,14 +93,14 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         mRootView.addView((View) mTitleBar);
 
         ((View) mTitleBar).setLayoutParams(new FrameLayout.LayoutParams(
-                mTitleBar.getWidth(), mTitleBar.getHeight()
+                mTitleBar.getWidgetWidth(), mTitleBar.getWidgetHeight()
         ));
     }
 
     private void createOpenWebView() {
         mWebView = new OpenWebView(this);
         mWebView.setListener(new PageLoadListener());
-        mWebView.setTheme(mTheme);
+        mWebView.setWebTheme(mTheme);
         mWebView.setShowLoading(mShowLoading);
         mWebView.setObserveLifecycle(mObserveLifecycle);
         mRootView.addView(mWebView);
@@ -108,7 +108,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         );
-        lp.setMargins(0, mTitleBar.getHeight(), 0, 0);
+        lp.setMargins(0, mTitleBar.getWidgetHeight(), 0, 0);
         mWebView.setLayoutParams(lp);
     }
 
@@ -206,8 +206,8 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
     }
 
     @Override
-    public void setTheme(int theme) {
-        mWebView.setTheme(theme);
+    public void setWebTheme(int theme) {
+        mWebView.setWebTheme(theme);
     }
 
     @Override

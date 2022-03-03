@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.example;
+package com.pipedog.mixkit.example.module;
 
 import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.kernel.IBridgeModule;

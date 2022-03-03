@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import com.pipedog.mixkit.messenger.constants.ErrorCode;
 import com.pipedog.mixkit.tool.MixLogger;
 import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
@@ -202,7 +200,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         }
 
         ((View) errorView).setLayoutParams(new FrameLayout.LayoutParams(
-                errorView.getWidth(), errorView.getHeight()
+                errorView.getWidgetWidth(), errorView.getWidgetHeight()
         ));
         return errorView;
     }
@@ -214,7 +212,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         }
 
         ((View) loadingView).setLayoutParams(new FrameLayout.LayoutParams(
-                loadingView.getWidth(), loadingView.getHeight()
+                loadingView.getWidgetWidth(), loadingView.getWidgetHeight()
         ));
         return loadingView;
     }
@@ -464,7 +462,7 @@ public class WKWebView extends FrameLayout implements IWebView {
     }
 
     @Override
-    public void setTheme(int theme) {
+    public void setWebTheme(int theme) {
         mLoadingView.setTheme(theme);
         mErrorView.setTheme(theme);
     }
@@ -488,7 +486,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         setupUserAgent();
         setupCookies();
         observeLifecycle();
-        setTheme(mTheme);
+        setWebTheme(mTheme);
     }
 
 }

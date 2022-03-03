@@ -62,6 +62,14 @@
             NativeModules.TestMergeModule.print();
         }
 
+        function toRemoteUrl() {
+            NativeModules.RouterModule.loadUrl("https://www.baidu.com");
+        }
+
+        function toLocalUrl() {
+            NativeModules.RouterModule.loadUrl("");
+        }
+
     </script>
 
 </head>
@@ -74,6 +82,10 @@
 <button class="button" type="button" onclick="log()">log</button>
 </br>
 <button class="button" type="button" onclick="print()">print</button>
+</br>
+<button class="button" type="button" onclick="toRemoteUrl()">访问远程 url</button>
+</br>
+<button class="button" type="button" onclick="toLocalUrl()">访问本地 url</button>
 </br>
 
 </body>

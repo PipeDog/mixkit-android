@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="64dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="88dp"
+        >
+        <ImageView
+            android:id="@+id/mix_tb_goback"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/mix_web_tb_back"
+            />
+
+        <ImageView
+            android:id="@+id/mix_tb_close"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/mix_web_tb_close"
+            android:scaleType="center"
+            />
+
+        <TextView
+            android:id="@+id/mix_tb_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="22sp"
+            android:text="test"
+            android:gravity="center"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="63.5dp"
+        android:background="#666666"
+        />
+
+</FrameLayout>

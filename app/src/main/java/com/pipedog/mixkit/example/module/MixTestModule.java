@@ -1,4 +1,4 @@
-package com.pipedog.mixkit.example;
+package com.pipedog.mixkit.example.module;
 
 import android.util.Log;
 

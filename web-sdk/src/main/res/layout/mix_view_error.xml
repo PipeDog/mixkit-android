@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/mix_err_container"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/mix_err_img"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:src="@drawable/mix_web_err_retry"
+            android:scaleType="center"
+            />
+
+        <TextView
+            android:id="@+id/mix_err_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="加载失败，点击重试"
+            android:textSize="20sp"
+            android:textColor="#333333"
+            />
+    </LinearLayout>
+
+</LinearLayout>

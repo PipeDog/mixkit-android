@@ -15,7 +15,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.pipedog.mixkit.web.view.MixWKWebView
+    <com.pipedog.mixkit.websdk.view.OpenWebView
+        android:layout_marginTop="64dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/testWebView"

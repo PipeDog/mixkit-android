@@ -63,7 +63,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
     private void setupWKWebView() {
         mWKWebView = new WKWebView(getContext());
-        mWKWebView.setTheme(mTheme);
+        mWKWebView.setWebTheme(mTheme);
         mWKWebView.setShowLoading(mShowLoading);
         mWKWebView.setObserveLifecycle(mObserveLifecycle);
         addView(mWKWebView);
@@ -178,9 +178,9 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     @Override
-    public void setTheme(int theme) {
+    public void setWebTheme(int theme) {
         if (getWebView() == null) { return; }
-        getWebView().setTheme(theme);
+        getWebView().setWebTheme(theme);
     }
 
     @Override
