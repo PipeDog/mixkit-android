@@ -4,6 +4,9 @@ import android.view.ViewGroup;
 
 import com.pipedog.mixkit.websdk.constants.WebStyle;
 
+/**
+ * UI 组件基础接口定义
+ */
 public interface IWidget {
 
     /**
