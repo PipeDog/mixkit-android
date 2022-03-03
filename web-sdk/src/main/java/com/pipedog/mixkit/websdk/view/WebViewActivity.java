@@ -178,7 +178,11 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
 
     @Override
     public void goBack() {
-        mWebView.goBack();
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+            return;
+        }
+        finish();
     }
 
     @Override
