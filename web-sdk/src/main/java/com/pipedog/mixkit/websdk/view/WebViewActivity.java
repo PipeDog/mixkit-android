@@ -18,6 +18,7 @@ import com.pipedog.mixkit.websdk.interfaces.IWebView;
 import com.pipedog.mixkit.websdk.interfaces.IWebViewActivity;
 import com.pipedog.mixkit.websdk.interfaces.IWebViewListener;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
+import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
 import java.util.Map;
 
@@ -94,7 +95,8 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         mRootView.addView((View) mTitleBar);
 
         ((View) mTitleBar).setLayoutParams(new FrameLayout.LayoutParams(
-                mTitleBar.getWidgetWidth(), mTitleBar.getWidgetHeight()
+                DimensionUtils.dp2px(this, mTitleBar.getWidgetWidth()),
+                DimensionUtils.dp2px(this, mTitleBar.getWidgetHeight())
         ));
     }
 
@@ -109,7 +111,7 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         );
-        lp.setMargins(0, mTitleBar.getWidgetHeight(), 0, 0);
+        lp.setMargins(0, DimensionUtils.dp2px(this, mTitleBar.getWidgetHeight()), 0, 0);
         mWebView.setLayoutParams(lp);
     }
 

@@ -33,6 +33,7 @@ import com.pipedog.mixkit.websdk.interfaces.IWebViewListener;
 import com.pipedog.mixkit.websdk.interfaces.widget.IErrorView;
 import com.pipedog.mixkit.websdk.interfaces.widget.ILoadingView;
 import com.pipedog.mixkit.websdk.notification.NotificationCenter;
+import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 import com.pipedog.mixkit.websdk.utils.UserAgentFormat;
 import com.pipedog.mixkit.websdk.utils.WebCookieManager;
 import com.pipedog.mixkit.websdk.utils.WebLifecycleObserver;
@@ -200,8 +201,10 @@ public class WKWebView extends FrameLayout implements IWebView {
         }
 
         ((View) errorView).setLayoutParams(new FrameLayout.LayoutParams(
-                errorView.getWidgetWidth(), errorView.getWidgetHeight()
+                DimensionUtils.dp2px(getContext(), errorView.getWidgetWidth()),
+                DimensionUtils.dp2px(getContext(), errorView.getWidgetHeight())
         ));
+        errorView.setVisibility(false);
         return errorView;
     }
 
@@ -212,7 +215,8 @@ public class WKWebView extends FrameLayout implements IWebView {
         }
 
         ((View) loadingView).setLayoutParams(new FrameLayout.LayoutParams(
-                loadingView.getWidgetWidth(), loadingView.getWidgetHeight()
+                DimensionUtils.dp2px(getContext(), loadingView.getWidgetWidth()),
+                DimensionUtils.dp2px(getContext(), loadingView.getWidgetHeight())
         ));
 
         loadingView.setVisibility(false);
