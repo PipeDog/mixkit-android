@@ -5,12 +5,12 @@ import com.pipedog.mixkit.kernel.IExecutor;
 import com.pipedog.mixkit.kernel.ResultCallback;
 import com.pipedog.mixkit.messenger.interfaces.IMessage2Server;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
-import com.pipedog.mixkit.messenger.utils.ThreadUtils;
 import com.pipedog.mixkit.module.MethodInvoker;
 import com.pipedog.mixkit.module.ModuleManager;
 import com.pipedog.mixkit.parser.IMessageParser;
 import com.pipedog.mixkit.parser.MessageParserManager;
 import com.pipedog.mixkit.tool.MixLogger;
+import com.pipedog.mixkit.tool.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

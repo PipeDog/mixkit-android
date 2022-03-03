@@ -21,7 +21,7 @@ import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.web.kernel.WebViewBridge;
 import com.pipedog.mixkit.web.utils.JavaScriptFormat;
-import com.pipedog.mixkit.web.utils.ThreadUtils;
+import com.pipedog.mixkit.tool.ThreadUtils;
 import com.pipedog.mixkit.web.utils.WebInjector;
 
 /**

@@ -7,7 +7,7 @@ import com.pipedog.mixkit.annotation.MixMethod;
 import com.pipedog.mixkit.annotation.MixModule;
 import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.kernel.IBridgeModule;
-import com.pipedog.mixkit.web.utils.ThreadUtils;
+import com.pipedog.mixkit.tool.ThreadUtils;
 import com.pipedog.mixkit.websdk.constants.RouteDef;
 import com.pipedog.mixkit.websdk.utils.WebViewBridgeUtils;
 import com.pipedog.mixkit.websdk.view.WebViewActivity;

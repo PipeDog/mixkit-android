@@ -10,8 +10,8 @@ import com.pipedog.mixkit.messenger.model.ErrorMessage;
 import com.pipedog.mixkit.messenger.model.RequestMessage;
 import com.pipedog.mixkit.messenger.model.ResponseMessage;
 import com.pipedog.mixkit.messenger.utils.CallbackIdGenerator;
-import com.pipedog.mixkit.messenger.utils.ThreadUtils;
 import com.pipedog.mixkit.messenger.utils.TraceIdGenerator;
+import com.pipedog.mixkit.tool.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
