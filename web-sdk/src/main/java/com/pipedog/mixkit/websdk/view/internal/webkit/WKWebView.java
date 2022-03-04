@@ -472,6 +472,7 @@ public class WKWebView extends FrameLayout implements IWebView {
 
     @Override
     public void setWebTheme(int theme) {
+        mTheme = theme;
         mLoadingView.setTheme(theme);
         mErrorView.setTheme(theme);
     }

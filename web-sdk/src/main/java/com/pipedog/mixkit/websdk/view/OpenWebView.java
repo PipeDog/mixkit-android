@@ -179,6 +179,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
     @Override
     public void setWebTheme(int theme) {
+        mTheme = theme;
         if (getWebView() == null) { return; }
         getWebView().setWebTheme(theme);
     }
