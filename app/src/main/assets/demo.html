@@ -67,7 +67,11 @@
         }
 
         function toLocalUrl() {
-            NativeModules.RouterModule.loadUrl("");
+            NativeModules.RouterModule.loadUrl("file:///android_asset/demo.html");
+        }
+
+        function setRightItems() {
+            NativeModules.PageModule.testSetRightItems();
         }
 
     </script>
@@ -86,6 +90,8 @@
 <button class="button" type="button" onclick="toRemoteUrl()">访问远程 url</button>
 </br>
 <button class="button" type="button" onclick="toLocalUrl()">访问本地 url</button>
+</br>
+<button class="button" type="button" onclick="setRightItems()">设置导航栏右侧按钮</button>
 </br>
 
 </body>

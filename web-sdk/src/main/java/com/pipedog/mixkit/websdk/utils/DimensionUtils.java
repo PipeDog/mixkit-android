@@ -29,4 +29,20 @@ public class DimensionUtils {
         return (int) (px / scale + 0.5f);
     }
 
+    /**
+     * sp 转换为 px
+     */
+    public static final int sp2px(Context context, float sp) {
+        float scale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (sp * scale + 0.5f);
+    }
+
+    /**
+     * px 转换为 sp
+     */
+    public static final int px2sp(Context context, float px) {
+        float scale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (px / scale + 0.5f);
+    }
+
 }

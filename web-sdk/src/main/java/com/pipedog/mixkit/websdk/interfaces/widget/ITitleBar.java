@@ -31,9 +31,14 @@ public interface ITitleBar extends IWidget {
     void setBackgroundColor(int color);
 
     /**
-     * 设置 titleBar 右侧按钮
+     * 重新设置 titleBar 所有右侧按钮
      */
     void setRightItems(List<ITitleBarItem> items);
+
+    /**
+     * 获取 titleBar 右侧按钮集合
+     */
+    List<ITitleBarItem> getRightItems();
 
     /**
      * 监听返回按钮点击事件

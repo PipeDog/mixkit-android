@@ -9,7 +9,6 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="88dp"
         >
         <ImageView
             android:id="@+id/mix_tb_goback"
@@ -36,7 +35,18 @@
             android:textSize="22sp"
             android:text="test"
             android:gravity="center"
+            android:layout_marginRight="88dp"
             />
+
+        <LinearLayout
+            android:id="@+id/mix_tb_right_container"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            >
+
+        </LinearLayout>
     </FrameLayout>
 
     <View

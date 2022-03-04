@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,9 @@ import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
 import com.pipedog.mixkit.websdk.interfaces.widget.IWidget;
+import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TitleBar extends FrameLayout implements ITitleBar {
@@ -23,6 +27,8 @@ public class TitleBar extends FrameLayout implements ITitleBar {
     private ImageView mGoBackImageView;
     private ImageView mCloseImageView;
     private TextView mTextView;
+    private LinearLayout mRightItemContainer;
+    private List<ITitleBarItem> mRightItems = new ArrayList<>();
 
     public TitleBar(@NonNull Context context) {
         this(context, null);
@@ -41,6 +47,7 @@ public class TitleBar extends FrameLayout implements ITitleBar {
         mGoBackImageView = findViewById(R.id.mix_tb_goback);
         mCloseImageView = findViewById(R.id.mix_tb_close);
         mTextView = findViewById(R.id.mix_tb_title);
+        mRightItemContainer = findViewById(R.id.mix_tb_right_container);
     }
 
 
@@ -58,7 +65,14 @@ public class TitleBar extends FrameLayout implements ITitleBar {
 
     @Override
     public void setRightItems(List<ITitleBarItem> items) {
+        mRightItems = items;
+        removeAllRightButtons();
+        addRightButtons();
+    }
 
+    @Override
+    public List<ITitleBarItem> getRightItems() {
+        return mRightItems;
     }
 
     @Override
@@ -84,6 +98,24 @@ public class TitleBar extends FrameLayout implements ITitleBar {
     @Override
     public int getWidgetHeight() {
         return 64;
+    }
+
+
+    // PRIVATE METHODS
+
+    private void addRightButtons() {
+        List<ITitleBarItem> rightItems = new ArrayList<>(mRightItems);
+        for (ITitleBarItem item : rightItems) {
+            TitleBarItemView itemView = new TitleBarItemView(getContext(), item);
+            itemView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT
+            ));
+            mRightItemContainer.addView(itemView);
+        }
+    }
+
+    private void removeAllRightButtons() {
+        mRightItemContainer.removeAllViews();
     }
 
 }
