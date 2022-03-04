@@ -43,7 +43,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mix_activity_web_view);
+        setContentView(R.layout.mix_layout_activity_web_view);
 
         parseParams();
         setupViews();

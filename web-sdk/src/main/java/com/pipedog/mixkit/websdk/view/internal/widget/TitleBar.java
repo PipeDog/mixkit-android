@@ -2,9 +2,7 @@ package com.pipedog.mixkit.websdk.view.internal.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,8 +14,6 @@ import androidx.annotation.Nullable;
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
-import com.pipedog.mixkit.websdk.interfaces.widget.IWidget;
-import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +39,7 @@ public class TitleBar extends FrameLayout implements ITitleBar {
     // PRIVATE METHODS
 
     private void setupViews() {
-        inflate(getContext(), R.layout.mix_view_title_bar, this);
+        inflate(getContext(), R.layout.mix_layout_view_title_bar, this);
         mGoBackImageView = findViewById(R.id.mix_tb_goback);
         mCloseImageView = findViewById(R.id.mix_tb_close);
         mTextView = findViewById(R.id.mix_tb_title);

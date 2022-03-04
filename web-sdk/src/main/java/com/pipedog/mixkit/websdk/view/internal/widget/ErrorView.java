@@ -3,7 +3,6 @@ package com.pipedog.mixkit.websdk.view.internal.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,8 +14,6 @@ import androidx.annotation.Nullable;
 
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.interfaces.widget.IErrorView;
-
-import org.jetbrains.annotations.NotNull;
 
 public class ErrorView extends FrameLayout implements IErrorView {
 
@@ -37,7 +34,7 @@ public class ErrorView extends FrameLayout implements IErrorView {
     // PRIVATE METHODS
 
     private void setupViews() {
-        inflate(getContext(), R.layout.mix_view_error, this);
+        inflate(getContext(), R.layout.mix_layout_view_error, this);
         mContainerView = findViewById(R.id.mix_err_container);
         mImageView = findViewById(R.id.mix_err_img);
         mTextView = findViewById(R.id.mix_err_tv);

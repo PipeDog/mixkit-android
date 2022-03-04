@@ -2,7 +2,6 @@ package com.pipedog.mixkit.websdk.view.internal.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -12,8 +11,6 @@ import androidx.annotation.Nullable;
 
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.interfaces.widget.ILoadingView;
-
-import org.jetbrains.annotations.NotNull;
 
 public class LoadingView extends FrameLayout implements ILoadingView {
 
@@ -32,7 +29,7 @@ public class LoadingView extends FrameLayout implements ILoadingView {
     // PRIVATE METHODS
 
     private void setupViews() {
-        inflate(getContext(), R.layout.mix_view_loading, this);
+        inflate(getContext(), R.layout.mix_layout_view_loading, this);
         mProgressBar = findViewById(R.id.mix_loading_progress_bar);
     }
 
