@@ -24,8 +24,8 @@ public interface IErrorView extends IWidget {
     void setRetryButtonListener(View.OnClickListener listener);
 
     /**
-     * 设置错误视图隐藏/展示
+     * 设置错误视图隐藏/展示（取值范围为 View.VISIBLE｜View.INVISIBLE｜View.GONE）
      */
-    void setVisibility(boolean visibility);
+    void setVisibility(int visibility);
 
 }

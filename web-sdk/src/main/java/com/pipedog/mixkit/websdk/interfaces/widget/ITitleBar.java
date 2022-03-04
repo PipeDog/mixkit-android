@@ -16,9 +16,9 @@ public interface ITitleBar extends IWidget {
     void setTitle(String title);
 
     /**
-     * 隐藏/展示关闭按钮
+     * 隐藏/展示关闭按钮（取值范围为 View.VISIBLE｜View.INVISIBLE｜View.GONE）
      */
-    void setCloseButtonVisibility(boolean visibility);
+    void setCloseButtonVisibility(int visibility);
 
     /**
      * 设置 titleBar 背景

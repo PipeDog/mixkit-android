@@ -23,8 +23,8 @@ public interface ILoadingView extends IWidget {
     };
 
     /**
-     * 设置加载视图隐藏/展示
+     * 设置加载视图隐藏/展示（取值范围为 View.VISIBLE｜View.INVISIBLE｜View.GONE）
      */
-    void setVisibility(boolean visibility);
+    void setVisibility(int visibility);
 
 }
