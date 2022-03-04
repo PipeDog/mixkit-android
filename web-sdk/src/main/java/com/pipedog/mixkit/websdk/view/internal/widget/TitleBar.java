@@ -59,8 +59,8 @@ public class TitleBar extends FrameLayout implements ITitleBar {
     }
 
     @Override
-    public void setCloseButtonVisibility(boolean visibility) {
-        mCloseImageView.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    public void setCloseButtonVisibility(int visibility) {
+        mCloseImageView.setVisibility(visibility);
     }
 
     @Override

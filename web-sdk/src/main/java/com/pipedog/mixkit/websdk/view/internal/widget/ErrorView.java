@@ -62,8 +62,8 @@ public class ErrorView extends FrameLayout implements IErrorView {
     }
 
     @Override
-    public void setVisibility(boolean visibility) {
-        super.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
     }
 
     @Override

@@ -55,8 +55,8 @@ public class LoadingView extends FrameLayout implements ILoadingView {
     }
 
     @Override
-    public void setVisibility(boolean visibility) {
-        super.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
     }
 
     @Override

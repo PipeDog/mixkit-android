@@ -139,12 +139,12 @@ public class WKWebView extends FrameLayout implements IWebView {
         if (!mShowLoading) {
             return;
         }
-        mLoadingView.setVisibility(true);
+        mLoadingView.setVisibility(View.VISIBLE);
         mLoadingView.setProgress(0);
     }
 
     private void hideLoadingView() {
-        mLoadingView.setVisibility(false);
+        mLoadingView.setVisibility(View.GONE);
     }
 
     private void setProgress(int progress) {
@@ -152,11 +152,11 @@ public class WKWebView extends FrameLayout implements IWebView {
     }
 
     private void showErrorView() {
-        mErrorView.setVisibility(true);
+        mErrorView.setVisibility(View.VISIBLE);
     }
 
     private void hideErrorView() {
-        mErrorView.setVisibility(false);
+        mErrorView.setVisibility(View.GONE);
     }
 
     private void handleWebError(String url, int errorCode, String errorMessage) {
@@ -204,7 +204,7 @@ public class WKWebView extends FrameLayout implements IWebView {
                 DimensionUtils.dp2px(getContext(), errorView.getWidgetWidth()),
                 DimensionUtils.dp2px(getContext(), errorView.getWidgetHeight())
         ));
-        errorView.setVisibility(false);
+        errorView.setVisibility(View.GONE);
         return errorView;
     }
 
@@ -219,7 +219,7 @@ public class WKWebView extends FrameLayout implements IWebView {
                 DimensionUtils.dp2px(getContext(), loadingView.getWidgetHeight())
         ));
 
-        loadingView.setVisibility(false);
+        loadingView.setVisibility(View.GONE);
         return loadingView;
     }
 
