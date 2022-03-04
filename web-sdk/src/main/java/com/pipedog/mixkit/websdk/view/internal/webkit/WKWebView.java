@@ -161,7 +161,10 @@ public class WKWebView extends FrameLayout implements IWebView {
 
     private void handleWebError(String url, int errorCode, String errorMessage) {
         String currentUrl = mWebView.getUrl();
-        if (currentUrl != null && url != null && !currentUrl.equals(url)) {
+        if (currentUrl != null &&
+                url != null &&
+                !currentUrl.equals(url) &&
+                !currentUrl.equals(ERR_ABOUT_BLANK)) {
             return;
         }
 
