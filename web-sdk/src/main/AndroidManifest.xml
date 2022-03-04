@@ -7,8 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application>
-        <activity android:name=".view.WebViewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".view.WebViewActivity">
         </activity>
     </application>
 
