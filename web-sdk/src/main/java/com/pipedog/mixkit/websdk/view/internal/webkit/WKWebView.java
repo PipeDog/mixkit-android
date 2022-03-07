@@ -70,7 +70,25 @@ public class WKWebView extends FrameLayout implements IWebView {
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
         setupViews();
+    }
+
+
+    // OVERRIDE METHODS FOR LIFECYCLE
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        setupUserAgent();
+        setupCookies();
+        observeLifecycle();
+        setWebTheme(mTheme);
         NotificationCenter.getInstance().addObserver(mWebView);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        onDestruct();
     }
 
 
@@ -488,18 +506,6 @@ public class WKWebView extends FrameLayout implements IWebView {
     @Override
     public void setObserveLifecycle(boolean observe) {
         mObserveLifecycle = observe;
-    }
-
-
-    // OVERRIDE METHODS
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        setupUserAgent();
-        setupCookies();
-        observeLifecycle();
-        setWebTheme(mTheme);
     }
 
 }

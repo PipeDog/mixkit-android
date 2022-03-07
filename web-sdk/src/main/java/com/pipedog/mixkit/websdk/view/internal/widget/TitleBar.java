@@ -61,6 +61,10 @@ public class TitleBar extends FrameLayout implements ITitleBar {
 
     @Override
     public void setRightItems(List<ITitleBarItem> items) {
+        if (items == null) {
+            mRightItems = new ArrayList<>();
+        }
+
         mRightItems = items;
         removeAllRightButtons();
         addRightButtons();
