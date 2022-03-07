@@ -38,6 +38,9 @@ import com.pipedog.mixkit.websdk.utils.UserAgentFormat;
 import com.pipedog.mixkit.websdk.utils.WebCookieManager;
 import com.pipedog.mixkit.websdk.utils.WebLifecycleObserver;
 
+/**
+ * 基于系统 webkit 内核的包装的业务定制 web 容器，为了区分 web 内核，因此添加了 WK~ 做为命名前缀
+ */
 public class WKWebView extends FrameLayout implements IWebView {
 
     private static final String ERR_ABOUT_BLANK = "about:blank";

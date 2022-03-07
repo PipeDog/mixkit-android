@@ -16,6 +16,7 @@ import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.IOpenWebView;
 import com.pipedog.mixkit.websdk.interfaces.IWebView;
 import com.pipedog.mixkit.websdk.interfaces.IWebViewListener;
+import com.pipedog.mixkit.websdk.view.internal.webkit.NestedWKWebView;
 import com.pipedog.mixkit.websdk.view.internal.webkit.WKWebView;
 
 import java.util.Map;
@@ -24,6 +25,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
     private Map<String, Object> mExtraData;
     private int mTheme = WebStyle.WEB_THEME_LIGHT;
+    private boolean mSupportNested = true;
     private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private WKWebView mWKWebView;
@@ -40,6 +42,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MixWebView);
         mTheme = typedArray.getInt(R.styleable.MixWebView_mix_theme, WebStyle.WEB_THEME_LIGHT);
+        mSupportNested = typedArray.getBoolean(R.styleable.MixWebView_mix_support_nested, true);
         mShowLoading = typedArray.getBoolean(R.styleable.MixWebView_mix_show_loading, true);
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
@@ -62,7 +65,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     private void setupWKWebView() {
-        mWKWebView = new WKWebView(getContext());
+        mWKWebView = mSupportNested ? new NestedWKWebView(getContext()) : new WKWebView(getContext());
         mWKWebView.setWebTheme(mTheme);
         mWKWebView.setShowLoading(mShowLoading);
         mWKWebView.setObserveLifecycle(mObserveLifecycle);
@@ -71,6 +74,13 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
         mWKWebView.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         ));
+    }
+
+    private void removeWebView() {
+        if (mWKWebView != null) {
+            removeView(mWKWebView);
+            mWKWebView = null;
+        }
     }
 
     private IWebView getWebView() {
@@ -91,6 +101,17 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     @Override
     public Map<String, Object> getExtraData() {
         return mExtraData;
+    }
+
+    @Override
+    public void setSupportNested(boolean supportNested) {
+        if (mSupportNested == supportNested) {
+            return;
+        }
+
+        mSupportNested = supportNested;
+        removeWebView();
+        setupViews();
     }
 
     @Override

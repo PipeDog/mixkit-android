@@ -20,4 +20,10 @@ public interface IOpenWebView extends IWebView {
      */
     Map<String, Object> getExtraData();
 
+    /**
+     * 设置是否需要处理因视图嵌套导致的手势冲突
+     * 尽量通过布局文件设置这一属性，这个方法会使视图重新初始化，开销较大
+     */
+    void setSupportNested(boolean supportNested);
+
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="MixWebView">
+        <attr name="mix_support_nested" format="boolean"></attr>
         <attr name="mix_observe_lifecycle" format="boolean" />
         <attr name="mix_show_loading" format="boolean" />
         <attr name="mix_theme" format="enum">

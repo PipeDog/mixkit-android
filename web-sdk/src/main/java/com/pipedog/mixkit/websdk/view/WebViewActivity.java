@@ -28,6 +28,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     private OpenWebView mWebView;
     private IWebViewListener mListener;
     private int mTheme = WebStyle.WEB_THEME_LIGHT;
+    private boolean mSupportNested = true;
     private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private String mUrl;
@@ -63,6 +64,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
         mUrl = bundle.getString(RouteDef.KEY_URL);
         mTheme = bundle.containsKey(RouteDef.KEY_THEME) ?
                 bundle.getInt(RouteDef.KEY_THEME) : WebStyle.WEB_THEME_LIGHT;
+        mSupportNested = bundle.getInt(RouteDef.KEY_SUPPORT_NESTED) == 0 ? true : false;
         mShowLoading = bundle.getInt(RouteDef.KEY_SHOW_LOADING) == 0 ? true : false;
         mObserveLifecycle = bundle.getInt(RouteDef.KEY_OBSERVE_LIFECYCLE) == 0 ? true : false;
     }
@@ -101,6 +103,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
 
     private void createOpenWebView() {
         mWebView = new OpenWebView(this);
+        mWebView.setSupportNested(mSupportNested);
         mWebView.setListener(new PageLoadListener());
         mWebView.setWebTheme(mTheme);
         mWebView.setShowLoading(mShowLoading);
@@ -135,6 +138,11 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     @Override
     public Map<String, Object> getExtraData() {
         return mWebView.getExtraData();
+    }
+
+    @Override
+    public void setSupportNested(boolean supportNested) {
+        mWebView.setSupportNested(supportNested);
     }
 
     @Override
