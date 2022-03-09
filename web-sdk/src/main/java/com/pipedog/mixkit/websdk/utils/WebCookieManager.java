@@ -57,6 +57,8 @@ public class WebCookieManager {
             }
             cookieManager.setCookie(cookie.getDomain(), builder.toString());
         }
+
+        cookieManager.flush();
     }
 
 }
