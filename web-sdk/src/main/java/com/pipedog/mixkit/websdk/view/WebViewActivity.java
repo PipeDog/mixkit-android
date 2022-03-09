@@ -8,8 +8,8 @@ import android.widget.FrameLayout;
 
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
-import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
-import com.pipedog.mixkit.websdk.config.WebSDKConfiguration;
+import com.pipedog.mixkit.websdk.config.IWebConfiguration;
+import com.pipedog.mixkit.websdk.config.WebConfiguration;
 import com.pipedog.mixkit.websdk.constants.RouteDef;
 import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.IOpenWebView;
@@ -79,7 +79,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     // DYNAMIC CREATE VIEWS
 
     private void createTitleBar() {
-        IWebSDKConfiguration.IWidgetCreator creator = WebSDKConfiguration.getInstance().getWidgetCreator();
+        IWebConfiguration.IWidgetCreator creator = WebConfiguration.getInstance().getWidgetCreator();
         if (creator == null) {
             throw new RuntimeException("Call method `void setWidgetCreator(IWidgetCreator);` first!");
         }
@@ -146,7 +146,7 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     }
 
     @Override
-    public void setConfiguration(IWebSDKConfiguration conf) {
+    public void setConfiguration(IWebConfiguration conf) {
         mWebView.setConfiguration(conf);
     }
 

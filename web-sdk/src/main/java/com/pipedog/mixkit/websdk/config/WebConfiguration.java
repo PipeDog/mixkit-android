@@ -14,7 +14,7 @@ import com.pipedog.mixkit.websdk.view.internal.widget.TitleBar;
  * @author liang
  * @time 2021/12/26
  */
-public class WebSDKConfiguration implements IWebSDKConfiguration {
+public class WebConfiguration implements IWebConfiguration {
 
     private IFetcher mFetcher;
     private ILoadURLAction mLoadURLAction;
@@ -26,13 +26,13 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
 
     // CONSTRUCTORS
 
-    private static volatile WebSDKConfiguration sGlobalConfiguration;
+    private static volatile WebConfiguration sGlobalConfiguration;
 
-    public static IWebSDKConfiguration getInstance() {
+    public static IWebConfiguration getInstance() {
         if (sGlobalConfiguration == null) {
-            synchronized (WebSDKConfiguration.class) {
+            synchronized (WebConfiguration.class) {
                 if (sGlobalConfiguration == null) {
-                    sGlobalConfiguration = new WebSDKConfiguration();
+                    sGlobalConfiguration = new WebConfiguration();
                 }
             }
         }
@@ -42,7 +42,7 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     /**
      * 之所以开放这个方法，是为了处理为某些模块定制化 web 能力的 case，慎用
      */
-    public WebSDKConfiguration() {
+    public WebConfiguration() {
         registerDefaultConfiguration();
     }
 
@@ -50,8 +50,8 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     // METHODS FOR `IWebConfiguration`
 
     @Override
-    public IWebSDKConfiguration copy() {
-        WebSDKConfiguration copy = new WebSDKConfiguration();
+    public IWebConfiguration copy() {
+        WebConfiguration copy = new WebConfiguration();
         copy.mFetcher = this.mFetcher;
         copy.mLoadURLAction = this.mLoadURLAction;
         copy.mBridgeValidation = this.mBridgeValidation;
@@ -62,32 +62,32 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     }
 
     @Override
-    public void setFetcher(IWebSDKConfiguration.IFetcher fetcher) {
+    public void setFetcher(IWebConfiguration.IFetcher fetcher) {
         this.mFetcher = fetcher;
     }
 
     @Override
-    public IWebSDKConfiguration.IFetcher getFetcher() {
+    public IWebConfiguration.IFetcher getFetcher() {
         return mFetcher;
     }
 
     @Override
-    public void setLoadURLAction(IWebSDKConfiguration.ILoadURLAction action) {
+    public void setLoadURLAction(IWebConfiguration.ILoadURLAction action) {
         this.mLoadURLAction = action;
     }
 
     @Override
-    public IWebSDKConfiguration.ILoadURLAction getLoadURLAction() {
+    public IWebConfiguration.ILoadURLAction getLoadURLAction() {
         return mLoadURLAction;
     }
 
     @Override
-    public void setBridgeValidation(IWebSDKConfiguration.IBridgeValidation bridgeValidation) {
+    public void setBridgeValidation(IWebConfiguration.IBridgeValidation bridgeValidation) {
         this.mBridgeValidation = bridgeValidation;
     }
 
     @Override
-    public IWebSDKConfiguration.IBridgeValidation getBridgeValidation() {
+    public IWebConfiguration.IBridgeValidation getBridgeValidation() {
         return mBridgeValidation;
     }
 
@@ -125,7 +125,7 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     // PRIVATE METHODS
 
     private void registerDefaultConfiguration() {
-        mBrowserKernelType = IWebSDKConfiguration.KERNEL_TYPE_WEBKIT;
+        mBrowserKernelType = IWebConfiguration.KERNEL_TYPE_WEBKIT;
 
         setWidgetCreator(new IWidgetCreator() {
             @Override

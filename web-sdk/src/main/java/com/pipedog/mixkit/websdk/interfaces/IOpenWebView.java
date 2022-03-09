@@ -1,6 +1,6 @@
 package com.pipedog.mixkit.websdk.interfaces;
 
-import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
+import com.pipedog.mixkit.websdk.config.IWebConfiguration;
 
 import java.util.Map;
 
@@ -31,6 +31,6 @@ public interface IOpenWebView extends IWebView {
     /**
      * 设置自定义配置（此方法会导致视图全部重新创建，开销较大，强需求外不建议使用）
      */
-    void setConfiguration(IWebSDKConfiguration conf);
+    void setConfiguration(IWebConfiguration conf);
 
 }

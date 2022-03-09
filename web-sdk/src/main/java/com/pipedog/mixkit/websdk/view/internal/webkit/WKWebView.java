@@ -25,8 +25,8 @@ import com.pipedog.mixkit.web.interfaces.IWebViewBridgeListener;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.web.view.MixWKWebView;
 import com.pipedog.mixkit.websdk.R;
-import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
-import com.pipedog.mixkit.websdk.config.WebSDKConfiguration;
+import com.pipedog.mixkit.websdk.config.IWebConfiguration;
+import com.pipedog.mixkit.websdk.config.WebConfiguration;
 import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.IWebView;
 import com.pipedog.mixkit.websdk.interfaces.IWebViewListener;
@@ -53,16 +53,16 @@ public class WKWebView extends FrameLayout implements IWebView {
     private boolean mObserveLifecycle = true;
     private WebLifecycleObserver mLifecycleObserver;
     private IWebViewListener mListener;
-    private IWebSDKConfiguration mConfiguration;
+    private IWebConfiguration mConfiguration;
 
 
     // CONSTRUCTORS
 
     public WKWebView(@NonNull Context context) {
-        this(context, WebSDKConfiguration.getInstance());
+        this(context, WebConfiguration.getInstance());
     }
 
-    public WKWebView(@NonNull Context context, @Nullable IWebSDKConfiguration configuration) {
+    public WKWebView(@NonNull Context context, @Nullable IWebConfiguration configuration) {
         super(context);
 
         mConfiguration = configuration;
@@ -77,7 +77,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         mShowLoading = typedArray.getBoolean(R.styleable.MixWebView_mix_show_loading, true);
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
-        mConfiguration = WebSDKConfiguration.getInstance();
+        mConfiguration = WebConfiguration.getInstance();
         setupViews();
     }
 
@@ -119,7 +119,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         mWebView.setWebViewClient(new WKWebViewClient());
         mWebView.setBridgeListener(new WKWebViewBridgeListener());
 
-        IWebSDKConfiguration.IWebSettingsConfiguration conf =
+        IWebConfiguration.IWebSettingsConfiguration conf =
                 getConfiguration().getWebSettingsConfiguration();
         if (conf != null) {
             conf.setup(mWebView.getSettings());
@@ -129,8 +129,8 @@ public class WKWebView extends FrameLayout implements IWebView {
         mErrorView.setRetryButtonListener(new RetryListener());
     }
 
-    private IWebSDKConfiguration.IWidgetCreator getWidgetCreator() {
-        IWebSDKConfiguration.IWidgetCreator creator = getConfiguration().getWidgetCreator();
+    private IWebConfiguration.IWidgetCreator getWidgetCreator() {
+        IWebConfiguration.IWidgetCreator creator = getConfiguration().getWidgetCreator();
         if (creator == null) {
             throw new RuntimeException("Call method `void setWidgetCreator(IWidgetCreator);` first!");
         }
@@ -213,9 +213,9 @@ public class WKWebView extends FrameLayout implements IWebView {
         mListener.onReceivedError(this, errorCode, errorMessage);
     }
 
-    private IWebSDKConfiguration getConfiguration() {
+    private IWebConfiguration getConfiguration() {
         if (mConfiguration == null) {
-            mConfiguration = WebSDKConfiguration.getInstance();
+            mConfiguration = WebConfiguration.getInstance();
         }
         return mConfiguration;
     }
@@ -293,7 +293,7 @@ public class WKWebView extends FrameLayout implements IWebView {
             MixLogger.error("[old] shouldOverrideUrlLoading, url : %s", url);
 
             // 业务层统一定义拦截操作
-            IWebSDKConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
+            IWebConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
             if (action != null && action.loadUrl(url)) {
                 return true;
             }
@@ -314,7 +314,7 @@ public class WKWebView extends FrameLayout implements IWebView {
             String url = request.getUrl().toString();
             MixLogger.error("[new] shouldOverrideUrlLoading, url : %s", url);
 
-            IWebSDKConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
+            IWebConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
             if (action != null && action.loadUrl(url)) {
                 return true;
             }
@@ -376,7 +376,7 @@ public class WKWebView extends FrameLayout implements IWebView {
     private class WKWebViewBridgeListener implements IWebViewBridgeListener {
         @Override
         public boolean onReceiveScriptMessage(IMixWebView webView, String fromUrl, String message) {
-            IWebSDKConfiguration.IBridgeValidation bridgeValidation = getConfiguration().getBridgeValidation();
+            IWebConfiguration.IBridgeValidation bridgeValidation = getConfiguration().getBridgeValidation();
             if (bridgeValidation == null) {
                 return false;
             }

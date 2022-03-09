@@ -11,8 +11,8 @@ import androidx.annotation.Nullable;
 
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
-import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
-import com.pipedog.mixkit.websdk.config.WebSDKConfiguration;
+import com.pipedog.mixkit.websdk.config.IWebConfiguration;
+import com.pipedog.mixkit.websdk.config.WebConfiguration;
 import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.IOpenWebView;
 import com.pipedog.mixkit.websdk.interfaces.IWebView;
@@ -30,7 +30,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private WKWebView mWKWebView;
-    private IWebSDKConfiguration mConfiguration;
+    private IWebConfiguration mConfiguration;
 
 
     // CONSTRUCTORS
@@ -55,10 +55,10 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     // PRIVATE METHODS
 
     private void setupViews() {
-        int browserKernelType = WebSDKConfiguration.getInstance().getBrowserKernelType();
+        int browserKernelType = WebConfiguration.getInstance().getBrowserKernelType();
 
         // If you need to take control of the browser kernel, do the logic here.
-        if ((browserKernelType & WebSDKConfiguration.KERNEL_TYPE_WEBKIT) != 0) {
+        if ((browserKernelType & WebConfiguration.KERNEL_TYPE_WEBKIT) != 0) {
             setupWKWebView();
             return;
         }
@@ -123,8 +123,8 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     @Override
-    public void setConfiguration(IWebSDKConfiguration conf) {
-        mConfiguration = conf != null ? conf : WebSDKConfiguration.getInstance();
+    public void setConfiguration(IWebConfiguration conf) {
+        mConfiguration = conf != null ? conf : WebConfiguration.getInstance();
 
         removeAllSubviews();
         setupViews();
