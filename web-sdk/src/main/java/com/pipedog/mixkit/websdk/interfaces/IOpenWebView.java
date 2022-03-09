@@ -1,5 +1,7 @@
 package com.pipedog.mixkit.websdk.interfaces;
 
+import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
+
 import java.util.Map;
 
 /**
@@ -25,5 +27,10 @@ public interface IOpenWebView extends IWebView {
      * 尽量通过布局文件设置这一属性，这个方法会使视图重新初始化，开销较大
      */
     void setSupportNested(boolean supportNested);
+
+    /**
+     * 设置自定义配置（此方法会导致视图全部重新创建，开销较大，强需求外不建议使用）
+     */
+    void setConfiguration(IWebSDKConfiguration conf);
 
 }

@@ -53,12 +53,20 @@ public class WKWebView extends FrameLayout implements IWebView {
     private boolean mObserveLifecycle = true;
     private WebLifecycleObserver mLifecycleObserver;
     private IWebViewListener mListener;
+    private IWebSDKConfiguration mConfiguration;
 
 
     // CONSTRUCTORS
 
     public WKWebView(@NonNull Context context) {
-        this(context, null);
+        this(context, WebSDKConfiguration.getInstance());
+    }
+
+    public WKWebView(@NonNull Context context, @Nullable IWebSDKConfiguration configuration) {
+        super(context);
+
+        mConfiguration = configuration;
+        setupViews();
     }
 
     public WKWebView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -69,6 +77,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         mShowLoading = typedArray.getBoolean(R.styleable.MixWebView_mix_show_loading, true);
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
+        mConfiguration = WebSDKConfiguration.getInstance();
         setupViews();
     }
 
@@ -111,7 +120,7 @@ public class WKWebView extends FrameLayout implements IWebView {
         mWebView.setBridgeListener(new WKWebViewBridgeListener());
 
         IWebSDKConfiguration.IWebSettingsConfiguration conf =
-                WebSDKConfiguration.getInstance().getWebSettingsConfiguration();
+                getConfiguration().getWebSettingsConfiguration();
         if (conf != null) {
             conf.setup(mWebView.getSettings());
         }
@@ -121,7 +130,7 @@ public class WKWebView extends FrameLayout implements IWebView {
     }
 
     private IWebSDKConfiguration.IWidgetCreator getWidgetCreator() {
-        IWebSDKConfiguration.IWidgetCreator creator = WebSDKConfiguration.getInstance().getWidgetCreator();
+        IWebSDKConfiguration.IWidgetCreator creator = getConfiguration().getWidgetCreator();
         if (creator == null) {
             throw new RuntimeException("Call method `void setWidgetCreator(IWidgetCreator);` first!");
         }
@@ -204,6 +213,13 @@ public class WKWebView extends FrameLayout implements IWebView {
         mListener.onReceivedError(this, errorCode, errorMessage);
     }
 
+    private IWebSDKConfiguration getConfiguration() {
+        if (mConfiguration == null) {
+            mConfiguration = WebSDKConfiguration.getInstance();
+        }
+        return mConfiguration;
+    }
+
 
     // PROTECTED METHODS
     // IF YOU NEED TO CUSTOMIZE SOMETHING, OVERRIDE THE FOLLOWING METHODS.
@@ -277,8 +293,7 @@ public class WKWebView extends FrameLayout implements IWebView {
             MixLogger.error("[old] shouldOverrideUrlLoading, url : %s", url);
 
             // 业务层统一定义拦截操作
-            IWebSDKConfiguration.ILoadURLAction action =
-                    WebSDKConfiguration.getInstance().getLoadURLAction();
+            IWebSDKConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
             if (action != null && action.loadUrl(url)) {
                 return true;
             }
@@ -299,8 +314,7 @@ public class WKWebView extends FrameLayout implements IWebView {
             String url = request.getUrl().toString();
             MixLogger.error("[new] shouldOverrideUrlLoading, url : %s", url);
 
-            IWebSDKConfiguration.ILoadURLAction action =
-                    WebSDKConfiguration.getInstance().getLoadURLAction();
+            IWebSDKConfiguration.ILoadURLAction action = getConfiguration().getLoadURLAction();
             if (action != null && action.loadUrl(url)) {
                 return true;
             }
@@ -362,8 +376,7 @@ public class WKWebView extends FrameLayout implements IWebView {
     private class WKWebViewBridgeListener implements IWebViewBridgeListener {
         @Override
         public boolean onReceiveScriptMessage(IMixWebView webView, String fromUrl, String message) {
-            IWebSDKConfiguration.IBridgeValidation bridgeValidation =
-                    WebSDKConfiguration.getInstance().getBridgeValidation();
+            IWebSDKConfiguration.IBridgeValidation bridgeValidation = getConfiguration().getBridgeValidation();
             if (bridgeValidation == null) {
                 return false;
             }

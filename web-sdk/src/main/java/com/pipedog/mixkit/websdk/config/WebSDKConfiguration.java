@@ -50,6 +50,18 @@ public class WebSDKConfiguration implements IWebSDKConfiguration {
     // METHODS FOR `IWebConfiguration`
 
     @Override
+    public IWebSDKConfiguration copy() {
+        WebSDKConfiguration copy = new WebSDKConfiguration();
+        copy.mFetcher = this.mFetcher;
+        copy.mLoadURLAction = this.mLoadURLAction;
+        copy.mBridgeValidation = this.mBridgeValidation;
+        copy.mBrowserKernelType = this.mBrowserKernelType;
+        copy.mWebSettingsConfiguration = this.mWebSettingsConfiguration;
+        copy.mWidgetCreator = this.mWidgetCreator;
+        return copy;
+    }
+
+    @Override
     public void setFetcher(IWebSDKConfiguration.IFetcher fetcher) {
         this.mFetcher = fetcher;
     }

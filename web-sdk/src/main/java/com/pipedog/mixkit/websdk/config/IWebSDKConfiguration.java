@@ -22,6 +22,13 @@ import java.util.List;
  */
 public interface IWebSDKConfiguration {
 
+    /**
+     * 拷贝生成一个新的 Configuration 实例，如果你需要自定义 web 配置，但是仅仅有某个配置项有区
+     * 别，可以使用这个方法来进行 WebSDKConfiguration 的创建，然后对某个配置项进行定制化修改即可
+     */
+    IWebSDKConfiguration copy();
+
+
     // SET COOKIE、USER-AGENT...
 
     /**

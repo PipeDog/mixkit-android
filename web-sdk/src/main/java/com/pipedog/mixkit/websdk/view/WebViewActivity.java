@@ -146,6 +146,11 @@ public class WebViewActivity extends Activity implements IWebViewActivity {
     }
 
     @Override
+    public void setConfiguration(IWebSDKConfiguration conf) {
+        mWebView.setConfiguration(conf);
+    }
+
+    @Override
     public void setListener(IWebViewListener listener) {
         mListener = listener;
     }

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
+import com.pipedog.mixkit.websdk.config.IWebSDKConfiguration;
 import com.pipedog.mixkit.websdk.config.WebSDKConfiguration;
 import com.pipedog.mixkit.websdk.constants.WebStyle;
 import com.pipedog.mixkit.websdk.interfaces.IOpenWebView;
@@ -29,6 +30,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     private boolean mShowLoading = true;
     private boolean mObserveLifecycle = true;
     private WKWebView mWKWebView;
+    private IWebSDKConfiguration mConfiguration;
 
 
     // CONSTRUCTORS
@@ -65,7 +67,9 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     private void setupWKWebView() {
-        mWKWebView = mSupportNested ? new NestedWKWebView(getContext()) : new WKWebView(getContext());
+        mWKWebView = mSupportNested ?
+                new NestedWKWebView(getContext(), mConfiguration) :
+                new WKWebView(getContext(), mConfiguration);
         mWKWebView.setWebTheme(mTheme);
         mWKWebView.setShowLoading(mShowLoading);
         mWKWebView.setObserveLifecycle(mObserveLifecycle);
@@ -81,6 +85,10 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
             removeView(mWKWebView);
             mWKWebView = null;
         }
+    }
+
+    private void removeAllSubviews() {
+        removeWebView();
     }
 
     private IWebView getWebView() {
@@ -110,7 +118,15 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
         }
 
         mSupportNested = supportNested;
-        removeWebView();
+        removeAllSubviews();
+        setupViews();
+    }
+
+    @Override
+    public void setConfiguration(IWebSDKConfiguration conf) {
+        mConfiguration = conf != null ? conf : WebSDKConfiguration.getInstance();
+
+        removeAllSubviews();
         setupViews();
     }
 
