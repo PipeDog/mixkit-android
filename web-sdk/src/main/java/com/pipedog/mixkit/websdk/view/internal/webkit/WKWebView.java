@@ -477,6 +477,16 @@ public class WKWebView extends FrameLayout implements IWebView {
     }
 
     @Override
+    public String getUrl() {
+        return mWebView.getUrl();
+    }
+
+    @Override
+    public String getOriginalUrl() {
+        return mWebView.getOriginalUrl();
+    }
+
+    @Override
     public void invokeMethod(String method, Object[] arguments, ScriptCallback resultCallback) {
         mWebView.invokeMethod(method, arguments, resultCallback);
     }

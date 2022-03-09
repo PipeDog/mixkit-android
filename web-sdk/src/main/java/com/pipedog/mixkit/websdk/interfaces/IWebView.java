@@ -77,4 +77,14 @@ public interface IWebView extends IWebViewExtra, IScriptEngine {
      */
     void goForward();
 
+    /**
+     * 获取当前 url 地址
+     */
+    String getUrl();
+
+    /**
+     * 获取原始 url 地址
+     */
+    String getOriginalUrl();
+
 }

@@ -181,6 +181,18 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     }
 
     @Override
+    public String getUrl() {
+        if (getWebView() == null) { return null; }
+        return getWebView().getUrl();
+    }
+
+    @Override
+    public String getOriginalUrl() {
+        if (getWebView() == null) { return null; }
+        return getWebView().getOriginalUrl();
+    }
+
+    @Override
     public void invokeMethod(String method, Object[] arguments, ScriptCallback resultCallback) {
         if (getWebView() == null) { return; }
         getWebView().invokeMethod(method, arguments, resultCallback);
