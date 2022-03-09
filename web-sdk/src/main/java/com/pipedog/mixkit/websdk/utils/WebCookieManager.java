@@ -22,7 +22,6 @@ public class WebCookieManager {
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.removeAllCookies(null);
-        cookieManager.flush();
     }
 
     /**
@@ -58,6 +57,13 @@ public class WebCookieManager {
             cookieManager.setCookie(cookie.getDomain(), builder.toString());
         }
 
+    }
+
+    /**
+     * 持久化同步 cookie 数据
+     */
+    public static void flush() {
+        CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.flush();
     }
 
