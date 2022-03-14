@@ -24,99 +24,100 @@ import com.pipedog.mixkit.websdk.notification.UniversalNotification;
 public class WebLifecycleObserver {
 
     private IMixWebView mWebView;
-    private Activity mActivity;
-    private WebActivityLifecycleCallbacks mLifecycleCallbacks;
+    private Lifecycle mLifecycle;
+    private LifecycleEventObserver mLifecycleObserver;
+
+    public WebLifecycleObserver(IMixWebView webView) {
+        mWebView = webView;
+    }
 
     private WebLifecycleObserver() {
 
-    }
-
-    public WebLifecycleObserver(IMixWebView webView) {
-        if (webView == null || !(webView instanceof View)) {
-            throw new RuntimeException("Invalid argument `webView` from `WebLifecycleObserver(IMixWebView)`, check it!");
-        }
-
-        mWebView = webView;
     }
 
 
     // PUBLIC METHODS
 
     /**
-     * 订阅上下文生命周期
+     * 订阅上下文生命周期 前提 context 继承父类必须继承了 LifecycleOwner
      */
     public void observe() {
-        if (mLifecycleCallbacks != null) {
+        if (mLifecycle != null) {
             return;
         }
 
-        mActivity = ContextUtils.getActivity(((View) mWebView).getContext());
-        if (mActivity == null) {
+        mLifecycle = getLifeCycle(((View) mWebView).getContext());
+        if (mWebView == null || !(mWebView instanceof View)) {
             return;
         }
 
-        mLifecycleCallbacks = new WebActivityLifecycleCallbacks();
-        mActivity.registerActivityLifecycleCallbacks(mLifecycleCallbacks);
+        View webView = (View) mWebView;
+        mLifecycle = getLifeCycle(webView.getContext());
+
+        if (mLifecycle == null) {
+            throw new RuntimeException(
+                    "The activity must be kind of class `ComponentActivity`!");
+        }
+
+        if (mLifecycleObserver == null) {
+            mLifecycleObserver = new LifecycleEventObserverImpl();
+        }
+
+        mLifecycle.addObserver(mLifecycleObserver);
     }
 
     /**
      * 取消监听订阅
      */
-    public void cancel() {
-        if (mLifecycleCallbacks == null) {
+    public void cancel () {
+        if (mLifecycle == null) {
             return;
         }
 
-        mActivity.unregisterActivityLifecycleCallbacks(mLifecycleCallbacks);
-        mActivity = null;
-        mLifecycleCallbacks = null;
+        mLifecycle.removeObserver(mLifecycleObserver);
+        mLifecycle = null;
+        mLifecycleObserver = null;
+    }
+
+
+    // PRIVATE METHODS
+
+    /**
+     * Context 来源类型类型如果继承自 ComponentActivity 可以拿到 Lifecycle
+     */
+    private Lifecycle getLifeCycle(Context context) {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof ComponentActivity) {
+                return ((ComponentActivity) context).getLifecycle();
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
 
     // PRIVATE CLASSES
 
-    private class WebActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+    /**
+     * 生命周期监听
+     */
+    private class LifecycleEventObserverImpl implements LifecycleEventObserver {
         @Override
-        public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(@NonNull Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityResumed(@NonNull Activity activity) {
-            if (mActivity == activity) {
-                NotificationCenter.getInstance().postNotification(
-                        UniversalNotification.Name.PAGE_VISIBLE, new Object[]{}, mWebView);
-            }
-        }
-
-        @Override
-        public void onActivityPaused(@NonNull Activity activity) {
-            if (mActivity == activity) {
-                NotificationCenter.getInstance().postNotification(
-                        UniversalNotification.Name.PAGE_INVISIBLE, new Object[]{}, mWebView);
-            }
-        }
-
-        @Override
-        public void onActivityStopped(@NonNull Activity activity) {
-
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(@NonNull Activity activity) {
-            if (mActivity == activity) {
-                NotificationCenter.getInstance().postNotification(
-                        UniversalNotification.Name.PAGE_DESTROY, new Object[]{}, mWebView);
+        public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+            switch (event) {
+                case ON_RESUME: {
+                    NotificationCenter.getInstance().postNotification(
+                            UniversalNotification.Name.PAGE_VISIBLE, new Object[]{}, mWebView);
+                } break;
+                case ON_PAUSE: {
+                    NotificationCenter.getInstance().postNotification(
+                            UniversalNotification.Name.PAGE_INVISIBLE, new Object[]{}, mWebView);
+                } break;
+                case ON_DESTROY: {
+                    NotificationCenter.getInstance().postNotification(
+                            UniversalNotification.Name.PAGE_DESTROY, new Object[]{}, mWebView);
+                } break;
+                default: break;
             }
         }
     }

@@ -58,10 +58,7 @@ public class ModuleCreator {
         return module;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-
+    public void unloadAllModules() {
         mModuleMap.forEach((key, value) -> {
             IBridgeModule iModule = (IBridgeModule)value;
             iModule.unload();

@@ -89,15 +89,18 @@ public class WKWebView extends FrameLayout implements IWebView {
         super.onAttachedToWindow();
         setupUserAgent();
         setupCookies();
-        observeLifecycle();
         setWebTheme(mTheme);
+
+        observeLifecycle();
         NotificationCenter.getInstance().addObserver(mWebView);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        onDestruct();
+
+        cancelObserveLifecycle();
+        NotificationCenter.getInstance().removeObserver(mWebView);
     }
 
 

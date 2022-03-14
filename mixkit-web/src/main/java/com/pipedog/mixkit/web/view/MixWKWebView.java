@@ -193,4 +193,13 @@ public class MixWKWebView extends WebView implements IMixWebView {
         return mBridgeListener;
     }
 
+
+    // OVERRIDE METHODS
+
+    @Override
+    public void destroy() {
+        mWebViewBridge.getModuleCreator().unloadAllModules();
+        super.destroy();
+    }
+
 }

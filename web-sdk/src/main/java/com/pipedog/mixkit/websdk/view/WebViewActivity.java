@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.config.IWebConfiguration;
@@ -21,7 +23,7 @@ import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
 import java.util.Map;
 
-public class WebViewActivity extends Activity implements IWebViewActivity {
+public class WebViewActivity extends AppCompatActivity implements IWebViewActivity {
 
     private FrameLayout mRootView;
     private ITitleBar mTitleBar;
