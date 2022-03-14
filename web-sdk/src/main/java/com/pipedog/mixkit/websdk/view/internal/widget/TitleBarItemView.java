@@ -5,12 +5,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
 import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
-public class TitleBarItemView extends FrameLayout {
+public class TitleBarItemView extends LinearLayout {
 
     private ITitleBarItem mTitleBarItem;
     private ImageView mImageView;
@@ -18,15 +19,17 @@ public class TitleBarItemView extends FrameLayout {
 
     public TitleBarItemView(Context context, ITitleBarItem titleBarItem) {
         super(context);
+
         mTitleBarItem = titleBarItem;
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER_VERTICAL);
+
         setupViews();
     }
 
     private void setupViews() {
         View view = null;
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
-        );
+        FrameLayout.LayoutParams lp = null;
 
         if (mTitleBarItem.getDrawable() != null) {
             mImageView = new ImageView(getContext());
@@ -34,8 +37,9 @@ public class TitleBarItemView extends FrameLayout {
             mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             view = mImageView;
 
-            int margin = DimensionUtils.dp2px(getContext(), 10);
-            lp.setMargins(-margin, margin, -margin, margin);
+            lp = new FrameLayout.LayoutParams(
+                    DimensionUtils.dp2px(getContext(), 40), DimensionUtils.dp2px(getContext(), 40)
+            );
         } else if (mTitleBarItem.getText() != null) {
             mTextView = new TextView(getContext());
             mTextView.setGravity(Gravity.CENTER);
@@ -43,8 +47,9 @@ public class TitleBarItemView extends FrameLayout {
             mTextView.setTextSize(16);
             view = mTextView;
 
-            int margin = DimensionUtils.dp2px(getContext(), 5);
-            lp.setMargins(margin, 0, margin, 0);
+            lp = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+            );
         } else {
             throw new RuntimeException("[TitleBarItemView] The view type could not be determined!");
         }

@@ -2,6 +2,7 @@ package com.pipedog.mixkit.websdk.view.internal.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBar;
 import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
+import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,11 +108,19 @@ public class TitleBar extends FrameLayout implements ITitleBar {
     private void addRightButtons() {
         List<ITitleBarItem> rightItems = new ArrayList<>(mRightItems);
         for (ITitleBarItem item : rightItems) {
+            // Real item
             TitleBarItemView itemView = new TitleBarItemView(getContext(), item);
             itemView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT
             ));
             mRightItemContainer.addView(itemView);
+
+            // Item space
+            View placeholderView = new View(getContext());
+            placeholderView.setLayoutParams(new LinearLayout.LayoutParams(
+                    DimensionUtils.dp2px(getContext(), 10), LinearLayout.LayoutParams.MATCH_PARENT
+            ));
+            mRightItemContainer.addView(placeholderView);
         }
     }
 
