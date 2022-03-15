@@ -2,6 +2,7 @@ package com.pipedog.mixkit.example.module;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,101 +38,78 @@ public class PageModule implements IBridgeModule {
 
     @MixMethod(name = "testSetRightItems")
     public void testSetRightItems() {
+        MixLogger.error("Call `testSetRightItems` success!");
         ITitleBar titleBar = mActivity.getTitleBar();
 
         List<ITitleBarItem> items = new ArrayList<>();
 
-        items.add(new ITitleBarItem() {
+        items.add(new CustomItem("item1", "测试按钮1", null, new View.OnClickListener() {
             @Override
-            public String getText() {
-                return "测试按钮1";
+            public void onClick(View v) {
+                MixLogger.error(">>>>> 点击了按钮 1");
             }
+        }));
 
+        items.add(new CustomItem("item2", "测试按钮2", null, new View.OnClickListener() {
             @Override
-            public Drawable getDrawable() {
-                return null;
+            public void onClick(View v) {
+                MixLogger.error(">>>>> 点击了按钮 2");
             }
+        }));
 
+        items.add(new CustomItem("item3", null, mActivity.getResources().getDrawable(R.mipmap.ic_launcher_round), new View.OnClickListener() {
             @Override
-            public View.OnClickListener getListener() {
-                return new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MixLogger.error(">>>>> 点击了按钮 1");
-                    }
-                };
+            public void onClick(View v) {
+                MixLogger.error(">>>>> 点击了按钮 3");
             }
-        });
+        }));
 
-        items.add(new ITitleBarItem() {
+        items.add(new CustomItem("item4", null, mActivity.getResources().getDrawable(R.mipmap.ic_launcher_round), new View.OnClickListener() {
             @Override
-            public String getText() {
-                return "测试按钮2";
+            public void onClick(View v) {
+                MixLogger.error(">>>>> 点击了按钮 4");
             }
-
-            @Override
-            public Drawable getDrawable() {
-                return null;
-            }
-
-            @Override
-            public View.OnClickListener getListener() {
-                return new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MixLogger.error(">>>>> 点击了按钮 2");
-                    }
-                };
-            }
-        });
-
-
-        items.add(new ITitleBarItem() {
-            @Override
-            public String getText() {
-                return null;
-            }
-
-            @Override
-            public Drawable getDrawable() {
-                return mActivity.getResources().getDrawable(R.mipmap.ic_launcher_round);
-            }
-
-            @Override
-            public View.OnClickListener getListener() {
-                return new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MixLogger.error(">>>>> 点击了按钮 3333");
-                    }
-                };
-            }
-        });
-
-        items.add(new ITitleBarItem() {
-            @Override
-            public String getText() {
-                return null;
-            }
-
-            @Override
-            public Drawable getDrawable() {
-                return mActivity.getResources().getDrawable(R.mipmap.ic_launcher_round);
-            }
-
-            @Override
-            public View.OnClickListener getListener() {
-                return new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MixLogger.error(">>>>> 点击了按钮 4444");
-                    }
-                };
-            }
-        });
-
+        }));
 
         titleBar.setRightItems(items);
+    }
+
+    private class CustomItem implements ITitleBarItem {
+
+        private String mItemId;
+        private String mText;
+        private Drawable mD;
+        private OnClickListener mL;
+
+        public CustomItem(String itemId,
+                          String text,
+                          Drawable d,
+                          View.OnClickListener l) {
+            mItemId = itemId;
+            mText = text;
+            mD = d;
+            mL = l;
+        }
+
+        @Override
+        public String getItemId() {
+            return mItemId;
+        }
+
+        @Override
+        public String getText() {
+            return mText;
+        }
+
+        @Override
+        public Drawable getDrawable() {
+            return mD;
+        }
+
+        @Override
+        public View.OnClickListener getListener() {
+            return mL;
+        }
     }
 
 }
