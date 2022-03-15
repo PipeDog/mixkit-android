@@ -9,6 +9,11 @@ import android.view.View;
 public interface ITitleBarItem {
 
     /**
+     * item 唯一标识，用来区分按钮
+     */
+    String getItemId();
+
+    /**
      * 按钮文案
      */
     String getText();

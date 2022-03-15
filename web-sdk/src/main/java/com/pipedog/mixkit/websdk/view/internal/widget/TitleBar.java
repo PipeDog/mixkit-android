@@ -18,7 +18,9 @@ import com.pipedog.mixkit.websdk.interfaces.widget.ITitleBarItem;
 import com.pipedog.mixkit.websdk.utils.DimensionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TitleBar extends FrameLayout implements ITitleBar {
 
@@ -68,6 +70,7 @@ public class TitleBar extends FrameLayout implements ITitleBar {
         }
 
         mRightItems = items;
+        verifyRightItems();
         removeAllRightButtons();
         addRightButtons();
     }
@@ -104,6 +107,26 @@ public class TitleBar extends FrameLayout implements ITitleBar {
 
 
     // PRIVATE METHODS
+
+    private void verifyRightItems() {
+        Set<String> visitedSet = new HashSet<>();
+        List<ITitleBarItem> rightItems = new ArrayList<>(mRightItems);
+
+        for (ITitleBarItem item : rightItems) {
+            String itemId = item.getItemId();
+            if (itemId == null) {
+                throw new RuntimeException(
+                        "The method `getItemId()` from interface `ITitleBarItem` can not be null!");
+            }
+
+            if (visitedSet.contains(itemId)) {
+                throw new RuntimeException(
+                        "Duplicate itemId: \"" + itemId + "\", the itemId must be unique!");
+            }
+
+            visitedSet.add(itemId);
+        }
+    }
 
     private void addRightButtons() {
         List<ITitleBarItem> rightItems = new ArrayList<>(mRightItems);
