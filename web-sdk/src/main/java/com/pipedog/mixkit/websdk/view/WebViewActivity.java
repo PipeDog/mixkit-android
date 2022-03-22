@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.config.IWebConfiguration;
@@ -251,6 +252,10 @@ public class WebViewActivity extends AppCompatActivity implements IWebViewActivi
         mWebView.setObserveLifecycle(observe);
     }
 
+    @Override
+    public IMixWebView getMixWebView() {
+        return mWebView.getMixWebView();
+    }
 
     // PRIVATE CLASSES
 

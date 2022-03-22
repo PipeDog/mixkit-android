@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.pipedog.mixkit.web.interfaces.IMixWebView;
 import com.pipedog.mixkit.web.interfaces.ScriptCallback;
 import com.pipedog.mixkit.websdk.R;
 import com.pipedog.mixkit.websdk.config.IWebConfiguration;
@@ -243,6 +244,12 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     public void setObserveLifecycle(boolean observe) {
         if (getWebView() == null) { return; }
         getWebView().setObserveLifecycle(observe);
+    }
+
+    @Override
+    public IMixWebView getMixWebView() {
+        if (getWebView() == null) { return null; }
+        return getWebView().getMixWebView();
     }
 
 }

@@ -534,4 +534,9 @@ public class WKWebView extends FrameLayout implements IWebView {
         mObserveLifecycle = observe;
     }
 
+    @Override
+    public IMixWebView getMixWebView() {
+        return mWebView;
+    }
+
 }
