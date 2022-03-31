@@ -1,10 +1,12 @@
-package com.pipedog.mixkit.kernel;
+package com.pipedog.mixkit.module;
 
 import java.lang.Class;
 import java.lang.reflect.*;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.pipedog.mixkit.kernel.IBridge;
+import com.pipedog.mixkit.kernel.IBridgeModule;
 import com.pipedog.mixkit.tool.MixLogger;
 
 /**
@@ -60,8 +62,10 @@ public class ModuleCreator {
 
     public void unloadAllModules() {
         mModuleMap.forEach((key, value) -> {
-            IBridgeModule iModule = (IBridgeModule)value;
-            iModule.unload();
+            if (value instanceof IBridgeModule) {
+                IBridgeModule iModule = (IBridgeModule)value;
+                iModule.unload();
+            }
         });
     }
 

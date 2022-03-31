@@ -2,7 +2,7 @@ package com.pipedog.mixkit.socket;
 
 import com.pipedog.mixkit.kernel.IBridge;
 import com.pipedog.mixkit.kernel.IExecutor;
-import com.pipedog.mixkit.kernel.ModuleCreator;
+import com.pipedog.mixkit.module.ModuleCreator;
 import com.pipedog.mixkit.parser.MessageParserManager;
 
 public class SocketBridge implements IBridge {

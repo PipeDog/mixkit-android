@@ -1,5 +1,6 @@
 package com.pipedog.mixkit.kernel;
 
+import com.pipedog.mixkit.module.ModuleCreator;
 import com.pipedog.mixkit.parser.MessageParserManager;
 
 /**
