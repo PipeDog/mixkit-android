@@ -63,7 +63,7 @@ public class JavaScriptFormat {
 
             if (obj == null) {
                 sb.append("null");
-            } else if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
+            } else if (obj instanceof List || obj instanceof Map) {
                 String argument = sGson.toJson(obj);
                 sb.append(argument);
             } else if (obj instanceof String) {

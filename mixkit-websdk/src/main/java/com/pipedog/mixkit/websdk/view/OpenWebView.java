@@ -49,6 +49,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
         mShowLoading = typedArray.getBoolean(R.styleable.MixWebView_mix_show_loading, true);
         mObserveLifecycle = typedArray.getBoolean(R.styleable.MixWebView_mix_observe_lifecycle, true);
 
+        setConfiguration(WebConfiguration.getInstance());
         setupViews();
     }
 
@@ -56,7 +57,7 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     // PRIVATE METHODS
 
     private void setupViews() {
-        int browserKernelType = WebConfiguration.getInstance().getBrowserKernelType();
+        int browserKernelType = mConfiguration.getBrowserKernelType();
 
         // If you need to take control of the browser kernel, do the logic here.
         if ((browserKernelType & WebConfiguration.KERNEL_TYPE_WEBKIT) != 0) {
