@@ -20,6 +20,13 @@ public class ModuleData implements Serializable {
      */
     public Map<String, ModuleMethod> methods;
 
+    /**
+     * 常量表（运行时动态生成），Key - 常量名，Value - 常量值
+     * 注意：
+     *      Value 只支持原始数据类型，包括：int、float、double、String、Map、List 等，不支持自定义类型
+     */
+    public Map<String, Object> constantsTable;
+
 
     // OVERRIDE METHODS
 
@@ -28,6 +35,7 @@ public class ModuleData implements Serializable {
         return "ModuleData{" +
                 "classes=" + classes +
                 ", methods=" + methods +
+                ", constantsTable=" + constantsTable +
                 '}';
     }
 

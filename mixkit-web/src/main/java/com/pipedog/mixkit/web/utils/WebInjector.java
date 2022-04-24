@@ -40,6 +40,7 @@ public class WebInjector {
             }
 
             moduleMap.put("methods", methodNames);
+            moduleMap.put("constants", moduleData.constantsTable);
         }
 
         Gson gson = new Gson();
