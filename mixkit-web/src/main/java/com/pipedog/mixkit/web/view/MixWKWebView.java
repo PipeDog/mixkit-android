@@ -50,11 +50,13 @@ public class MixWKWebView extends WebView implements IMixWebView {
     // CONSTRUCTORS
 
     public MixWKWebView(Context context) {
-        this(context, null);
+        super(context);
+        setupInitializeConfiguration();
     }
 
-    public MixWKWebView(Context context, AttributeSet att) {
-        this(context, att, 0);
+    public MixWKWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setupInitializeConfiguration();
     }
 
     public MixWKWebView(Context context, AttributeSet attrs, int defStyle) {
