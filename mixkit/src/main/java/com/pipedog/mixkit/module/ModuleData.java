@@ -1,6 +1,11 @@
 package com.pipedog.mixkit.module;
 
+import com.pipedog.mixkit.kernel.IBridgeModule;
+import com.pipedog.mixkit.tool.MixLogger;
+
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +31,50 @@ public class ModuleData implements Serializable {
      *      Value 只支持原始数据类型，包括：int、float、double、String、Map、List 等，不支持自定义类型
      */
     public Map<String, Object> constantsTable;
+
+
+    // PUBLIC METHODS
+
+    /**
+     * 动态整合并注册本地常量表到当前类的属性 `constantsTable`
+     */
+    public void dynamicRegisterConstantsTable() {
+        if (classes == null) {
+            return;
+        }
+
+        Map<String, Object> mergeTable = new HashMap<>();
+
+        for (String className : classes) {
+            Class aClass = null;
+            try {
+                aClass = Class.forName(className);
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            if (!IBridgeModule.class.isAssignableFrom(aClass)) {
+                MixLogger.error(String.format("Class %s does not comply with" +
+                        " the interface %s", className, IBridgeModule.class));
+                continue;
+            }
+
+            Method constantsToExportMethod = null;
+            try {
+                constantsToExportMethod = aClass.getMethod("constantsToExport");
+                constantsToExportMethod.setAccessible(true);
+                Map<String, Object> moduleConstantsTable =
+                        (Map<String, Object>) constantsToExportMethod.invoke(aClass);
+                mergeTable.putAll(moduleConstantsTable);
+            } catch (Exception e) {
+                e.printStackTrace();
+                MixLogger.error("Invoke static method failed, class = %s!", className);
+            }
+        }
+
+        this.constantsTable = mergeTable;
+    }
 
 
     // OVERRIDE METHODS
