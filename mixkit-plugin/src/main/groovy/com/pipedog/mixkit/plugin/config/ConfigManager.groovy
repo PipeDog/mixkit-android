@@ -46,6 +46,12 @@ class ConfigManager {
         return configItems
     }
 
+    void reset() {
+        configItems.each {
+            it.reset()
+        }
+    }
+
     @Override
     String toString() {
         return configItems.toString()

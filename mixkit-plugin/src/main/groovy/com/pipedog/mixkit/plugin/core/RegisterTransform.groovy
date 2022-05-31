@@ -66,6 +66,7 @@ class RegisterTransform extends Transform {
 
     private void scanClasses(TransformInvocation transformInvocation) {
         PerfMonitor.startPerf("Trans|Scan")
+        configManager.reset()
 
         ScanProcessor scanProcessor = new ScanProcessor(configManager.getConfigItems())
         TransformOutputProvider outputProvider = transformInvocation.outputProvider

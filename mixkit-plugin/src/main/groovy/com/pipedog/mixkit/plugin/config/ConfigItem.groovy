@@ -59,6 +59,11 @@ class ConfigItem {
         convertIfNeeded()
     }
 
+    void reset() {
+        fileContainsInitClass = null
+        classList.clear()
+    }
+
     private void convertIfNeeded() {
         interfaceName = convertDotToSlash(interfaceName)
         superClasses = convertedList(superClasses)
