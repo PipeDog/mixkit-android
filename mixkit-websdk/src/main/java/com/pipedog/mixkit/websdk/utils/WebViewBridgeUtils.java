@@ -65,9 +65,12 @@ public class WebViewBridgeUtils {
         if (webView == null) { return null; }
 
         try {
-            IOpenWebView openWebView = (IOpenWebView) ((View) webView)
-                    .getParent().getParent().getParent();
-            return openWebView;
+            View openWebView = (View) ((View) webView).getParent();
+            while (openWebView != null && !(openWebView instanceof IOpenWebView)) {
+                openWebView = (View) openWebView.getParent();
+            }
+
+            return (IOpenWebView) openWebView;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
