@@ -3,7 +3,9 @@ package com.pipedog.mixkit.websdk.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -141,6 +143,13 @@ public class OpenWebView extends FrameLayout implements IOpenWebView {
     @Override
     public void onDestruct() {
         if (getWebView() == null) { return; }
+
+        View webView = (View) getWebView();
+        ViewParent viewParent = webView.getParent();
+        if (viewParent != null) {
+            ((ViewGroup) viewParent).removeView(webView);
+        }
+
         getWebView().onDestruct();
     }
 

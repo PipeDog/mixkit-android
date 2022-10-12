@@ -7,6 +7,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -415,9 +416,24 @@ public class WKWebView extends FrameLayout implements IWebView {
         NotificationCenter.getInstance().removeObserver(mWebView);
         cancelObserveLifecycle();
 
-        if (mWebView != null) {
-            mWebView.destroy();
+        if (mWebView == null) { return; }
+
+        // Avoid memory leak
+        // 1) Remove from superview
+        ViewParent viewParent = mWebView.getParent();
+        if (viewParent != null) {
+            ((ViewGroup) viewParent).removeView(mWebView);
         }
+
+        // 2) Release related resources
+        mWebView.stopLoading();
+        mWebView.getSettings().setJavaScriptEnabled(false);
+        mWebView.clearHistory();
+        mWebView.clearView();
+        mWebView.removeAllViews();
+
+        // 3) Finally, destroy webView
+        mWebView.destroy();
     }
 
     @Override
